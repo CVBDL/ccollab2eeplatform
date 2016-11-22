@@ -226,7 +226,7 @@ namespace CcollabLauncher
         /// <param name="p">Instance of <see cref="OptionSet"/></param>
         static void ShowHelp(OptionSet p)
         {
-            Console.WriteLine("Usage: ccollabLauncher [OPTIONS]");
+            Console.WriteLine("Usage: ccollab2ee [OPTIONS]");
             Console.WriteLine();
             Console.WriteLine("Options:");
             p.WriteOptionDescriptions(Console.Out);
