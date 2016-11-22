@@ -9,10 +9,10 @@ options:
 	-h, --help		show this message and exit  
 
 e.g.  
-ccollab2ee --id="1234567890"
-ccollab2ee -i "1234567890"
-ccollab2ee -h
-ccollab2ee --h
+ccollab2ee --id="1234567890"  
+ccollab2ee -i "1234567890"  
+ccollab2ee -h  
+ccollab2ee --h  
 
 # Notes
 1. in this version, the tool will wait a keyboard hit before exit.
