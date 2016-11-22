@@ -4,8 +4,8 @@ Data from CodeCollaborator to EagleEye-Platform
 # Usage
 ccollab2ee [options]  
 
-options:
-	-i, --id=VALUE	the task Id.
+options:  
+	-i, --id=VALUE	the task Id.  
 	-h, --help		show this message and exit  
 
 e.g.  
