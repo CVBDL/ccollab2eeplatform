@@ -9,7 +9,8 @@ using log4net.Config;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
-
+using eeDataGenerator;
+using ccollabDataGenerator;
 
 
 namespace CcollabLauncher
@@ -31,6 +32,7 @@ namespace CcollabLauncher
 
             log.Info("initialize command line parser");
 
+            //TODO: support specific start&End time in the data query, use commandline parameter to receive the start&end time
             var optSet = new OptionSet() {
                 { "i|id=",  "the task Id.",               v => taskId = v },
                 { "h|help", "show this message and exit", v => show_help = v != null },
@@ -100,7 +102,7 @@ namespace CcollabLauncher
 
             //enumerate the command to get the raw data
             var ccRawFiles = new List<string>();
-            if(ccollabCmds == null || ccollabCmds.Count>0)
+            if(ccollabCmds == null || ccollabCmds.Count == 0)
             {
                 var msg = "Program exit: No command to be proceed";
                 log.Info(msg);
@@ -108,7 +110,7 @@ namespace CcollabLauncher
                 return;
             }
 
-            foreach( var cmd in ccollabCmds )
+            foreach (var cmd in ccollabCmds)
             {
                 var fileName = GetCCRawFile(cmd.relUrl);
                 if (string.IsNullOrEmpty(fileName))
@@ -118,9 +120,10 @@ namespace CcollabLauncher
                 Console.WriteLine(fileName);
             }
 
-
             //Get data from the files
-
+            var generator = CreateDataGenerator();
+            if (generator != null)
+                generator.Execute(ccRawFiles);
 
             Console.ReadKey();
 
@@ -132,6 +135,15 @@ namespace CcollabLauncher
 
         }
 
+        /// <summary>
+        /// Create data generator
+        /// </summary>
+        /// <param name="rawData">raw data to be handled</param>
+        /// <returns></returns>
+        protected static IeeDataGenerator CreateDataGenerator( )
+        {
+            return new ccollabDataGenerator.ccollabDataGenerator();
+        }
 
         /// <summary>
         /// Get codecollaborator raw data

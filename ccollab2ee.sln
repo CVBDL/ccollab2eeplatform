@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ccollab2ee", "ccollab2ee\ccollab2ee.csproj", "{E4DF215B-C178-4227-8BC1-369501558166}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eeDataGenerator", "eeDataGenerator\eeDataGenerator.csproj", "{008ACC7A-60FE-487B-9E95-4D21689BDEB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ccollabDataGenerator", "ccollabDataGenerator\ccollabDataGenerator.csproj", "{BB79C020-7C3F-4A80-A876-C58A920EA65B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{E4DF215B-C178-4227-8BC1-369501558166}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4DF215B-C178-4227-8BC1-369501558166}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4DF215B-C178-4227-8BC1-369501558166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{008ACC7A-60FE-487B-9E95-4D21689BDEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{008ACC7A-60FE-487B-9E95-4D21689BDEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{008ACC7A-60FE-487B-9E95-4D21689BDEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{008ACC7A-60FE-487B-9E95-4D21689BDEB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB79C020-7C3F-4A80-A876-C58A920EA65B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB79C020-7C3F-4A80-A876-C58A920EA65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB79C020-7C3F-4A80-A876-C58A920EA65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB79C020-7C3F-4A80-A876-C58A920EA65B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
