@@ -5,14 +5,14 @@ Data from CodeCollaborator to EagleEye-Platform
 ccollab2ee [options]  
 
 options:  
-	-i, --id=VALUE	the task Id.  
+	-t, --task-id=VALUE	the task Id.  
 	-h, --help		show this message and exit  
 
 e.g.  
-ccollab2ee --id="1234567890"  
-ccollab2ee -i "1234567890"  
+ccollab2ee --task-id="57837029c66dc1a4570962b6"  
+ccollab2ee -t "57837029c66dc1a4570962b6"  
 ccollab2ee -h  
-ccollab2ee --h  
+ccollab2ee --help  
 
 # Notes
 1. in this version, the tool will wait a keyboard hit before exit.

@@ -34,7 +34,7 @@ namespace CcollabLauncher
 
             //TODO: support specific start&End time in the data query, use commandline parameter to receive the start&end time
             var optSet = new OptionSet() {
-                { "i|id=",  "the task Id.",               v => taskId = v },
+                { "t|task-id=",  "the task Id.",               v => taskId = v },
                 { "h|help", "show this message and exit", v => show_help = v != null },
             };
 
