@@ -1,20 +1,38 @@
 # ccollab2eeplatform
-Data from CodeCollaborator to EagleEye-Platform
 
-# Usage
-ccollab2ee [options]  
+Extract data from CodeCollaborator to EagleEye-Platform
 
-options:  
-	-t, --task-id=VALUE	the task Id.  
-	-h, --help		show this message and exit  
+## Usage
 
-e.g.  
-ccollab2ee --task-id="57837029c66dc1a4570962b6"  
-ccollab2ee -t "57837029c66dc1a4570962b6"  
-ccollab2ee -h  
-ccollab2ee --help  
+```sh
+ccollab2ee [options]
+```  
 
-# Notes
+### Options
+
+| Option                 | Type      | Description                                                 |
+| ---------------------- | --------- | ----------------------------------------------------------- |
+| `--task-id` or `-t`    | string    | The `_id` property of the task which invoked this command.  |
+| `--help` or `-h`       |           | Show helping message of this command.                       |
+
+For example:
+
+```sh
+# Run this command with task id "57837029c66dc1a4570962b6"
+ccollab2ee --task-id="57837029c66dc1a4570962b6"
+
+# Run this command with task id "57837029c66dc1a4570962b6"
+ccollab2ee -t "57837029c66dc1a4570962b6"
+
+# Show `ccollab2ee` helping message
+ccollab2ee -h
+
+# Show `ccollab2ee` helping message
+ccollab2ee --help
+```
+
+## Notes
+
 1. in this version, the tool will wait a keyboard hit before exit.
-2. the csv files file name will be displayed in the console window
-3. the csv file will be removed just before tool exit
+2. the csv files file name will be displayed in the console window.
+3. the csv file will be removed just before tool exit.
