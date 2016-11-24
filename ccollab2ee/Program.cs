@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Reflection;
 using eeDataGenerator;
 using ccollabDataGenerator;
+using System.Net.Http;
 
 
 namespace CcollabLauncher
@@ -131,6 +132,30 @@ namespace CcollabLauncher
             foreach( var ccRawFile in ccRawFiles)
             {
                 File.Delete(ccRawFile);
+            }
+
+            //Update task state
+            //TODO: Remove hard code and refactor
+            log.Info("Press Enter to notify task: " + taskId);
+            Console.ReadKey();
+
+            HttpClient client = new HttpClient();
+
+            try
+            {
+                StringContent payload = new StringContent("{\"state\":\"success\"}", Encoding.UTF8, "application/json");
+                log.Info("Sending request...");
+                HttpResponseMessage response = client.PutAsync("http://127.0.0.1:3000/api/v1/tasks/" + taskId, payload).Result;
+                response.EnsureSuccessStatusCode();
+                var responseContent = response.Content;
+                string responseBody = responseContent.ReadAsStringAsync().Result;
+
+                Console.WriteLine(responseBody);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nUpdate task state error!");
+                Console.WriteLine("Message :{0} ", e.Message);
             }
 
         }
