@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using log4net;
+using log4net.Config;
 
 
 namespace CcollabLauncher
@@ -15,12 +16,12 @@ namespace CcollabLauncher
         private static readonly ILog log = LogManager.GetLogger(typeof(Employee));
 
  
-        public string fullName;
-        public string product;
-        public string name;
+        public string FullName;
+        public string ProductName;
+        public string LoginName;
 
 
-        public static List<Employee> InifFromJson( string json)
+        public static List<Employee> InitFromJson( string json)
         {
             if (string.IsNullOrWhiteSpace(json))
                 return null;
