@@ -1,13 +1,11 @@
-[
-  
-  {
-    "fullName": "ZhangSan",
-    "product": "Team1",
-    "name": "Zhang San"
-  },
-  {
-    "fullName": "LiSi",
-    "product": "Team2",
-    "name": "Li Si"
-  }
-]
+{
+  "Employees": [{
+    "LoginName": "pzhong",
+    "FullName": "Patrick Zhong",
+    "ProductName": "Team1"
+  }, {
+    "LoginName": "rli",
+    "FullName": "Rex Li",
+    "ProductName": "Team2"
+  }]
+}
