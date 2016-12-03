@@ -13,14 +13,14 @@ namespace eeDataGenerator
         /// It could be a path to a file or string in JSON format.
         /// The detail format is decided by concrete implementation of eeDataGenerator class
         /// </summary>
-        List<string> ReviewsRawData { get; }
+        List<string[]> ReviewsRawData { get; }
 
         /// <summary>
         /// The raw data will be processed.
         /// It could be a path to a file or string in JSON format.
         /// The detail format is decided by concrete implementation of eeDataGenerator class
         /// </summary>
-        List<string> DefectsRawData { get; }
+        List<string[]> DefectsRawData { get; }
 
 
         /// <summary>

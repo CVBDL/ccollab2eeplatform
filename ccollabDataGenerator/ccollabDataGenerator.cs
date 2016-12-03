@@ -10,10 +10,10 @@ namespace ccollabDataGenerator
 {
     public class ccollabDataGenerator : IeeDataGenerator
     {
-        protected List<string> _reviewsRawData;
-        protected List<string> _defectsRawData;
+        protected List<string[]> _reviewsRawData;
+        protected List<string[]> _defectsRawData;
 
-        public List<string> ReviewsRawData
+        public List<string[]> ReviewsRawData
         {
             get
             {
@@ -21,7 +21,7 @@ namespace ccollabDataGenerator
             }
         }
 
-        public List<string> DefectsRawData
+        public List<string[]> DefectsRawData
         {
             get
             {
@@ -31,19 +31,26 @@ namespace ccollabDataGenerator
 
         public bool Execute(List<string> rawData)
         {
-            var reviewsFileName = rawData[0];
+            _reviewsRawData = ReadInReviewsCsvFile(rawData[0]);
+
+            // var reviewsCreatorLoginIndex = 9;
+            // IEnumerable<string> reviewsQuery =
+            //     from line in File.ReadAllLines(reviewsFileName)
+            //     let fields = line.Split(',')
+            //     where employees.Any(employee => employee.LoginName == fields[reviewsCreatorLoginIndex])
+            //     select line;
+
             var defectsFileName = rawData[1];
-
-            IEnumerable<string> reviewsQuery =
-                from line in File.ReadAllLines(reviewsFileName)
-                let fields = line.Split(',')
-                where fields[9] == "pzhong"
-                select line;
-
-            _reviewsRawData = reviewsQuery.ToList<string>();
 
             return true;
         }
 
+        private List<string[]> ReadInReviewsCsvFile(string reviewsFileName)
+        {
+            return File.ReadAllLines(reviewsFileName)
+                .Skip(1)
+                .Select(line => line.Split(','))
+                .ToList<string[]>();
+        }
     }
 }

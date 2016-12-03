@@ -18,12 +18,12 @@ namespace CcollabLauncher
         public string args;
         public string relUrl;
 
-        public static List<ccollabCmd> InifFromJson(string json)
+        public static List<ccollabCmd> InitFromJson(string json)
         {
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            List<ccollabCmd> ccollabCmds = null; 
+            List<ccollabCmd> ccollabCmds = null;
             try
             {
                 ccollabCmds = JsonConvert.DeserializeObject<List<ccollabCmd>>(json);

@@ -39,7 +39,7 @@ namespace CcollabLauncher
 
             //TODO: support specific start&End time in the data query, use commandline parameter to receive the start&end time
             var optSet = new OptionSet() {
-                { "t|task-id=",  "the task Id.",               v => taskId = v },
+                { "t|task-id=",  "the task Id.",          v => taskId = v },
                 { "h|help", "show this message and exit", v => show_help = v != null },
             };
 
@@ -98,7 +98,7 @@ namespace CcollabLauncher
             List<ccollabCmd> ccollabCmds = null;
             try
             {
-                ccollabCmds = ccollabCmd.InifFromJson(json);
+                ccollabCmds = ccollabCmd.InitFromJson(json);
             }
             catch(Exception)
             {
