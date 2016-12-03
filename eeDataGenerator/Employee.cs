@@ -9,27 +9,36 @@ using log4net;
 using log4net.Config;
 
 
-namespace CcollabLauncher
+namespace eeDataGenerator
 {
     internal class Employee
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Employee));
 
- 
+        public static string EMPLOYEES_FILE_NAME = "employees.json";
+
         public string FullName;
         public string ProductName;
         public string LoginName;
 
 
-        public static List<Employee> InitFromJson( string json)
+        public static List<Employee> InitFromJson()
         {
+            string json = String.Empty;
+
+            StreamReader sr = new StreamReader(EMPLOYEES_FILE_NAME, Encoding.Default);
+            using (sr)
+            {
+                json = sr.ReadToEnd();
+            }
+
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            List<Employee> developers = null;
+            List<Employee> employees = null;
             try
             {
-                developers = JsonConvert.DeserializeObject<List<Employee>>(json);
+                employees = JsonConvert.DeserializeObject<List<Employee>>(json);
             }
             catch (Exception exp)
             {
@@ -37,7 +46,7 @@ namespace CcollabLauncher
                 throw;
             }
 
-            return developers;
+            return employees;
         }
     }
 }

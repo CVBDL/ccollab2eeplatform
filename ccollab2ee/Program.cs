@@ -24,7 +24,6 @@ namespace CcollabLauncher
         static string taskId;
         static bool show_help = false;
 
-        public static string EMPLOYEES_FILE_NAME = "employees.json";
         public static string CCOLLABCMD_FILE_NAME = "ccollabCmd.json";
         /// <summary>
         /// 
@@ -70,26 +69,9 @@ namespace CcollabLauncher
                 return;
             }
 
-            //load Employees
-            string json = null;
-            StreamReader sr = new StreamReader(EMPLOYEES_FILE_NAME, Encoding.Default);
-            using (sr)
-            {
-                json = sr.ReadToEnd();
-            }
-
-            List<Employee> employees = null;
-            try
-            {
-                employees = Employee.InitFromJson(json);
-            }
-            catch (Exception)
-            {
-                log.Error(string.Format("Failed to load from JSON: {0}", EMPLOYEES_FILE_NAME));
-            }
-
             //load ccollab commands
-            sr = new StreamReader(CCOLLABCMD_FILE_NAME, Encoding.Default);
+            string json = String.Empty;
+            StreamReader sr = new StreamReader(CCOLLABCMD_FILE_NAME, Encoding.Default);
             using (sr)
             {
                 json = sr.ReadToEnd();
@@ -132,8 +114,10 @@ namespace CcollabLauncher
             if (generator != null)
                 generator.Execute(ccRawFiles);
 
-            log.Info(generator.ReviewsRawData.Count);
+            EagleEyeDataGenerator ee = new eeDataGenerator.EagleEyeDataGenerator();
+            ee.Execute(generator);
 
+            Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
 
             //Remove all temp files

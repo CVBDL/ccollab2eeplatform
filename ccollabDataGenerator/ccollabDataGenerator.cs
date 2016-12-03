@@ -31,23 +31,15 @@ namespace ccollabDataGenerator
 
         public bool Execute(List<string> rawData)
         {
-            _reviewsRawData = ReadInReviewsCsvFile(rawData[0]);
-
-            // var reviewsCreatorLoginIndex = 9;
-            // IEnumerable<string> reviewsQuery =
-            //     from line in File.ReadAllLines(reviewsFileName)
-            //     let fields = line.Split(',')
-            //     where employees.Any(employee => employee.LoginName == fields[reviewsCreatorLoginIndex])
-            //     select line;
-
-            var defectsFileName = rawData[1];
+            _reviewsRawData = ReadInCsvFile(rawData[0]);
+            _defectsRawData = ReadInCsvFile(rawData[1]);
 
             return true;
         }
 
-        private List<string[]> ReadInReviewsCsvFile(string reviewsFileName)
+        private List<string[]> ReadInCsvFile(string fileName)
         {
-            return File.ReadAllLines(reviewsFileName)
+            return File.ReadAllLines(fileName)
                 .Skip(1)
                 .Select(line => line.Split(','))
                 .ToList<string[]>();
