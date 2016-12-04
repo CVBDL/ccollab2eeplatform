@@ -58,8 +58,6 @@ namespace eeDataGenerator
                 group row by row[2].Substring(0, 7) into month
                 select new { Month = month.Key, Count = month.Count() };
 
-            var length = query.Count();
-
             List<object[]> datatable = new List<object[]>();
 
             datatable.Add(new object[] { "Month", "Count" });
