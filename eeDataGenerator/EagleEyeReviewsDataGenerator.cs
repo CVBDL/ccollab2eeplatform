@@ -19,19 +19,21 @@ namespace eeDataGenerator
         }
     }
 
-    public class EagleEyeDataGenerator
+    public class EagleEyeReviewsDataGenerator: EagleEyeDataGeneratorDecorator
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeDataGenerator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeReviewsDataGenerator));
 
         private List<string[]> FilteredEmployeesReviewsData;
         private List<string[]> FilteredEmployeesDefectsData;
         private List<Employee> Employees;
 
-        public bool Execute(IeeDataGenerator ccollab)
+        public EagleEyeReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator) { }
+
+        public bool Execute()
         {
             Employees = Employee.InitFromJson();
 
-            FilteredEmployeesReviewsData = FilterEmployeesReviewData(ccollab.ReviewsRawData);
+            FilteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
 
             GenerateReviewCountByMonth();
 

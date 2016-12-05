@@ -48,9 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EagleEyeDataGenerator.cs" />
+    <Compile Include="EagleEyeReviewsDataGenerator.cs" />
+    <Compile Include="EagleEyeDataGeneratorDecorator.cs" />
     <Compile Include="Employee.cs" />
-    <Compile Include="IeeDataGenerator.cs" />
+    <Compile Include="IEagleEyeDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eeDataGenerator
 {
-    public interface IeeDataGenerator
+    public interface IEagleEyeDataGenerator
     {
         /// <summary>
         /// The raw data will be processed.
@@ -26,10 +26,7 @@ namespace eeDataGenerator
         /// <summary>
         /// Execute the process
         /// </summary>
-        /// <param name="rawData">The raw data will be processed.
-        /// It could be a path to a file or string in JSON format.
-        /// The detail format is decided by concrete implementation of eeDataGenerator class</param>
         /// <returns></returns>
-        bool Execute(List<string> rawData);
+        bool Execute();
     }
 }
