@@ -106,8 +106,8 @@ namespace CcollabLauncher
             //    ccRawFiles.Add(fileName);
             //    Console.WriteLine(fileName);
             //}
-            ccRawFiles.Add(@"C:\reviews-report.csv");
-            ccRawFiles.Add(@"C:\defects-report.csv");
+            ccRawFiles.Add(@"reviews-report.csv");
+            ccRawFiles.Add(@"defects-report.csv");
 
             //Get data from the files
             var generator = CreateDataGenerator();
