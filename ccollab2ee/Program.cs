@@ -68,18 +68,18 @@ namespace CcollabLauncher
                 return;
             }
             
-            //Get data from the files
-            var generator = CreateDataGenerator();
-            if (generator != null)
-                generator.Execute();
 
-            EagleEyeReviewsDataGenerator ee = new eeDataGenerator.EagleEyeReviewsDataGenerator();
-            ee.Execute();
+            var ccollabGenerator = CreateDataGenerator();
+            
+            var eeReviewsGenerator = CreateReviewsDataGenerator(ccollabGenerator);
+
+            eeReviewsGenerator.Execute();
+            
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
 
-            // TODO
+            // TODO: Remove files
             //Remove all temp files
             //foreach( var ccRawFile in ccRawFiles)
             //{
@@ -120,6 +120,11 @@ namespace CcollabLauncher
         protected static IEagleEyeDataGenerator CreateDataGenerator( )
         {
             return new ccollabDataGenerator.CcollabDataGenerator();
+        }
+
+        protected static EagleEyeReviewsDataGenerator CreateReviewsDataGenerator(IEagleEyeDataGenerator ccollabGenerator)
+        {
+            return new eeDataGenerator.EagleEyeReviewsDataGenerator(ccollabGenerator);
         }
 
         /// <summary>

@@ -29,8 +29,10 @@ namespace eeDataGenerator
 
         public EagleEyeReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator) { }
 
-        public bool Execute()
+        public new bool Execute()
         {
+            base.Execute();
+
             Employees = Employee.InitFromJson();
 
             FilteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
@@ -76,6 +78,7 @@ namespace eeDataGenerator
             
             string json = JsonConvert.SerializeObject(new Chart(datatable.ToArray()));
 
+            //TODO: sort by ascending order
             log.Info(json); // {"datatable":[["Month","Count"],["2016-08",2],["2016-07",1]]}
 
             // Expected format:
