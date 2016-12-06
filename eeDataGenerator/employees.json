@@ -1,12 +1,12 @@
 [
-    {
-      "LoginName": "pzhong",
-      "FullName": "Patrick Zhong",
-      "ProductName": "Team1"
-    },
-    {
-      "LoginName": "rli",
-      "FullName": "Rex Li",
-      "ProductName": "Team2"
-    }
- ]
+  {
+    "LoginName": "pzhong",
+    "FullName": "Patrick Zhong",
+    "ProductName": "Team1"
+  },
+  {
+    "LoginName": "rli",
+    "FullName": "Rex Li",
+    "ProductName": "Team2"
+  }
+]

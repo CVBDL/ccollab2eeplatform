@@ -9,31 +9,29 @@ using log4net;
 
 namespace eeDataGenerator
 {
-    internal class Chart
-    {
-        public object[][] datatable { get; set; }
-
-        public Chart(object[][] dt)
-        {
-            datatable = dt;
-        }
-    }
-
     public class EagleEyeReviewsDataGenerator: EagleEyeDataGeneratorDecorator
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeReviewsDataGenerator));
 
         private List<string[]> FilteredEmployeesReviewsData;
-        private List<string[]> FilteredEmployeesDefectsData;
         private List<Employee> Employees;
+        private ApplicationSettings Settings;
+        private HttpClient httpClient;
 
-        public EagleEyeReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator) { }
+        public EagleEyeReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
+        {
+            httpClient = new HttpClient();
+        }
 
         public new bool Execute()
         {
             base.Execute();
 
+            // get employees list from `employees.json`
             Employees = Employee.InitFromJson();
+
+            // get application settings from `application.json`
+            Settings = ApplicationSettings.InitFromJson();
 
             FilteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
 
@@ -58,12 +56,19 @@ namespace eeDataGenerator
         {
             log.Info("Generating: Review Count By Month ...");
 
-            // `reviewCreationDate` format is "2016-09-30 23:33 UTC"
+            // key from `application.json`
+            ChartItem chartSettings = null;
+            var settingsKeyName = "ReviewCountByMonth";
+            Settings.Charts.TryGetValue(settingsKeyName, out chartSettings);
+            log.Info("Chart id is: " + chartSettings.ChartId);
+
+            // `Review Creation Date`'s format is "2016-09-30 23:33 UTC"
             var reviewCreationDateIndex = 2;
 
             var query =
                 from row in FilteredEmployeesReviewsData
                 group row by row[reviewCreationDateIndex].Substring(0, 7) into month
+                orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
 
             List<object[]> datatable = new List<object[]>();
@@ -76,10 +81,9 @@ namespace eeDataGenerator
                 log.Info("Month: " + date.Month + ", Count: " + date.Count);
             }
             
-            string json = JsonConvert.SerializeObject(new Chart(datatable.ToArray()));
+            string payload = JsonConvert.SerializeObject(new Chart(datatable.ToArray()));
 
-            //TODO: sort by ascending order
-            log.Info(json); // {"datatable":[["Month","Count"],["2016-08",2],["2016-07",1]]}
+            log.Info(payload); // {"datatable":[["Month","Count"],["2016-07",1],["2016-08",2],["2016-09",1]]}
 
             // Expected format:
             // https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table
