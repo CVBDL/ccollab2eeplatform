@@ -22,6 +22,10 @@ namespace eeDataGenerator
         public string LoginName;
 
 
+        /// <summary>
+        /// Read employees list from `employees.json` file.
+        /// </summary>
+        /// <returns>Employee list.</returns>
         public static List<Employee> InitFromJson()
         {
             string json = String.Empty;

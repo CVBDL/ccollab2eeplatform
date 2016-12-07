@@ -68,13 +68,11 @@ namespace CcollabLauncher
                 return;
             }
             
-
             var ccollabGenerator = CreateDataGenerator();
             
             var eeReviewsGenerator = CreateReviewsDataGenerator(ccollabGenerator);
 
             eeReviewsGenerator.Execute();
-            
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();

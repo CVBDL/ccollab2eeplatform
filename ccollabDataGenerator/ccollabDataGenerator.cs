@@ -103,10 +103,6 @@ namespace ccollabDataGenerator
 
         private List<string[]> ReadInCsvFile(string fileName)
         {
-            //return File.ReadAllLines(fileName)
-            //    .Skip(1)
-            //    .Select(line => Regex.Split(line, ",(?=(?:[^']*'[^']*')*[^']*$)"))
-            //    .ToList<string[]>();
             List<string[]> lines = new List<string[]>();
 
             using (TextFieldParser parser = new TextFieldParser(fileName))

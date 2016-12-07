@@ -26,11 +26,9 @@ namespace eeDataGenerator
         public new bool Execute()
         {
             base.Execute();
-
-            // get employees list from `employees.json`
+            
             Employees = Employee.InitFromJson();
-
-            // get application settings from `application.json`
+            
             Settings = ApplicationSettings.InitFromJson();
 
             FilteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
@@ -56,11 +54,10 @@ namespace eeDataGenerator
         {
             log.Info("Generating: Review Count By Month ...");
 
-            // key from `application.json`
+            string chartSettingsKeyName = "ReviewCountByMonth";
             ChartItem chartSettings = null;
-            var settingsKeyName = "ReviewCountByMonth";
-            Settings.Charts.TryGetValue(settingsKeyName, out chartSettings);
-            log.Info("Chart id is: " + chartSettings.ChartId);
+
+            Settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);  // { "ChartId": "57837029c66dc1a4570962b6" }
 
             // `Review Creation Date`'s format is "2016-09-30 23:33 UTC"
             var reviewCreationDateIndex = 2;

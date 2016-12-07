@@ -36,6 +36,10 @@ namespace eeDataGenerator
 
         public Dictionary<string, ChartItem> Charts;
 
+        /// <summary>
+        /// Read application settings from `employees.json` file.
+        /// </summary>
+        /// <returns>Application setttings.</returns>
         public static ApplicationSettings InitFromJson()
         {
             string json = String.Empty;
