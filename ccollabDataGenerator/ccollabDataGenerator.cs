@@ -7,6 +7,8 @@ using System.IO;
 using log4net;
 using eeDataGenerator;
 using System.Diagnostics;
+using Microsoft.VisualBasic.FileIO;
+
 
 namespace ccollabDataGenerator
 {
@@ -101,10 +103,33 @@ namespace ccollabDataGenerator
 
         private List<string[]> ReadInCsvFile(string fileName)
         {
-            return File.ReadAllLines(fileName)
-                .Skip(1)
-                .Select(line => line.Split(','))
-                .ToList<string[]>();
+            //return File.ReadAllLines(fileName)
+            //    .Skip(1)
+            //    .Select(line => Regex.Split(line, ",(?=(?:[^']*'[^']*')*[^']*$)"))
+            //    .ToList<string[]>();
+            List<string[]> lines = new List<string[]>();
+
+            using (TextFieldParser parser = new TextFieldParser(fileName))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+
+                    lines.Add(fields);
+                }
+
+                int length = lines.Count;
+
+                if (length > 0)
+                {
+                    lines.RemoveAt(0);
+                }
+
+                return lines;
+            }
         }
 
 
