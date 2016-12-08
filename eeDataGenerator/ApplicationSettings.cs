@@ -1,28 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using log4net;
 
 namespace eeDataGenerator
 {
-    /// <summary>
-    /// JSON payload format used to update chart datatable to EagleEye platform.
-    /// https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table
-    /// </summary>
-    internal class Chart
-    {
-        public object[][] datatable { get; set; }
-
-        public Chart(object[][] dt)
-        {
-            datatable = dt;
-        }
-    }
-
     /// <summary>
     /// Application level settings JSON format.
     /// </summary>
@@ -34,7 +18,7 @@ namespace eeDataGenerator
 
         public string EagleEyeApiRootEndpoint;
 
-        public Dictionary<string, ChartItem> Charts;
+        public Dictionary<string, ChartSettings> Charts;
 
         /// <summary>
         /// Read application settings from `employees.json` file.
@@ -66,13 +50,5 @@ namespace eeDataGenerator
 
             return application;
         }
-    }
-
-    /// <summary>
-    /// A single chart settings JSON format.
-    /// </summary>
-    internal class ChartItem
-    {
-        public string ChartId;
     }
 }

@@ -55,7 +55,7 @@ namespace eeDataGenerator
             log.Info("Generating: Review Count By Month ...");
 
             string chartSettingsKeyName = "ReviewCountByMonth";
-            ChartItem chartSettings = null;
+            ChartSettings chartSettings = null;
 
             Settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);  // { "ChartId": "57837029c66dc1a4570962b6" }
 
