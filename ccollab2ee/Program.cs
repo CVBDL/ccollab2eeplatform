@@ -77,13 +77,6 @@ namespace CcollabLauncher
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
 
-            // TODO: Remove files
-            //Remove all temp files
-            //foreach( var ccRawFile in ccRawFiles)
-            //{
-            //    // File.Delete(ccRawFile);
-            //}
-
             //Update task state
             //TODO: Remove hard code and refactor
             //log.Info("Press Enter to notify task: " + taskId);

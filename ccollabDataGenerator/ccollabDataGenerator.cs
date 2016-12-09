@@ -52,9 +52,15 @@ namespace ccollabDataGenerator
             _reviewsRawData = ReadInCsvFile(ccRawFiles[0]);
             _defectsRawData = ReadInCsvFile(ccRawFiles[1]);
 
+            // delete downloaded csv files
+            foreach (var ccRawFile in ccRawFiles)
+            {
+                //File.Delete(ccRawFile);
+            }
+
             return true;
         }
-
+        
         private List<ccollabCmd> ReadInCcollabCommandConfigJson()
         {
             string json = String.Empty;

@@ -1,11 +1,11 @@
 ﻿{
-  "EagleEyeApiRootEndpoint": "http://127.0.0.1:3000/api/v1/",
+  "EagleEyeApiRootEndpoint": "http://localhost:3000/api/v1/",
   "Charts": {
     "ReviewCountByMonth": {
-      "ChartId": "57837029c66dc1a4570962b6"
+      "ChartId": "5809b2827e9254582e54116d"
     },
     "ReviewCountByViewPoint": {
-      "ChartId":  "5799641be24561202bc7190d"
+      "ChartId": "5799641be24561202bc7190d"
     }
   }
 }
