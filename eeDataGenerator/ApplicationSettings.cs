@@ -10,7 +10,7 @@ namespace eeDataGenerator
     /// <summary>
     /// Application level settings JSON format.
     /// </summary>
-    internal class ApplicationSettings
+    public class ApplicationSettings
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ApplicationSettings));
 

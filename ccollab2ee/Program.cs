@@ -25,7 +25,7 @@ namespace CcollabLauncher
         static bool show_help = false;
         
         /// <summary>
-        /// 
+        /// Main method
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -74,33 +74,11 @@ namespace CcollabLauncher
 
             eeReviewsGenerator.Execute();
 
+            // notify task state
+            //NotifyTaskStatus(taskId, true);
+
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
-
-            //Update task state
-            //TODO: Remove hard code and refactor
-            //log.Info("Press Enter to notify task: " + taskId);
-            //Console.ReadKey();
-
-            //HttpClient client = new HttpClient();
-
-            //try
-            //{
-            //    StringContent payload = new StringContent("{\"state\":\"success\"}", Encoding.UTF8, "application/json");
-            //    log.Info("Sending request...");
-            //    HttpResponseMessage response = client.PutAsync("http://127.0.0.1:3000/api/v1/tasks/" + taskId, payload).Result;
-            //    response.EnsureSuccessStatusCode();
-            //    var responseContent = response.Content;
-            //    string responseBody = responseContent.ReadAsStringAsync().Result;
-
-            //    Console.WriteLine(responseBody);
-            //}
-            //catch (HttpRequestException e)
-            //{
-            //    Console.WriteLine("\nUpdate task state error!");
-            //    Console.WriteLine("Message :{0} ", e.Message);
-            //}
-
         }
 
         /// <summary>
@@ -108,7 +86,7 @@ namespace CcollabLauncher
         /// </summary>
         /// <param name="rawData">raw data to be handled</param>
         /// <returns></returns>
-        protected static IEagleEyeDataGenerator CreateDataGenerator( )
+        protected static IEagleEyeDataGenerator CreateDataGenerator()
         {
             return new ccollabDataGenerator.CcollabDataGenerator();
         }
@@ -128,6 +106,35 @@ namespace CcollabLauncher
             Console.WriteLine();
             Console.WriteLine("Options:");
             p.WriteOptionDescriptions(Console.Out);
+        }
+
+        static void NotifyTaskStatus(string taskId, bool isSuccess)
+        {
+            log.Info("Sending task notification to server ...");
+
+            HttpClient client = new HttpClient();
+
+            var settings = eeDataGenerator.ApplicationSettings.InitFromJson();
+
+            string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
+
+            try
+            {
+                StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
+                log.Info("Sending request...");
+                HttpResponseMessage response = client.PutAsync(settings.EagleEyeApiRootEndpoint + "tasks/" + taskId, payload).Result;
+                response.EnsureSuccessStatusCode();
+
+                // use for debugging
+                var responseContent = response.Content;
+                string responseBody = responseContent.ReadAsStringAsync().Result;
+                Console.WriteLine(responseBody);
+            }
+            catch (HttpRequestException e)
+            {
+                log.Info("Error: Notify task with id '" + taskId + "'");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
         }
     }
 }

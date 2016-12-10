@@ -120,6 +120,8 @@ namespace eeDataGenerator
 
             Console.WriteLine(json); // {"datatable":[["Month","Count"],["2016-07",1],["2016-08",2],["2016-09",1]]}
 
+            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+
             log.Info("Generating: Review Count By Month ... Done.");
         }
     }
