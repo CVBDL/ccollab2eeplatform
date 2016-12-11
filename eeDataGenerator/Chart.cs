@@ -1,4 +1,4 @@
-﻿namespace eeDataGenerator
+﻿namespace EagleEye
 {
     /// <summary>
     /// JSON payload format used to update chart datatable to EagleEye platform.

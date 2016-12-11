@@ -1,4 +1,4 @@
-﻿namespace eeDataGenerator
+﻿namespace EagleEye
 {
     /// <summary>
     /// Application level chart settings. Use for communicating with EagleEye APIs.

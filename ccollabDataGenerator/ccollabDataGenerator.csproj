@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ccollabCmd.cs" />
+    <Compile Include="CcollabCmd.cs" />
     <Compile Include="CcollabDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,7 +60,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ccollabCmd.json">
+    <None Include="ccollab-cmd.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

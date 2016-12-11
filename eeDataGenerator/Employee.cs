@@ -9,7 +9,7 @@ using log4net;
 using log4net.Config;
 
 
-namespace eeDataGenerator
+namespace EagleEye
 {
     internal class Employee
     {

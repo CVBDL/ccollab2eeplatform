@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 using log4net;
 
-namespace eeDataGenerator
+namespace EagleEye
 {
-    public class EagleEyeReviewsDataGenerator: EagleEyeDataGeneratorDecorator
+    public class ReviewsDataGenerator: EagleEyeDataGeneratorDecorator
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeReviewsDataGenerator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(ReviewsDataGenerator));
 
         private HttpClient httpClient = new HttpClient();
 
@@ -21,14 +20,17 @@ namespace eeDataGenerator
 
         private List<string[]> filteredEmployeesReviewsData;
 
-        public EagleEyeReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
+        public ReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
         {
             httpClient = new HttpClient();
         }
 
         public new bool Execute()
         {
-            base.Execute();
+            if (!base.Execute())
+            {
+                return false;
+            }
             
             employees = Employee.InitFromJson();
             

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eeDataGenerator
+namespace EagleEye
 {
     public abstract class EagleEyeDataGeneratorDecorator: IEagleEyeDataGenerator
     {

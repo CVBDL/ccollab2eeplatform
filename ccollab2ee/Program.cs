@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NDesk.Options;
+﻿using Ccollab;
+using EagleEye;
 using log4net;
 using log4net.Config;
-using System.IO;
-using System.Diagnostics;
-using System.Reflection;
-using eeDataGenerator;
-using ccollabDataGenerator;
+using NDesk.Options;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
-
+using System.Text;
 
 namespace CcollabLauncher
 {
@@ -67,61 +61,44 @@ namespace CcollabLauncher
                 ShowHelp(optSet);
                 return;
             }
-            
-            var ccollabGenerator = CreateDataGenerator();
-            
-            var eeReviewsGenerator = CreateReviewsDataGenerator(ccollabGenerator);
 
-            eeReviewsGenerator.Execute();
+            IEagleEyeDataGenerator ccollabGenerator = new CcollabDataGenerator();
 
-            // notify task state
-            //NotifyTaskStatus(taskId, true);
+            ReviewsDataGenerator reviewsDataGenerator = new ReviewsDataGenerator(ccollabGenerator);
+
+            reviewsDataGenerator.Execute();
+
+            if (String.IsNullOrEmpty(taskId))
+            {
+                log.Error("No task id provided, so unable to notify EagleEye task state.");
+            }
+            else
+            {
+                //NotifyTaskStatus(taskId, true);
+            }
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
 
         /// <summary>
-        /// Create data generator
+        /// Change the task state in EagleEye Platform
         /// </summary>
-        /// <param name="rawData">raw data to be handled</param>
-        /// <returns></returns>
-        protected static IEagleEyeDataGenerator CreateDataGenerator()
-        {
-            return new ccollabDataGenerator.CcollabDataGenerator();
-        }
-
-        protected static EagleEyeReviewsDataGenerator CreateReviewsDataGenerator(IEagleEyeDataGenerator ccollabGenerator)
-        {
-            return new eeDataGenerator.EagleEyeReviewsDataGenerator(ccollabGenerator);
-        }
-
-        /// <summary>
-        /// display the usage
-        /// </summary>
-        /// <param name="p">Instance of <see cref="OptionSet"/></param>
-        static void ShowHelp(OptionSet p)
-        {
-            Console.WriteLine("Usage: ccollab2ee [OPTIONS]");
-            Console.WriteLine();
-            Console.WriteLine("Options:");
-            p.WriteOptionDescriptions(Console.Out);
-        }
-
+        /// <param name="taskId"></param>
+        /// <param name="isSuccess"></param>
         static void NotifyTaskStatus(string taskId, bool isSuccess)
         {
             log.Info("Sending task notification to server ...");
 
             HttpClient client = new HttpClient();
 
-            var settings = eeDataGenerator.ApplicationSettings.InitFromJson();
+            var settings = ApplicationSettings.InitFromJson();
 
             string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
 
             try
             {
                 StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                log.Info("Sending request...");
                 HttpResponseMessage response = client.PutAsync(settings.EagleEyeApiRootEndpoint + "tasks/" + taskId, payload).Result;
                 response.EnsureSuccessStatusCode();
 
@@ -135,6 +112,18 @@ namespace CcollabLauncher
                 log.Info("Error: Notify task with id '" + taskId + "'");
                 Console.WriteLine("Message :{0} ", e.Message);
             }
+        }
+
+        /// <summary>
+        /// display the usage
+        /// </summary>
+        /// <param name="p">Instance of <see cref="OptionSet"/></param>
+        static void ShowHelp(OptionSet p)
+        {
+            Console.WriteLine("Usage: ccollab2ee [OPTIONS]");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            p.WriteOptionDescriptions(Console.Out);
         }
     }
 }

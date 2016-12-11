@@ -5,7 +5,7 @@ using System.IO;
 using Newtonsoft.Json;
 using log4net;
 
-namespace eeDataGenerator
+namespace EagleEye
 {
     /// <summary>
     /// Application level settings JSON format.

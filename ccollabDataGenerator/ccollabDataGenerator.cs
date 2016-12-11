@@ -1,115 +1,122 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using EagleEye;
 using log4net;
-using eeDataGenerator;
-using System.Diagnostics;
 using Microsoft.VisualBasic.FileIO;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
 
-
-namespace ccollabDataGenerator
+namespace Ccollab
 {
     public class CcollabDataGenerator : IEagleEyeDataGenerator
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CcollabDataGenerator));
 
-        public static string CCOLLABCMD_FILE_NAME = "ccollabCmd.json";
+        public static readonly string CCOLLABCMD_FILE_NAME = "ccollab-cmd.json";
 
-        protected List<string[]> _reviewsRawData;
-        protected List<string[]> _defectsRawData;
-
-        public List<string[]> ReviewsRawData
-        {
-            get
-            {
-                return _reviewsRawData;
-            }
-        }
-
-        public List<string[]> DefectsRawData
-        {
-            get
-            {
-                return _defectsRawData;
-            }
-        }
+        public List<string[]> ReviewsRawData { get; private set; } = null;
+        public List<string[]> DefectsRawData { get; private set; } = null;
 
         public bool Execute()
         {
-            var ccollabCmds = ReadInCcollabCommandConfigJson();
+            List<CcollabCmd> ccollabCmds = ReadCcollabConfigJson();
 
-            if (ccollabCmds == null || ccollabCmds.Count == 0)
+            if (ccollabCmds == null)
             {
-                log.Info("Program exit: No command to be proceed");
+                log.Info("Program exit: No ccollab command to be proceed.");
+
                 return false;
             }
 
-            var ccRawFiles = FetchCsvFilesFromCcollabServer(ccollabCmds);
+            Dictionary<string, string> ccRawFiles = FetchRawCsvFilesFromCcollabServer(ccollabCmds);
+            
+            string reviewsRawFileName = String.Empty;
 
-            _reviewsRawData = ReadInCsvFile(ccRawFiles[0]);
-            _defectsRawData = ReadInCsvFile(ccRawFiles[1]);
+            if (ccRawFiles.TryGetValue("Reviews", out reviewsRawFileName))
+            {
+                ReviewsRawData = ReadInCsvFile(reviewsRawFileName);
+            }
+            else
+            {
+                log.Info("Cannot find reviews CSV file.");
+            }
 
-            // delete downloaded csv files
+            string defectsRawFileName = String.Empty;
+
+            if (ccRawFiles.TryGetValue("Defects", out defectsRawFileName))
+            {
+                DefectsRawData = ReadInCsvFile(defectsRawFileName);
+            }
+            else
+            {
+                log.Info("Cannot find defects CSV file.");
+            }
+
             foreach (var ccRawFile in ccRawFiles)
             {
-                //File.Delete(ccRawFile);
+                //File.Delete(ccRawFile.Value);
+            }
+
+            if (ReviewsRawData == null && DefectsRawData == null)
+            {
+                return false;
             }
 
             return true;
         }
-        
-        private List<ccollabCmd> ReadInCcollabCommandConfigJson()
+
+        private List<CcollabCmd> ReadCcollabConfigJson()
         {
             string json = String.Empty;
 
             StreamReader sr = new StreamReader(CCOLLABCMD_FILE_NAME, Encoding.Default);
+
             using (sr)
             {
                 json = sr.ReadToEnd();
             }
 
-            List<ccollabCmd> ccollabCmds = null;
+            List<CcollabCmd> ccollabCmds = null;
 
             try
             {
-                ccollabCmds = ccollabCmd.InitFromJson(json);
+                ccollabCmds = JsonConvert.DeserializeObject<List<CcollabCmd>>(json);
             }
             catch (Exception)
             {
-                log.Error(string.Format("Failed to load from JSON: {0}", CCOLLABCMD_FILE_NAME));
+                log.Error(string.Format("Failed to read json file: {0}", CCOLLABCMD_FILE_NAME));
             }
 
             return ccollabCmds;
         }
 
-        private List<string> FetchCsvFilesFromCcollabServer(List<ccollabCmd> ccollabCmds)
+        private Dictionary<string, string> FetchRawCsvFilesFromCcollabServer(List<CcollabCmd> cmds)
         {
-            //enumerate the command to get the raw data
-            var ccRawFiles = new List<string>();
+            var ccRawFiles = new Dictionary<string, string>();
 
-
-            //foreach (var cmd in ccollabCmds)
+            //foreach (var cmd in cmds)
             //{
-            //    var fileName = GetCCRawFile(cmd.relUrl);
+            //    var fileName = GetCCRawFile(cmd.RelUrl);
             //    if (string.IsNullOrEmpty(fileName))
+            //    {
             //        continue;
+            //    }
 
-            //    ccRawFiles.Add(fileName);
+            //    ccRawFiles.Add(cmd.Id, fileName);
             //    Console.WriteLine(fileName);
             //}
 
-            ccRawFiles.Add(@"reviews-report.csv");
-            ccRawFiles.Add(@"defects-report.csv");
+            ccRawFiles.Add("Reviews", @"reviews-report.csv");
+            ccRawFiles.Add("Defects", @"defects-report.csv");
 
             return ccRawFiles;
         }
 
         private List<string[]> ReadInCsvFile(string fileName)
         {
-            List<string[]> lines = new List<string[]>();
+            List<string[]> rows = new List<string[]>();
 
             using (TextFieldParser parser = new TextFieldParser(fileName))
             {
@@ -120,20 +127,19 @@ namespace ccollabDataGenerator
                 {
                     string[] fields = parser.ReadFields();
 
-                    lines.Add(fields);
+                    rows.Add(fields);
                 }
 
-                int length = lines.Count;
+                int length = rows.Count;
 
                 if (length > 0)
                 {
-                    lines.RemoveAt(0);
+                    rows.RemoveAt(0);
                 }
 
-                return lines;
+                return rows;
             }
         }
-
 
         /// <summary>
         /// Get codecollaborator raw data

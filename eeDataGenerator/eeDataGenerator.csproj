@@ -51,7 +51,7 @@
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Chart.cs" />
     <Compile Include="ChartSettings.cs" />
-    <Compile Include="EagleEyeReviewsDataGenerator.cs" />
+    <Compile Include="ReviewsDataGenerator.cs" />
     <Compile Include="EagleEyeDataGeneratorDecorator.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="IEagleEyeDataGenerator.cs" />
