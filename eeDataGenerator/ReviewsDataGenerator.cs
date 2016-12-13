@@ -14,9 +14,9 @@ namespace EagleEye
 
         private HttpClient httpClient = new HttpClient();
 
-        private List<string[]> filteredEmployeesReviewsData = null;
-        private ApplicationSettings settings = null;
         private List<Employee> employees = null;
+        private ApplicationSettings settings = null;
+        private List<string[]> filteredEmployeesReviewsData = null;
 
         public ReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
         {
@@ -31,9 +31,7 @@ namespace EagleEye
             }
 
             employees = EmployeesGenerator.GetEmployees();
-
             settings = ApplicationSettingsGenerator.GetApplicationSettings();
-
             filteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
 
             GenerateReviewCountByMonth();
