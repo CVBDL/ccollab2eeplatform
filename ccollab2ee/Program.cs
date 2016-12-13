@@ -92,7 +92,7 @@ namespace CcollabLauncher
 
             HttpClient client = new HttpClient();
 
-            var settings = ApplicationSettings.InitFromJson();
+            var settings = ApplicationSettingsGenerator.GetApplicationSettings();
 
             string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
 

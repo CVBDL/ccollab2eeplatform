@@ -14,11 +14,9 @@ namespace EagleEye
 
         private HttpClient httpClient = new HttpClient();
 
-        private ApplicationSettings settings;
-
-        private List<Employee> employees;
-
-        private List<string[]> filteredEmployeesReviewsData;
+        private List<string[]> filteredEmployeesReviewsData = null;
+        private ApplicationSettings settings = null;
+        private List<Employee> employees = null;
 
         public ReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
         {
@@ -31,10 +29,10 @@ namespace EagleEye
             {
                 return false;
             }
-            
-            employees = Employee.InitFromJson();
-            
-            settings = ApplicationSettings.InitFromJson();
+
+            employees = EmployeesGenerator.GetEmployees();
+
+            settings = ApplicationSettingsGenerator.GetApplicationSettings();
 
             filteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
 
