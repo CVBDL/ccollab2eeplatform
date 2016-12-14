@@ -14,6 +14,10 @@ namespace EagleEye
 
         private static ApplicationSettings settings = null;
 
+        /// <summary>
+        /// Read application settings from json file.
+        /// </summary>
+        /// <returns>Deserialized application settings json object.</returns>
         public static ApplicationSettings GetApplicationSettings()
         {
 

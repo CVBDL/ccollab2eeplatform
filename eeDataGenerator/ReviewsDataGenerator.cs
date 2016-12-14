@@ -1,10 +1,10 @@
-﻿using System;
+﻿using log4net;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Net.Http;
-using Newtonsoft.Json;
-using log4net;
+using System.Text;
 
 namespace EagleEye
 {
@@ -95,8 +95,8 @@ namespace EagleEye
 
             // Expected data table format:
             // https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table
-            // {
-            //   "datatable": [
+            //{
+            //    "datatable": [
             //     ["Month", "Count"],
             //     ["2016-01", 20],
             //     ["2016-02", 30],
@@ -104,17 +104,19 @@ namespace EagleEye
             //   ]
             // }
 
-            List<object[]> datatable = new List<object[]>();
+            var chart = new Chart();
 
-            datatable.Add(new object[] { "Month", "Count" });
+            chart.datatable = new List<List<object>>();
+
+            chart.datatable.Add(new List<object> { "Month", "Count" });
 
             foreach (var date in query)
             {
-                datatable.Add(new object[] { date.Month, date.Count });
+                chart.datatable.Add(new List<object> { date.Month, date.Count });
                 Console.WriteLine("Month: " + date.Month + ", Count: " + date.Count);
             }
-            
-            string json = JsonConvert.SerializeObject(new Chart(datatable.ToArray()));
+
+            string json = JsonConvert.SerializeObject(chart);
 
             Console.WriteLine(json); // {"datatable":[["Month","Count"],["2016-07",1],["2016-08",2],["2016-09",1]]}
 

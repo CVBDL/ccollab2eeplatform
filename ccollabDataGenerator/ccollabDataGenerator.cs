@@ -19,6 +19,10 @@ namespace Ccollab
         public List<string[]> ReviewsRawData { get; private set; } = null;
         public List<string[]> DefectsRawData { get; private set; } = null;
 
+        /// <summary>
+        /// Generate ReviewsRawData and DefectsRawData.
+        /// </summary>
+        /// <returns>Operation successfully or not.</returns>
         public bool Execute()
         {
             List<CcollabCmd> ccollabCmds = ReadCcollabConfigJson();
@@ -67,6 +71,10 @@ namespace Ccollab
             return true;
         }
 
+        /// <summary>
+        /// Read ccollab commands configuration json file.
+        /// </summary>
+        /// <returns>Deserialized ccollab commands json object.</returns>
         private List<CcollabCmd> ReadCcollabConfigJson()
         {
             string json = String.Empty;
@@ -92,6 +100,11 @@ namespace Ccollab
             return ccollabCmds;
         }
 
+        /// <summary>
+        /// Run ccollab commands to fetch raw csv files from ccollab server.
+        /// </summary>
+        /// <param name="cmds">ccollab commands config object.</param>
+        /// <returns>Downloaded csv files' filename.</returns>
         private Dictionary<string, string> FetchRawCsvFilesFromCcollabServer(List<CcollabCmd> cmds)
         {
             var ccRawFiles = new Dictionary<string, string>();
@@ -114,6 +127,11 @@ namespace Ccollab
             return ccRawFiles;
         }
 
+        /// <summary>
+        /// Read csv file and parse rows and columns.
+        /// </summary>
+        /// <param name="fileName">CSV filename.</param>
+        /// <returns>All of the rows in csv file.</returns>
         private List<string[]> ReadInCsvFile(string fileName)
         {
             List<string[]> rows = new List<string[]>();

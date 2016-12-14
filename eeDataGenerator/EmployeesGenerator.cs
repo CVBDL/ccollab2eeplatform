@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using log4net;
 using Newtonsoft.Json;
-using log4net;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace EagleEye
 {
@@ -15,6 +15,10 @@ namespace EagleEye
 
         private static List<Employee> employees = null;
 
+        /// <summary>
+        /// Read employees from json file.
+        /// </summary>
+        /// <returns>Deserialized employees json object.</returns>
         public static List<Employee> GetEmployees()
         {
 
