@@ -73,6 +73,10 @@
       <Project>{008acc7a-60fe-487b-9e95-4d21689bdeb4}</Project>
       <Name>eeDataGenerator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Employees\Employees.csproj">
+      <Project>{78c40237-e681-4fca-a97f-3a857128f1b2}</Project>
+      <Name>Employees</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

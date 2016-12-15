@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace EagleEye
+namespace Employees
 {
-    class EmployeesGenerator
+    public class EmployeesGenerator
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EmployeesGenerator));
 
-        private static readonly string EMPLOYEES_JSON_FILENAME = "employees.json";
+        private static readonly string EMPLOYEES_JSON_FILENAME = "ConfigurationFiles/employees.json";
 
         private static List<Employee> employees = null;
 

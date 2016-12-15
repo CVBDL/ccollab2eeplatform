@@ -1,4 +1,4 @@
-﻿namespace EagleEye
+﻿namespace Employees
 {
     public class Employee
     {
