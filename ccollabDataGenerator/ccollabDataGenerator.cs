@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Web;
 
 namespace Ccollab
 {
@@ -111,7 +112,8 @@ namespace Ccollab
 
             //foreach (var cmd in cmds)
             //{
-            //    var fileName = GetCCRawFile(cmd.RelUrl);
+            //    var downloadLink = GenerateCCRawFileDownloadLink(cmd);
+            //    var fileName = GetCCRawFile(downloadLink);
             //    if (string.IsNullOrEmpty(fileName))
             //    {
             //        continue;
@@ -157,6 +159,35 @@ namespace Ccollab
 
                 return rows;
             }
+        }
+
+        /// <summary>
+        /// Generate a file download link with the specified review creation date range.
+        /// 
+        /// Append "reviewCreationDateFilter" query parameter string to command's "RelUrl".
+        /// 
+        /// Raw format:
+        ///     reviewCreationDateFilter=lo=2016-10-01|||hi=2016-10-02
+        ///
+        /// URL encoded format:
+        ///     &reviewCreationDateFilter=lo%3D2016-10-01%7C%7C%7Chi%3D2016-10-02
+        ///
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns>Generated file download link.</returns>
+        private string GenerateCCRawFileDownloadLink(CcollabCmd cmd)
+        {
+            string downloadLink = String.Empty;
+            string query = "lo=" + cmd.ReviewsCreationDateLow + "|||hi=" + cmd.ReviewsCreationDateHigh;
+
+            int len = cmd.RelUrl.Length;
+
+            if (len > 0)
+            {
+                downloadLink = cmd.RelUrl.Substring(0, len - 1) + "&reviewCreationDateFilter=" + HttpUtility.UrlEncode(query) + "\"";
+            }
+
+            return downloadLink;
         }
 
         /// <summary>

@@ -79,8 +79,8 @@ namespace EagleEye
         {
             log.Info("Generating: Review Count By Month ...");
 
-            string chartSettingsKeyName = "ReviewCountByMonth";
             ChartSettings chartSettings = null;
+            string chartSettingsKeyName = "ReviewCountByMonth";
 
             settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
 
