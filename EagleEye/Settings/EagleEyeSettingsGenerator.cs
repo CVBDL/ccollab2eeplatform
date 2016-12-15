@@ -1,31 +1,31 @@
-﻿using System;
-using System.Text;
-using System.IO;
+﻿using log4net;
 using Newtonsoft.Json;
-using log4net;
+using System;
+using System.IO;
+using System.Text;
 
-namespace EagleEye
+namespace EagleEye.Settings
 {
-    public class ApplicationSettingsGenerator
+    public class EagleEyeSettingsGenerator
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(ApplicationSettingsGenerator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeSettingsGenerator));
 
-        private static readonly string APPLICATION_SETTINGS_JSON_FILENAME = "application-settings.json";
+        private static readonly string EAGLEEYE_SETTINGS_JSON_FILENAME = "Settings/eagleeye-settings.json";
 
-        private static ApplicationSettings settings = null;
+        private static EagleEyeSettings settings = null;
 
         /// <summary>
         /// Read application settings from json file.
         /// </summary>
         /// <returns>Deserialized application settings json object.</returns>
-        public static ApplicationSettings GetApplicationSettings()
+        public static EagleEyeSettings GetEagleEyeSettings()
         {
 
             if (settings == null)
             {
                 string json = String.Empty;
 
-                StreamReader sr = new StreamReader(APPLICATION_SETTINGS_JSON_FILENAME, Encoding.UTF8);
+                StreamReader sr = new StreamReader(EAGLEEYE_SETTINGS_JSON_FILENAME, Encoding.UTF8);
                 using (sr)
                 {
                     json = sr.ReadToEnd();
@@ -36,7 +36,7 @@ namespace EagleEye
 
                 try
                 {
-                    settings = JsonConvert.DeserializeObject<ApplicationSettings>(json);
+                    settings = JsonConvert.DeserializeObject<EagleEyeSettings>(json);
                 }
                 catch (Exception exp)
                 {

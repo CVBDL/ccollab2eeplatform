@@ -1,5 +1,6 @@
 ﻿using Ccollab;
 using EagleEye;
+using EagleEye.Settings;
 using log4net;
 using log4net.Config;
 using NDesk.Options;
@@ -92,7 +93,7 @@ namespace CcollabLauncher
 
             HttpClient client = new HttpClient();
 
-            var settings = ApplicationSettingsGenerator.GetApplicationSettings();
+            var settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
 
             string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
 

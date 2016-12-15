@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace EagleEye
+namespace EagleEye.Settings
 {
-    public class ApplicationSettings
+    public class EagleEyeSettings
     {
         public string EagleEyeApiRootEndpoint { get; set; }
 

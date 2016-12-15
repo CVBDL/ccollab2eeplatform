@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using EagleEye.Settings;
+using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace EagleEye
         private HttpClient httpClient = new HttpClient();
 
         private List<Employee> employees = null;
-        private ApplicationSettings settings = null;
+        private EagleEyeSettings settings = null;
         private List<string[]> filteredEmployeesReviewsData = null;
 
         public ReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
@@ -31,7 +32,7 @@ namespace EagleEye
             }
 
             employees = EmployeesGenerator.GetEmployees();
-            settings = ApplicationSettingsGenerator.GetApplicationSettings();
+            settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
             filteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
 
             GenerateReviewCountByMonth();
