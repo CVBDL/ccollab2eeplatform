@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ccollab2ee", "ccollab2ee\ccollab2ee.csproj", "{E4DF215B-C178-4227-8BC1-369501558166}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eeDataGenerator", "eeDataGenerator\eeDataGenerator.csproj", "{008ACC7A-60FE-487B-9E95-4D21689BDEB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EagleEye", "EagleEye\EagleEye.csproj", "{008ACC7A-60FE-487B-9E95-4D21689BDEB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ccollabDataGenerator", "ccollabDataGenerator\ccollabDataGenerator.csproj", "{BB79C020-7C3F-4A80-A876-C58A920EA65B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ccollab", "Ccollab\Ccollab.csproj", "{BB79C020-7C3F-4A80-A876-C58A920EA65B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9C8AD3C6-AA81-4BCC-9DDC-337719D81323}"
 	ProjectSection(SolutionItems) = preProject

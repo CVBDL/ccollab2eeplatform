@@ -7,8 +7,8 @@
     <ProjectGuid>{BB79C020-7C3F-4A80-A876-C58A920EA65B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ccollabDataGenerator</RootNamespace>
-    <AssemblyName>ccollabDataGenerator</AssemblyName>
+    <RootNamespace>Ccollab</RootNamespace>
+    <AssemblyName>Ccollab</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -55,7 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\eeDataGenerator\eeDataGenerator.csproj">
+    <ProjectReference Include="..\EagleEye\EagleEye.csproj">
       <Project>{008acc7a-60fe-487b-9e95-4d21689bdeb4}</Project>
       <Name>eeDataGenerator</Name>
     </ProjectReference>

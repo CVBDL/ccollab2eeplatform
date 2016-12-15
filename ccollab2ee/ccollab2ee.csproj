@@ -65,11 +65,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ccollabDataGenerator\ccollabDataGenerator.csproj">
+    <ProjectReference Include="..\Ccollab\Ccollab.csproj">
       <Project>{bb79c020-7c3f-4a80-a876-c58a920ea65b}</Project>
       <Name>ccollabDataGenerator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\eeDataGenerator\eeDataGenerator.csproj">
+    <ProjectReference Include="..\EagleEye\EagleEye.csproj">
       <Project>{008acc7a-60fe-487b-9e95-4d21689bdeb4}</Project>
       <Name>eeDataGenerator</Name>
     </ProjectReference>

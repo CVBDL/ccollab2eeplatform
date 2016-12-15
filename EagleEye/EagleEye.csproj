@@ -7,8 +7,8 @@
     <ProjectGuid>{008ACC7A-60FE-487B-9E95-4D21689BDEB4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>eeDataGenerator</RootNamespace>
-    <AssemblyName>eeDataGenerator</AssemblyName>
+    <RootNamespace>EagleEye</RootNamespace>
+    <AssemblyName>EagleEye</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
