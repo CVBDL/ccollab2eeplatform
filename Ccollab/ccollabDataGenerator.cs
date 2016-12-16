@@ -123,8 +123,8 @@ namespace Ccollab
             //    Console.WriteLine(fileName);
             //}
 
-            ccRawFiles.Add("Reviews", @"reviews-report.csv");
-            ccRawFiles.Add("Defects", @"defects-report.csv");
+            ccRawFiles.Add("Reviews", @"ConfigurationFiles/reviews-report.csv");
+            ccRawFiles.Add("Defects", @"ConfigurationFiles/defects-report.csv");
 
             return ccRawFiles;
         }

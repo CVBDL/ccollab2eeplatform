@@ -8,11 +8,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 
-namespace EagleEye
+namespace EagleEye.Reviews
 {
-    public class ReviewsDataGenerator: EagleEyeDataGeneratorDecorator
+    public class Reviews : EagleEyeDataGeneratorDecorator, IReviewsCommands
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(ReviewsDataGenerator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
 
         private HttpClient httpClient = new HttpClient();
 
@@ -20,7 +20,7 @@ namespace EagleEye
         private EagleEyeSettings settings = null;
         private List<string[]> filteredEmployeesReviewsData = null;
 
-        public ReviewsDataGenerator(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
+        public Reviews(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
         {
             httpClient = new HttpClient();
         }
@@ -35,8 +35,6 @@ namespace EagleEye
             employees = EmployeesGenerator.GetEmployees();
             settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
             filteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
-
-            GenerateReviewCountByMonth();
 
             return true;
         }
@@ -77,7 +75,7 @@ namespace EagleEye
             }
         }
 
-        private void GenerateReviewCountByMonth()
+        public void GenerateReviewCountByMonth()
         {
             log.Info("Generating: Review Count By Month ...");
 

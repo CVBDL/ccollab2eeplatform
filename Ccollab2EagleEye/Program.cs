@@ -1,5 +1,6 @@
 ﻿using Ccollab;
 using EagleEye;
+using EagleEye.Reviews;
 using EagleEye.Settings;
 using log4net;
 using log4net.Config;
@@ -65,9 +66,15 @@ namespace Ccollab2EagleEye
 
             IEagleEyeDataGenerator ccollabGenerator = new CcollabDataGenerator();
 
-            ReviewsDataGenerator reviewsDataGenerator = new ReviewsDataGenerator(ccollabGenerator);
+            Reviews reviews = new Reviews(ccollabGenerator);
 
-            reviewsDataGenerator.Execute();
+            reviews.Execute();
+
+            ICommand GenerateReviewCountByMonthCommand = new GenerateReviewCountByMonthCommand(reviews);
+
+            ReviewsDataGenerator reviewsDataGenerator = new ReviewsDataGenerator(GenerateReviewCountByMonthCommand);
+
+            reviewsDataGenerator.GenerateReviewCountByMonth();
 
             if (String.IsNullOrEmpty(taskId))
             {
