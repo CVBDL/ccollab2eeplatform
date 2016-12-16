@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 
-namespace CcollabLauncher
+namespace Ccollab2EagleEye
 {
     class Program
     {

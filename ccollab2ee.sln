@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ccollab2ee", "ccollab2ee\ccollab2ee.csproj", "{E4DF215B-C178-4227-8BC1-369501558166}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ccollab2EagleEye", "Ccollab2EagleEye\Ccollab2EagleEye.csproj", "{E4DF215B-C178-4227-8BC1-369501558166}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EagleEye", "EagleEye\EagleEye.csproj", "{008ACC7A-60FE-487B-9E95-4D21689BDEB4}"
 EndProject

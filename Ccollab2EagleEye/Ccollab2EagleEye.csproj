@@ -7,8 +7,8 @@
     <ProjectGuid>{E4DF215B-C178-4227-8BC1-369501558166}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ccollab2ee</RootNamespace>
-    <AssemblyName>ccollab2ee</AssemblyName>
+    <RootNamespace>Ccollab2EagleEye</RootNamespace>
+    <AssemblyName>ccollab2eagleye</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
