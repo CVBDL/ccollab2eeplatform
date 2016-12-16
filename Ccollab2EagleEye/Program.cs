@@ -1,5 +1,6 @@
 ﻿using Ccollab;
 using EagleEye;
+using EagleEye.Defects;
 using EagleEye.Reviews;
 using EagleEye.Settings;
 using log4net;
@@ -66,14 +67,25 @@ namespace Ccollab2EagleEye
 
             ICcollabDataSource ccollabDataGenerator = new CcollabDataGenerator();
 
+            // ccollab reviews charts related
             Reviews reviews = new Reviews(ccollabDataGenerator);
 
             ICommand GenerateReviewCountByMonthCommand = new GenerateReviewCountByMonthCommand(reviews);
 
-            ReviewsManager reviewsDataGenerator = new ReviewsManager(GenerateReviewCountByMonthCommand);
+            ReviewsManager reviewsManager = new ReviewsManager(GenerateReviewCountByMonthCommand);
 
-            reviewsDataGenerator.GenerateReviewCountByMonth();
+            reviewsManager.GenerateReviewCountByMonth();
 
+            // ccollab defects charts related
+            Defects defects = new Defects(ccollabDataGenerator);
+
+            ICommand GenerateGenerateDefectCountByProductCommand = new GenerateDefectCountByProductCommand(defects);
+
+            DefectsManager defectsManager = new DefectsManager(GenerateGenerateDefectCountByProductCommand);
+
+            defectsManager.GenerateReviewCountByMonth();
+
+            // notify task state
             if (String.IsNullOrEmpty(taskId))
             {
                 log.Error("No task id provided, so unable to notify EagleEye task state.");

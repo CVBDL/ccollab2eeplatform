@@ -26,7 +26,7 @@ namespace EagleEye.Reviews
 
         private List<string[]> _filteredEmployeesReviewsData = null;
 
-        public List<string[]> FilteredEmployeesReviewData
+        public List<string[]> FilteredEmployeesReviewsData
         {
             get
             {
@@ -87,7 +87,7 @@ namespace EagleEye.Reviews
             var reviewCreationDateIndex = 2;
 
             var query =
-                from row in FilteredEmployeesReviewData
+                from row in FilteredEmployeesReviewsData
                 group row by row[reviewCreationDateIndex].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };

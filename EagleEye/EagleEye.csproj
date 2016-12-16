@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chart.cs" />
+    <Compile Include="Defects\Defects.cs" />
+    <Compile Include="Defects\DefectsManager.cs" />
+    <Compile Include="Defects\GenerateDefectCountByProductCommand.cs" />
+    <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Reviews\IReviewsCommands.cs" />
     <Compile Include="EagleEyeDataGeneratorDecorator.cs" />
