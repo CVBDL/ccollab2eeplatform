@@ -64,15 +64,13 @@ namespace Ccollab2EagleEye
                 return;
             }
 
-            IEagleEyeDataGenerator ccollabGenerator = new CcollabDataGenerator();
+            ICcollabDataSource ccollabDataGenerator = new CcollabDataGenerator();
 
-            Reviews reviews = new Reviews(ccollabGenerator);
-
-            reviews.Execute();
+            Reviews reviews = new Reviews(ccollabDataGenerator);
 
             ICommand GenerateReviewCountByMonthCommand = new GenerateReviewCountByMonthCommand(reviews);
 
-            ReviewsDataGenerator reviewsDataGenerator = new ReviewsDataGenerator(GenerateReviewCountByMonthCommand);
+            ReviewsManager reviewsDataGenerator = new ReviewsManager(GenerateReviewCountByMonthCommand);
 
             reviewsDataGenerator.GenerateReviewCountByMonth();
 

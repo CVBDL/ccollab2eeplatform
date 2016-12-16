@@ -52,13 +52,8 @@
   <ItemGroup>
     <Compile Include="CcollabCmd.cs" />
     <Compile Include="CcollabDataGenerator.cs" />
+    <Compile Include="ICcollabDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EagleEye\EagleEye.csproj">
-      <Project>{008acc7a-60fe-487b-9e95-4d21689bdeb4}</Project>
-      <Name>eeDataGenerator</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigurationFiles\ccollab-cmd.json">

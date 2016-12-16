@@ -1,37 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using Ccollab;
+using System.Collections.Generic;
 
 namespace EagleEye
 {
-    public abstract class EagleEyeDataGeneratorDecorator: IEagleEyeDataGenerator
+    public abstract class EagleEyeDataGeneratorDecorator: ICcollabDataSource
     {
-        private IEagleEyeDataGenerator _ccollabDataGenerator;
+        private ICcollabDataSource _ccollabDataGenerator;
 
-        public List<string[]>  ReviewsRawData
-        {
-            get
-            {
-                return _ccollabDataGenerator.ReviewsRawData;
-            }
-        }
-
-        public List<string[]> DefectsRawData
-        {
-            get
-            {
-                return _ccollabDataGenerator.DefectsRawData;
-            }
-        }
-
-        public EagleEyeDataGeneratorDecorator(IEagleEyeDataGenerator ccollabDataGenerator)
+        public EagleEyeDataGeneratorDecorator(ICcollabDataSource ccollabDataGenerator)
         {
             _ccollabDataGenerator = ccollabDataGenerator;
         }
 
-        public bool Execute()
+        public List<string[]> GetReviewsRawData()
         {
-            return _ccollabDataGenerator.Execute();
+            return _ccollabDataGenerator.GetReviewsRawData();
         }
 
-
+        public List<string[]> GetDefectsRawData()
+        {
+            return _ccollabDataGenerator.GetDefectsRawData();
+        }
     }
 }

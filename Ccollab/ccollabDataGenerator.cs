@@ -1,5 +1,4 @@
-﻿using EagleEye;
-using log4net;
+﻿using log4net;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json;
 using System;
@@ -11,21 +10,41 @@ using System.Web;
 
 namespace Ccollab
 {
-    public class CcollabDataGenerator : IEagleEyeDataGenerator
+    public class CcollabDataGenerator : ICcollabDataSource
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CcollabDataGenerator));
 
-        public static readonly string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
+        private readonly string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
 
-        public List<string[]> ReviewsRawData { get; private set; } = null;
-        public List<string[]> DefectsRawData { get; private set; } = null;
+        private bool _hasFetchedCcollabData = false;
 
-        /// <summary>
-        /// Generate ReviewsRawData and DefectsRawData.
-        /// </summary>
-        /// <returns>Operation successfully or not.</returns>
-        public bool Execute()
+        private List<string[]> _reviewsRawData = null;
+        private List<string[]> _defectsRawData = null;
+
+        public List<string[]> GetReviewsRawData()
         {
+            if (!_hasFetchedCcollabData)
+            {
+                FetchCcollabData();
+            }
+
+            return _reviewsRawData;
+        }
+
+        public List<string[]> GetDefectsRawData()
+        {
+            if (!_hasFetchedCcollabData)
+            {
+                FetchCcollabData();
+            }
+
+            return _defectsRawData;
+        }
+        
+        private bool FetchCcollabData()
+        {
+            _hasFetchedCcollabData = true;
+
             List<CcollabCmd> ccollabCmds = ReadCcollabConfigJson();
 
             if (ccollabCmds == null)
@@ -41,7 +60,7 @@ namespace Ccollab
 
             if (ccRawFiles.TryGetValue("Reviews", out reviewsRawFileName))
             {
-                ReviewsRawData = ReadInCsvFile(reviewsRawFileName);
+                _reviewsRawData = ReadInCsvFile(reviewsRawFileName);
             }
             else
             {
@@ -52,7 +71,7 @@ namespace Ccollab
 
             if (ccRawFiles.TryGetValue("Defects", out defectsRawFileName))
             {
-                DefectsRawData = ReadInCsvFile(defectsRawFileName);
+                _defectsRawData = ReadInCsvFile(defectsRawFileName);
             }
             else
             {
@@ -64,7 +83,7 @@ namespace Ccollab
                 //File.Delete(ccRawFile.Value);
             }
 
-            if (ReviewsRawData == null && DefectsRawData == null)
+            if (_reviewsRawData == null && _defectsRawData == null)
             {
                 return false;
             }
@@ -274,8 +293,6 @@ namespace Ccollab
                 return;
 
             writer.WriteLine(data);
-
         }
-
     }
 }

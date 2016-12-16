@@ -1,4 +1,5 @@
-﻿using EagleEye.Settings;
+﻿using Ccollab;
+using EagleEye.Settings;
 using Employees;
 using log4net;
 using Newtonsoft.Json;
@@ -14,48 +15,46 @@ namespace EagleEye.Reviews
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
 
-        private HttpClient httpClient = new HttpClient();
-
-        private List<Employee> employees = null;
         private EagleEyeSettings settings = null;
-        private List<string[]> filteredEmployeesReviewsData = null;
+        private List<Employee> employees = null;
 
-        public Reviews(IEagleEyeDataGenerator eagleeyeDataGenerator) : base(eagleeyeDataGenerator)
+        public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator)
         {
-            httpClient = new HttpClient();
-        }
-
-        public new bool Execute()
-        {
-            if (!base.Execute())
-            {
-                return false;
-            }
-
-            employees = EmployeesGenerator.GetEmployees();
             settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
-            filteredEmployeesReviewsData = FilterEmployeesReviewData(ReviewsRawData);
-
-            return true;
+            employees = EmployeesGenerator.GetEmployees();
         }
 
-        private List<string[]> FilterEmployeesReviewData(List<string[]> ReviewsRawData)
+        private List<string[]> _filteredEmployeesReviewsData = null;
+
+        public List<string[]> FilteredEmployeesReviewData
         {
-            var reviewsCreatorLoginIndex = 9;
+            get
+            {
+                if (_filteredEmployeesReviewsData == null)
+                {
+                    List<string[]> reviewsRawData = GetReviewsRawData();
 
-            IEnumerable<string[]> reviewsQuery =
-                from row in ReviewsRawData
-                where employees.Any(employee => employee.LoginName == row[reviewsCreatorLoginIndex])
-                select row;
+                    int reviewsCreatorLoginIndex = 9;
 
-            return reviewsQuery.ToList<string[]>();
+                    IEnumerable<string[]> reviewsQuery =
+                        from row in reviewsRawData
+                        where employees.Any(employee => employee.LoginName == row[reviewsCreatorLoginIndex])
+                        select row;
+
+                    _filteredEmployeesReviewsData = reviewsQuery.ToList<string[]>();
+                }
+
+                return _filteredEmployeesReviewsData;
+            }
         }
-
+        
         private void PutDataTableToEagleEye(string chartId, string json)
         {
             // API: <https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table>
 
             log.Info("Sending Review Count By Month Data to Server ...");
+
+            HttpClient httpClient = new HttpClient();
 
             try
             {
@@ -88,7 +87,7 @@ namespace EagleEye.Reviews
             var reviewCreationDateIndex = 2;
 
             var query =
-                from row in filteredEmployeesReviewsData
+                from row in FilteredEmployeesReviewData
                 group row by row[reviewCreationDateIndex].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
