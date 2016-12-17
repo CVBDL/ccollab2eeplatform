@@ -54,6 +54,7 @@
     <Compile Include="Defects\GenerateDefectCountByProductCommand.cs" />
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="Reviews\GenerateReviewCountByProductCommand.cs" />
     <Compile Include="Reviews\IReviewsCommands.cs" />
     <Compile Include="EagleEyeDataGeneratorDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

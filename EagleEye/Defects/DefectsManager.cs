@@ -2,16 +2,16 @@
 {
     public class DefectsManager
     {
-        ICommand _generateReviewCountByMonthCommand;
+        ICommand _cmdGenerateDefectCountByProduct;
 
-        public DefectsManager(ICommand generateReviewCountByMonthCommand)
+        public DefectsManager(ICommand cmdGenerateDefectCountByProduct)
         {
-            _generateReviewCountByMonthCommand = generateReviewCountByMonthCommand;
+            _cmdGenerateDefectCountByProduct = cmdGenerateDefectCountByProduct;
         }
 
         public void GenerateReviewCountByMonth()
         {
-            _generateReviewCountByMonthCommand.Execute();
+            _cmdGenerateDefectCountByProduct.Execute();
         }
     }
 }

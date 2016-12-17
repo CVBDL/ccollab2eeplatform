@@ -2,16 +2,26 @@
 {
     public class ReviewsManager
     {
-        ICommand _generateReviewCountByMonthCommand;
+        ICommand _cmdGenerateReviewCountByMonth;
+        ICommand _cmdGenerateReviewCountByProduct;
 
-        public ReviewsManager(ICommand generateReviewCountByMonthCommand)
+        public ReviewsManager(
+            ICommand cmdGenerateReviewCountByMonth,
+            ICommand cmdGenerateReviewCountByProduct
+        )
         {
-            _generateReviewCountByMonthCommand = generateReviewCountByMonthCommand;
+            _cmdGenerateReviewCountByMonth = cmdGenerateReviewCountByMonth;
+            _cmdGenerateReviewCountByProduct = cmdGenerateReviewCountByProduct;
         }
 
         public void GenerateReviewCountByMonth()
         {
-            _generateReviewCountByMonthCommand.Execute();
+            _cmdGenerateReviewCountByMonth.Execute();
+        }
+
+        public void GenerateReviewCountByProduct()
+        {
+            _cmdGenerateReviewCountByProduct.Execute();
         }
     }
 }

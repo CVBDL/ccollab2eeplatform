@@ -65,23 +65,29 @@ namespace Ccollab2EagleEye
                 return;
             }
 
+            // ccollab data source
             ICcollabDataSource ccollabDataGenerator = new CcollabDataGenerator();
 
             // ccollab reviews charts related
             Reviews reviews = new Reviews(ccollabDataGenerator);
 
-            ICommand GenerateReviewCountByMonthCommand = new GenerateReviewCountByMonthCommand(reviews);
+            ICommand cmdGenerateReviewCountByMonth = new GenerateReviewCountByMonthCommand(reviews);
+            ICommand cmdGenerateReviewCountByProduct = new GenerateReviewCountByProductCommand(reviews);
 
-            ReviewsManager reviewsManager = new ReviewsManager(GenerateReviewCountByMonthCommand);
+            ReviewsManager reviewsManager = new ReviewsManager(
+                cmdGenerateReviewCountByMonth,
+                cmdGenerateReviewCountByProduct
+            );
 
             reviewsManager.GenerateReviewCountByMonth();
+            reviewsManager.GenerateReviewCountByProduct();
 
             // ccollab defects charts related
             Defects defects = new Defects(ccollabDataGenerator);
 
-            ICommand GenerateGenerateDefectCountByProductCommand = new GenerateDefectCountByProductCommand(defects);
+            ICommand cmdGenerateDefectCountByProduct = new GenerateDefectCountByProductCommand(defects);
 
-            DefectsManager defectsManager = new DefectsManager(GenerateGenerateDefectCountByProductCommand);
+            DefectsManager defectsManager = new DefectsManager(cmdGenerateDefectCountByProduct);
 
             defectsManager.GenerateReviewCountByMonth();
 

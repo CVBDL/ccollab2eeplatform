@@ -121,5 +121,67 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count By Month ... Done.");
         }
+
+        public void GenerateReviewCountByProduct()
+        {
+            log.Info("Generating: Review Count By Product ...");
+
+            Dictionary<string, int> product2count = new Dictionary<string, int>();
+
+            // collect all products
+            foreach (Employee employee in employees)
+            {
+                if (!product2count.ContainsKey(employee.ProductName))
+                {
+                    product2count.Add(employee.ProductName, 0);
+                }
+            }
+
+            int employeeLoginNameIndex = 9;
+
+            var query =
+                from row in FilteredEmployeesReviewsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[employeeLoginNameIndex])
+                group row by productName into productGroup
+                select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
+
+            foreach (var product in query)
+            {
+                if (product2count.ContainsKey(product.ProductName))
+                {
+                    product2count[product.ProductName] = product.DefectCount;
+                }
+            }
+
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Count"],
+            //     ["Team1", 20],
+            //     ["Team2", 16]
+            //   ]
+            // }
+
+            Chart chart = new Chart();
+            chart.datatable = new List<List<object>>();
+            chart.datatable.Add(new List<object> { "Product", "Count" });
+
+            foreach (KeyValuePair<string, int> item in product2count)
+            {
+                chart.datatable.Add(new List<object> { item.Key, item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(chart);
+            Console.WriteLine(json);
+
+            ChartSettings chartSettings = null;
+            string chartSettingsKeyName = "ReviewCountByProduct";
+            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
+
+            // send request to eagleeye platform
+            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+
+            log.Info("Generating: Review Count By Product ... Done.");
+        }
     }
 }
