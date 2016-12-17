@@ -24,7 +24,7 @@ namespace Employees
 
             if (employees == null)
             {
-                string json = String.Empty;
+                string json = string.Empty;
 
                 StreamReader sr = new StreamReader(EMPLOYEES_JSON_FILENAME, Encoding.UTF8);
                 using (sr)
@@ -32,7 +32,7 @@ namespace Employees
                     json = sr.ReadToEnd();
                 }
 
-                if (String.IsNullOrWhiteSpace(json))
+                if (string.IsNullOrWhiteSpace(json))
                     return null;
                 
                 try
@@ -41,7 +41,7 @@ namespace Employees
                 }
                 catch (Exception exp)
                 {
-                    log.Error(String.Format("Failed to load from json: {0}", exp.Message));
+                    log.Error(string.Format("Failed to load from json: {0}", exp.Message));
                     throw;
                 }
             }

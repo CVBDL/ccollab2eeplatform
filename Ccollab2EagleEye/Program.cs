@@ -74,7 +74,8 @@ namespace Ccollab2EagleEye
             ICommand cmdGenerateReviewCountByMonth = new GenerateReviewCountByMonthCommand(reviews);
             ICommand cmdGenerateReviewCountByProduct = new GenerateReviewCountByProductCommand(reviews);
 
-            ReviewsManager reviewsManager = new ReviewsManager(
+            ReviewsManager reviewsManager = new ReviewsManager
+            (
                 cmdGenerateReviewCountByMonth,
                 cmdGenerateReviewCountByProduct
             );
@@ -86,13 +87,19 @@ namespace Ccollab2EagleEye
             Defects defects = new Defects(ccollabDataGenerator);
 
             ICommand cmdGenerateDefectCountByProduct = new GenerateDefectCountByProductCommand(defects);
+            ICommand cmdGenerateDefectSeverityByProduct = new GenerateDefectSeverityByProductCommand(defects);
 
-            DefectsManager defectsManager = new DefectsManager(cmdGenerateDefectCountByProduct);
+            DefectsManager defectsManager = new DefectsManager
+            (
+                cmdGenerateDefectCountByProduct,
+                cmdGenerateDefectSeverityByProduct
+            );
 
             defectsManager.GenerateReviewCountByMonth();
+            defectsManager.GenerateDefectSeverityByProduct();
 
             // notify task state
-            if (String.IsNullOrEmpty(taskId))
+            if (string.IsNullOrEmpty(taskId))
             {
                 log.Error("No task id provided, so unable to notify EagleEye task state.");
             }
@@ -123,7 +130,7 @@ namespace Ccollab2EagleEye
             try
             {
                 StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PutAsync(settings.EagleEyeApiRootEndpoint + "tasks/" + taskId, payload).Result;
+                HttpResponseMessage response = client.PutAsync(settings.ApiRootEndpoint + "tasks/" + taskId, payload).Result;
                 response.EnsureSuccessStatusCode();
 
                 // use for debugging

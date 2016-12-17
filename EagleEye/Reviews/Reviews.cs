@@ -59,7 +59,7 @@ namespace EagleEye.Reviews
             try
             {
                 StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PutAsync(settings.EagleEyeApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
+                HttpResponseMessage response = httpClient.PutAsync(settings.ApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
                 response.EnsureSuccessStatusCode();
 
                 // use for debugging

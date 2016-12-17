@@ -5,7 +5,8 @@
         ICommand _cmdGenerateReviewCountByMonth;
         ICommand _cmdGenerateReviewCountByProduct;
 
-        public ReviewsManager(
+        public ReviewsManager
+        (
             ICommand cmdGenerateReviewCountByMonth,
             ICommand cmdGenerateReviewCountByProduct
         )

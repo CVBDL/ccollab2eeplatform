@@ -59,7 +59,7 @@ namespace EagleEye.Defects
             try
             {
                 StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PutAsync(settings.EagleEyeApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
+                HttpResponseMessage response = httpClient.PutAsync(settings.ApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
                 response.EnsureSuccessStatusCode();
 
                 // use for debugging
@@ -136,6 +136,84 @@ namespace EagleEye.Defects
             //PutDataTableToEagleEye(chartSettings.ChartId, json);
 
             log.Info("Generating: Defect Count By Product ... Done.");
+        }
+
+        public void GenerateDefectSeverityByProduct()
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Major", "Minor"],
+            //     ["Team1", 20, 3],
+            //     ["Team2", 16, 0]
+            //   ]
+            // }
+
+            log.Info("Generating: Defect Severity By Product ...");
+            
+            Dictionary<string, List<int>> product2severitycount = new Dictionary<string, List<int>>();
+
+            // collect all products
+            foreach (Employee employee in employees)
+            {
+                if (!product2severitycount.ContainsKey(employee.ProductName))
+                {
+                    product2severitycount.Add(employee.ProductName, new List<int>(new int[settings.DefectSeverityTypes.Count]));
+                }
+            }
+
+            int employeeLoginNameIndex = 8;
+
+            var query =
+                from row in FilteredEmployeesDefectsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[employeeLoginNameIndex])
+                group row by productName into productGroup
+                select productGroup;
+
+            int defectSeverityIndex = 20;
+
+            foreach (var productDefects in query)
+            {
+                if (!product2severitycount.ContainsKey(productDefects.Key)) continue;
+
+                foreach (var defect in productDefects)
+                {
+                    int index = settings.DefectSeverityTypes.IndexOf(defect[defectSeverityIndex]);
+
+                    if (index >= 0)
+                    {
+                        product2severitycount[productDefects.Key][index] += 1;
+                    }
+                }
+            }
+
+            Chart chart = new Chart();
+            chart.datatable = new List<List<object>>();
+            chart.datatable.Add(new List<object> { "Product" }.Concat<object>(settings.DefectSeverityTypes).ToList());
+
+            foreach (KeyValuePair<string, List<int>> item in product2severitycount)
+            {
+                List<object> row = new List<object> { item.Key };
+
+                foreach (int count in item.Value)
+                {
+                    row.Add(count);
+                }
+
+                chart.datatable.Add(row);
+            }
+
+            string json = JsonConvert.SerializeObject(chart);
+            Console.WriteLine(json);
+
+            ChartSettings chartSettings = null;
+            string chartSettingsKeyName = "DefectSeverityByProduct";
+            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
+
+            // send request to eagleeye platform
+            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+
+            log.Info("Generating: Defect Severity By Product ... Done.");
         }
     }
 }

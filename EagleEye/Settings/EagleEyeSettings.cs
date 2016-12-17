@@ -4,9 +4,9 @@ namespace EagleEye.Settings
 {
     public class EagleEyeSettings
     {
-        public string EagleEyeApiRootEndpoint { get; set; }
-
+        public string ApiRootEndpoint { get; set; }
         public Dictionary<string, ChartSettings> Charts { get; set; }
+        public List<string> DefectSeverityTypes { get; set; }
     }
 
     public class ChartSettings

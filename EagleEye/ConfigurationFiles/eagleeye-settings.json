@@ -1,5 +1,5 @@
 ﻿{
-  "EagleEyeApiRootEndpoint": "http://localhost:3000/api/v1/",
+  "ApiRootEndpoint": "http://localhost:3000/api/v1/",
   "Charts": {
     "ReviewCountByMonth": {
       "ChartId": "5809b2827e9254582e54116d"
@@ -9,6 +9,10 @@
     },
     "DefectCountByProduct": {
       "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectSeverityByProduct": {
+      "ChartId": "5799641be24561202bc7190d"
     }
-  }
+  },
+  "DefectSeverityTypes": [ "Major", "Minor" ]
 }

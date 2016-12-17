@@ -56,7 +56,7 @@ namespace Ccollab
 
             Dictionary<string, string> ccRawFiles = FetchRawCsvFilesFromCcollabServer(ccollabCmds);
             
-            string reviewsRawFileName = String.Empty;
+            string reviewsRawFileName = string.Empty;
 
             if (ccRawFiles.TryGetValue("Reviews", out reviewsRawFileName))
             {
@@ -67,7 +67,7 @@ namespace Ccollab
                 log.Info("Cannot find reviews CSV file.");
             }
 
-            string defectsRawFileName = String.Empty;
+            string defectsRawFileName = string.Empty;
 
             if (ccRawFiles.TryGetValue("Defects", out defectsRawFileName))
             {
@@ -97,7 +97,7 @@ namespace Ccollab
         /// <returns>Deserialized ccollab commands json object.</returns>
         private List<CcollabCmd> ReadCcollabConfigJson()
         {
-            string json = String.Empty;
+            string json = string.Empty;
 
             StreamReader sr = new StreamReader(CCOLLABCMD_FILE_NAME, Encoding.Default);
 
@@ -196,7 +196,7 @@ namespace Ccollab
         /// <returns>Generated file download link.</returns>
         private string GenerateCCRawFileDownloadLink(CcollabCmd cmd)
         {
-            string downloadLink = String.Empty;
+            string downloadLink = string.Empty;
             string query = "lo=" + cmd.ReviewsCreationDateLow + "|||hi=" + cmd.ReviewsCreationDateHigh;
 
             int len = cmd.RelUrl.Length;
