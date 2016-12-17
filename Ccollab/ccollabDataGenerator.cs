@@ -14,7 +14,7 @@ namespace Ccollab
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CcollabDataGenerator));
 
-        private readonly string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
+        private const string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
 
         private bool _hasFetchedCcollabData = false;
 

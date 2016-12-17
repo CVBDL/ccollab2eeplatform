@@ -10,7 +10,7 @@ namespace EagleEye.Settings
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeSettingsReader));
 
-        private static readonly string EAGLEEYE_SETTINGS_JSON_FILENAME = "ConfigurationFiles/eagleeye-settings.json";
+        private const string EAGLEEYE_SETTINGS_JSON_FILENAME = "ConfigurationFiles/eagleeye-settings.json";
 
         private static EagleEyeSettings settings = null;
 

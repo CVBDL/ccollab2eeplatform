@@ -52,7 +52,7 @@ namespace EagleEye.Reviews
         {
             // API: <https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table>
 
-            log.Info("Sending Review Count By Month Data to Server ...");
+            log.Info("Sending data to EagleEye platform ...");
 
             HttpClient httpClient = new HttpClient();
 
@@ -72,16 +72,15 @@ namespace EagleEye.Reviews
                 log.Info("Error: Put data table to chart with id '" + chartId + "'");
                 Console.WriteLine("Message :{0} ", e.Message);
             }
+
+            log.Info("Sending data to EagleEye platform ... Done.");
         }
 
         public void GenerateReviewCountByMonth()
         {
             log.Info("Generating: Review Count By Month ...");
 
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "ReviewCountByMonth";
 
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
 
             // `Review Creation Date`'s format is "2016-09-30 23:33 UTC"
             var reviewCreationDateIndex = 2;
@@ -93,32 +92,31 @@ namespace EagleEye.Reviews
                 select new { Month = month.Key, Count = month.Count() };
 
             // Expected data table format:
-            // https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table
-            //{
+            // {
             //    "datatable": [
             //     ["Month", "Count"],
             //     ["2016-01", 20],
-            //     ["2016-02", 30],
-            //     ["2016-03", 25]
+            //     ["2016-02", 30]
             //   ]
             // }
 
-            var chart = new Chart();
-
+            Chart chart = new Chart();
             chart.datatable = new List<List<object>>();
-
             chart.datatable.Add(new List<object> { "Month", "Count" });
 
             foreach (var date in query)
             {
                 chart.datatable.Add(new List<object> { date.Month, date.Count });
-                Console.WriteLine("Month: " + date.Month + ", Count: " + date.Count);
             }
 
             string json = JsonConvert.SerializeObject(chart);
+            Console.WriteLine(json);
 
-            Console.WriteLine(json); // {"datatable":[["Month","Count"],["2016-07",1],["2016-08",2],["2016-09",1]]}
+            ChartSettings chartSettings = null;
+            string chartSettingsKeyName = "ReviewCountByMonth";
+            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
 
+            // send request to eagleeye platform
             //PutDataTableToEagleEye(chartSettings.ChartId, json);
 
             log.Info("Generating: Review Count By Month ... Done.");
