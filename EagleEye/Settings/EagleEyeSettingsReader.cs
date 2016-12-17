@@ -6,9 +6,9 @@ using System.Text;
 
 namespace EagleEye.Settings
 {
-    public class EagleEyeSettingsGenerator
+    public class EagleEyeSettingsReader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeSettingsGenerator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeSettingsReader));
 
         private static readonly string EAGLEEYE_SETTINGS_JSON_FILENAME = "ConfigurationFiles/eagleeye-settings.json";
 

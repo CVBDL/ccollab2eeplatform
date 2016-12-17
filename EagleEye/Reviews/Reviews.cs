@@ -20,8 +20,8 @@ namespace EagleEye.Reviews
 
         public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator)
         {
-            settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
-            employees = EmployeesGenerator.GetEmployees();
+            settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            employees = EmployeesReader.GetEmployees();
         }
 
         private List<string[]> _filteredEmployeesReviewsData = null;

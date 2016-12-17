@@ -20,8 +20,8 @@ namespace EagleEye.Defects
 
         public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator)
         {
-            settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
-            employees = EmployeesGenerator.GetEmployees();
+            settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            employees = EmployeesReader.GetEmployees();
         }
 
         private List<string[]> _filteredEmployeesDefectsData = null;

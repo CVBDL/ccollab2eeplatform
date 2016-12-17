@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Employees
 {
-    public class EmployeesGenerator
+    public class EmployeesReader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(EmployeesGenerator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(EmployeesReader));
 
         private static readonly string EMPLOYEES_JSON_FILENAME = "ConfigurationFiles/employees.json";
 

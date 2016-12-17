@@ -110,7 +110,7 @@ namespace Ccollab2EagleEye
 
             HttpClient client = new HttpClient();
 
-            var settings = EagleEyeSettingsGenerator.GetEagleEyeSettings();
+            var settings = EagleEyeSettingsReader.GetEagleEyeSettings();
 
             string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
 
