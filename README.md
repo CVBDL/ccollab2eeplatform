@@ -5,7 +5,7 @@ Extract data from CodeCollaborator to EagleEye-Platform
 ## Usage
 
 ```sh
-ccollab2ee [options]
+ccollab2eeplatform [options]
 ```  
 
 ### Options
@@ -19,16 +19,16 @@ For example:
 
 ```sh
 # Run this command with task id "57837029c66dc1a4570962b6"
-ccollab2ee --task-id="57837029c66dc1a4570962b6"
+ccollab2eeplatform --task-id="57837029c66dc1a4570962b6"
 
 # Run this command with task id "57837029c66dc1a4570962b6"
-ccollab2ee -t "57837029c66dc1a4570962b6"
+ccollab2eeplatform -t "57837029c66dc1a4570962b6"
 
-# Show `ccollab2ee` helping message
-ccollab2ee -h
+# Show `ccollab2eeplatform` helping message
+ccollab2eeplatform -h
 
-# Show `ccollab2ee` helping message
-ccollab2ee --help
+# Show `ccollab2eeplatform` helping message
+ccollab2eeplatform --help
 ```
 
 ## Notes
