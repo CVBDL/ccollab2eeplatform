@@ -2,16 +2,16 @@
 {
     public class GenerateDefectSeverityByProductCommand : ICommand
     {
-        private Defects _defectsDataGenerator;
+        private Defects _defects;
 
-        public GenerateDefectSeverityByProductCommand(Defects reviewsDataGenerator)
+        public GenerateDefectSeverityByProductCommand(Defects defects)
         {
-            _defectsDataGenerator = reviewsDataGenerator;
+            _defects = defects;
         }
 
         public void Execute()
         {
-            _defectsDataGenerator.GenerateDefectSeverityByProduct();
+            _defects.GenerateDefectSeverityByProduct();
         }
     }
 }

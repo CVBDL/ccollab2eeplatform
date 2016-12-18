@@ -2,16 +2,16 @@
 {
     public class GenerateReviewCountByProductCommand : ICommand
     {
-        private Reviews _reviewsDataGenerator;
+        private Reviews _reviews;
 
-        public GenerateReviewCountByProductCommand(Reviews reviewsDataGenerator)
+        public GenerateReviewCountByProductCommand(Reviews reviews)
         {
-            _reviewsDataGenerator = reviewsDataGenerator;
+            _reviews = reviews;
         }
 
         public void Execute()
         {
-            _reviewsDataGenerator.GenerateReviewCountByProduct();
+            _reviews.GenerateReviewCountByProduct();
         }
     }
 }

@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EagleEye.Reviews
+﻿namespace EagleEye.Reviews
 {
     public class GenerateReviewCountByViewPointCommand : ICommand
     {
-        private Reviews _reviewsDataGenerator;
+        private Reviews _reviews;
 
-        public GenerateReviewCountByViewPointCommand(Reviews reviewsDataGenerator)
+        public GenerateReviewCountByViewPointCommand(Reviews reviews)
         {
-            _reviewsDataGenerator = reviewsDataGenerator;
+            _reviews = reviews;
         }
 
         public void Execute()
         {
-            _reviewsDataGenerator.GenerateReviewCountForProduct("ViewPoint", "ReviewCountForViewPoint");
+            _reviews.GenerateReviewCountForProduct("ViewPoint", "ReviewCountForViewPoint");
         }
     }
 }

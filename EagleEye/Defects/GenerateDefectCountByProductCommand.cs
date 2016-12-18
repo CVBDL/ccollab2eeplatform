@@ -2,16 +2,16 @@
 {
     public class GenerateDefectCountByProductCommand : ICommand
     {
-        private Defects _defectsDataGenerator;
+        private Defects _defects;
 
-        public GenerateDefectCountByProductCommand(Defects reviewsDataGenerator)
+        public GenerateDefectCountByProductCommand(Defects defects)
         {
-            _defectsDataGenerator = reviewsDataGenerator;
+            _defects = defects;
         }
 
         public void Execute()
         {
-            _defectsDataGenerator.GenerateDefectCountByProduct();
+            _defects.GenerateDefectCountByProduct();
         }
     }
 }

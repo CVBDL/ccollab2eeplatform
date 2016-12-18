@@ -71,17 +71,12 @@ namespace Ccollab2EagleEye
             // ccollab reviews charts related
             Reviews reviews = new Reviews(ccollabDataGenerator);
 
-            ICommand cmdGenerateReviewCountByMonth = new GenerateReviewCountByMonthCommand(reviews);
-            ICommand cmdGenerateReviewCountByProduct = new GenerateReviewCountByProductCommand(reviews);
-            ICommand cmdGenerateReviewCountByViewPoint = new GenerateReviewCountByViewPointCommand(reviews);
-            ICommand cmdGenerateReviewCountByFTView = new GenerateReviewCountByFTViewCommand(reviews);
-
             ReviewsManager reviewsManager = new ReviewsManager
             (
-                cmdGenerateReviewCountByMonth,
-                cmdGenerateReviewCountByProduct,
-                cmdGenerateReviewCountByViewPoint,
-                cmdGenerateReviewCountByFTView
+                new GenerateReviewCountByMonthCommand(reviews),
+                new GenerateReviewCountByProductCommand(reviews),
+                new GenerateReviewCountByViewPointCommand(reviews),
+                new GenerateReviewCountByFTViewCommand(reviews)
             );
 
             reviewsManager.GenerateReviewCountByMonth();
@@ -92,13 +87,10 @@ namespace Ccollab2EagleEye
             // ccollab defects charts related
             Defects defects = new Defects(ccollabDataGenerator);
 
-            ICommand cmdGenerateDefectCountByProduct = new GenerateDefectCountByProductCommand(defects);
-            ICommand cmdGenerateDefectSeverityByProduct = new GenerateDefectSeverityByProductCommand(defects);
-
             DefectsManager defectsManager = new DefectsManager
             (
-                cmdGenerateDefectCountByProduct,
-                cmdGenerateDefectSeverityByProduct
+                new GenerateDefectCountByProductCommand(defects),
+                new GenerateDefectSeverityByProductCommand(defects)
             );
 
             defectsManager.GenerateReviewCountByMonth();
