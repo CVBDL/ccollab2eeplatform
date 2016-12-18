@@ -13,7 +13,7 @@ namespace Employees
 
         private const string EMPLOYEES_JSON_FILENAME = "ConfigurationFiles/employees.json";
 
-        private static List<Employee> employees = null;
+        private static List<Employee> _employees = null;
 
         /// <summary>
         /// Read employees from json file.
@@ -22,7 +22,7 @@ namespace Employees
         public static List<Employee> GetEmployees()
         {
 
-            if (employees == null)
+            if (_employees == null)
             {
                 string json = string.Empty;
 
@@ -37,7 +37,7 @@ namespace Employees
                 
                 try
                 {
-                    employees = JsonConvert.DeserializeObject<List<Employee>>(json);
+                    _employees = JsonConvert.DeserializeObject<List<Employee>>(json);
                 }
                 catch (Exception exp)
                 {
@@ -46,7 +46,7 @@ namespace Employees
                 }
             }
 
-            return employees;
+            return _employees;
         }
 
         /// <summary>
@@ -56,6 +56,8 @@ namespace Employees
         /// <returns></returns>
         public static string GetEmployeeProductName(string loginName)
         {
+            List<Employee> employees = GetEmployees();
+
             foreach (Employee employee in employees)
             {
                 if (employee.LoginName == loginName)
@@ -65,6 +67,40 @@ namespace Employees
             }
 
             return "";
+        }
+
+        public static List<Employee> GetEmployeesByProduct(string productName)
+        {
+            List<Employee> employees = GetEmployees();
+
+            List<Employee> employeesOfProduct = new List<Employee>();
+
+            foreach (Employee employee in employees)
+            {
+                if (employee.ProductName == productName)
+                {
+                    employeesOfProduct.Add(employee);
+                }
+            }
+
+            return employeesOfProduct;
+        }
+
+        public static string GetEmployeeFullNameByLoginName(string loginName)
+        {
+            List<Employee> employees = GetEmployees();
+
+            string fullName = string.Empty;
+
+            foreach (Employee employee in employees)
+            {
+                if (employee.LoginName == loginName)
+                {
+                    return employee.FullName;
+                }
+            }
+
+            return fullName;
         }
     }
 }

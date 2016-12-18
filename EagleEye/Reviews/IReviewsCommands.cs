@@ -10,5 +10,6 @@ namespace EagleEye.Reviews
     {
         void GenerateReviewCountByMonth();
         void GenerateReviewCountByProduct();
+        void GenerateReviewCountForProduct(string productName, string settingsKey);
     }
 }

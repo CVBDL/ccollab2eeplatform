@@ -55,7 +55,9 @@
     <Compile Include="Defects\GenerateDefectSeverityByProductCommand.cs" />
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="Reviews\GenerateReviewCountByFTViewCommand.cs" />
     <Compile Include="Reviews\GenerateReviewCountByProductCommand.cs" />
+    <Compile Include="Reviews\GenerateReviewCountByViewPointCommand.cs" />
     <Compile Include="Reviews\IReviewsCommands.cs" />
     <Compile Include="EagleEyeDataGeneratorDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
