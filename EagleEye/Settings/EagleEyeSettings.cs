@@ -6,6 +6,7 @@ namespace EagleEye.Settings
     {
         public string ApiRootEndpoint { get; set; }
         public Dictionary<string, ChartSettings> Charts { get; set; }
+        public List<string> DefectInjectionStage { get; set; }
         public List<string> DefectSeverityTypes { get; set; }
         public List<ReviewCountByEmployeeOfProductSettings> ReviewCountByEmployeeOfProduct { get; set; }
     }

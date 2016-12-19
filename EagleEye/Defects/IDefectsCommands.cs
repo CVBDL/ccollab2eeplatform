@@ -3,6 +3,7 @@
     public interface IDefectsCommands
     {
         void GenerateDefectCountByProduct();
-        void GenerateDefectSeverityByProduct();
+        void GenerateDefectCountBySeverity();
+        void GenerateDefectCountByInjectionStage();
     }
 }

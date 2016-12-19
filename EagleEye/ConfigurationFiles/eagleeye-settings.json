@@ -4,7 +4,10 @@
     "DefectCountByProduct": {
       "ChartId": "5799641be24561202bc7190d"
     },
-    "DefectSeverityByProduct": {
+    "DefectCountByInjectionStage": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectCountBySeverity": {
       "ChartId": "5799641be24561202bc7190d"
     },
     "ReviewCountByEmployeeOfFTSP_FTAE": {
@@ -23,6 +26,7 @@
       "ChartId": "5799641be24561202bc7190d"
     }
   },
+  "DefectInjectionStage": [ "Code/Unit Test", "Design", "Requirements", "Integration/Test" ],
   "DefectSeverityTypes": [ "Major", "Minor" ],
   "ReviewCountByEmployeeOfProduct": [
     {
