@@ -7,11 +7,16 @@
   {
     "LoginName": "rli",
     "FullName": "Rex Li",
-    "ProductName": "Team2"
+    "ProductName": "FTView"
   },
   {
     "LoginName": "mmo2",
     "FullName": "Merlin Mo",
     "ProductName": "ViewPoint"
+  },
+  {
+    "LoginName": "trang",
+    "FullName": "Tweety Rang",
+    "ProductName": "FTSP_FTAE"
   }
 ]

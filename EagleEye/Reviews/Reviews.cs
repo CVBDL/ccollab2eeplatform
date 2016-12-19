@@ -200,12 +200,20 @@ namespace EagleEye.Reviews
             log.Info("Generating: Review Count By Product ... Done.");
         }
 
+        public void GenerateReviewCountByEmployeeOfProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.GetEagleEyeSettings().ReviewCountByEmployeeOfProduct)
+            {
+                ReviewCountByEmployeeOfProduct(item.ProductName, item.ChartSettingsKey);
+            }
+        }
+
         /// <summary>
         /// Generate review count submitted by employees belongs to the given product.
         /// </summary>
         /// <param name="productName">Product name.</param>
         /// <param name="settingsKey">EagleEye settings key name.</param>
-        public void GenerateReviewCountForProduct(string productName, string settingsKey)
+        private void ReviewCountByEmployeeOfProduct(string productName, string settingsKey)
         {
             // Expected data table format:
             // {

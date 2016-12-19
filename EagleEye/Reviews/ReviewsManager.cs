@@ -4,21 +4,18 @@
     {
         ICommand _cmdGenerateReviewCountByMonth;
         ICommand _cmdGenerateReviewCountByProduct;
-        ICommand _cmdGenerateReviewCountByViewPoint;
-        ICommand _cmdGenerateReviewCountByFTView;
+        ICommand _cmdGenerateReviewCountByEmployeeOfProduct;
 
         public ReviewsManager
         (
             ICommand cmdGenerateReviewCountByMonth,
             ICommand cmdGenerateReviewCountByProduct,
-            ICommand cmdGenerateReviewCountByViewPoint,
-            ICommand cmdGenerateReviewCountByFTView
+            ICommand cmdGenerateReviewCountByEmployeeOfProduct
         )
         {
             _cmdGenerateReviewCountByMonth = cmdGenerateReviewCountByMonth;
             _cmdGenerateReviewCountByProduct = cmdGenerateReviewCountByProduct;
-            _cmdGenerateReviewCountByViewPoint = cmdGenerateReviewCountByViewPoint;
-            _cmdGenerateReviewCountByFTView = cmdGenerateReviewCountByFTView;
+            _cmdGenerateReviewCountByEmployeeOfProduct = cmdGenerateReviewCountByEmployeeOfProduct;
         }
 
         public void GenerateReviewCountByMonth()
@@ -31,14 +28,9 @@
             _cmdGenerateReviewCountByProduct.Execute();
         }
 
-        public void GenerateReviewCountByViewPoint()
+        public void GenerateReviewCountByEmployeeOfProduct()
         {
-            _cmdGenerateReviewCountByViewPoint.Execute();
-        }
-
-        public void GenerateReviewCountByFTView()
-        {
-            _cmdGenerateReviewCountByFTView.Execute();
+            _cmdGenerateReviewCountByEmployeeOfProduct.Execute();
         }
     }
 }

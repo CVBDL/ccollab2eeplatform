@@ -1,21 +1,41 @@
 ﻿{
   "ApiRootEndpoint": "http://localhost:3000/api/v1/",
   "Charts": {
-    "ReviewCountByMonth": {
-      "ChartId": "5809b2827e9254582e54116d"
-    },
-    "ReviewCountByProduct": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "ReviewCountForViewPoint": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
     "DefectCountByProduct": {
       "ChartId": "5799641be24561202bc7190d"
     },
     "DefectSeverityByProduct": {
       "ChartId": "5799641be24561202bc7190d"
+    },
+    "ReviewCountByEmployeeOfFTSP_FTAE": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "ReviewCountByEmployeeOfFTView": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "ReviewCountByEmployeeOfViewPoint": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "ReviewCountByMonth": {
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    "ReviewCountByProduct": {
+      "ChartId": "5799641be24561202bc7190d"
     }
   },
-  "DefectSeverityTypes": [ "Major", "Minor" ]
+  "DefectSeverityTypes": [ "Major", "Minor" ],
+  "ReviewCountByEmployeeOfProduct": [
+    {
+      "ProductName": "ViewPoint",
+      "ChartSettingsKey": "ReviewCountByEmployeeOfViewPoint"
+    },
+    {
+      "ProductName": "FTView",
+      "ChartSettingsKey": "ReviewCountByEmployeeOfFTView"
+    },
+    {
+      "ProductName": "FTSP_FTAE",
+      "ChartSettingsKey": "ReviewCountByEmployeeOfFTSP_FTAE"
+    }
+  ]
 }
