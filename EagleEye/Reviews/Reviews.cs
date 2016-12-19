@@ -15,16 +15,23 @@ namespace EagleEye.Reviews
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
 
-        private EagleEyeSettings settings = null;
-        private List<Employee> employees = null;
-
-        public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator)
-        {
-            settings = EagleEyeSettingsReader.GetEagleEyeSettings();
-            employees = EmployeesReader.GetEmployees();
-        }
-
+        /// <summary>
+        /// Filtered reviews data.
+        /// </summary>
         private List<string[]> _filteredEmployeesReviewsData = null;
+
+        /// <summary>
+        /// Index of "Review Creation Date" column in reviews.csv file
+        /// </summary>
+        private const int indexReviewCreationDate = 2;
+
+        /// <summary>
+        /// Index of "Creator Login" column in reviews.csv file
+        /// </summary>
+        private const int indexCreatorLogin = 9;
+        
+        public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
+        
 
         public List<string[]> FilteredEmployeesReviewsData
         {
@@ -32,13 +39,9 @@ namespace EagleEye.Reviews
             {
                 if (_filteredEmployeesReviewsData == null)
                 {
-                    List<string[]> reviewsRawData = GetReviewsRawData();
-
-                    int reviewsCreatorLoginIndex = 9;
-
                     IEnumerable<string[]> reviewsQuery =
-                        from row in reviewsRawData
-                        where employees.Any(employee => employee.LoginName == row[reviewsCreatorLoginIndex])
+                        from row in GetReviewsRawData()
+                        where EmployeesReader.GetEmployees().Any(employee => employee.LoginName == row[indexCreatorLogin])
                         select row;
 
                     _filteredEmployeesReviewsData = reviewsQuery.ToList<string[]>();
@@ -58,6 +61,8 @@ namespace EagleEye.Reviews
             // API: <https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table>
 
             log.Info("Sending data to EagleEye platform ...");
+
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
 
             HttpClient httpClient = new HttpClient();
 
@@ -96,13 +101,14 @@ namespace EagleEye.Reviews
             // }
 
             log.Info("Generating: Review Count By Month ...");
-            
-            // `Review Creation Date`'s format is "2016-09-30 23:33 UTC"
-            var reviewCreationDateIndex = 2;
+
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
 
             var query =
                 from row in FilteredEmployeesReviewsData
-                group row by row[reviewCreationDateIndex].Substring(0, 7) into month
+                
+                // `Review Creation Date` column data format is "2016-09-30 23:33 UTC"
+                group row by row[indexReviewCreationDate].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
 
@@ -144,6 +150,9 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count By Product ...");
 
+            List<Employee> employees = EmployeesReader.GetEmployees();
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
             // collect all products
@@ -154,12 +163,10 @@ namespace EagleEye.Reviews
                     product2count.Add(employee.ProductName, 0);
                 }
             }
-
-            int employeeLoginNameIndex = 9;
-
+            
             var query =
                 from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[employeeLoginNameIndex])
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
                 group row by productName into productGroup
                 select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
 
@@ -211,6 +218,8 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count For " + productName + " ...");
 
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+
             Dictionary<string, int> employee2count = new Dictionary<string, int>();
 
             // collect all employees of the product
@@ -218,14 +227,12 @@ namespace EagleEye.Reviews
             {
                 employee2count.Add(employee.LoginName, 0);
             }
-
-            int employeeLoginNameIndex = 9;
-
+            
             var query =
                 from row in FilteredEmployeesReviewsData
-                let _productName = EmployeesReader.GetEmployeeProductName(row[employeeLoginNameIndex])
+                let _productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
                 where _productName == productName
-                group row by row[employeeLoginNameIndex] into employeeReviewsGroup
+                group row by row[indexCreatorLogin] into employeeReviewsGroup
                 select new { LoginName = employeeReviewsGroup.Key, ReviewCount = employeeReviewsGroup.Count() };
 
             foreach (var employee in query)

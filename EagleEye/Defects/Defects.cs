@@ -15,30 +15,27 @@ namespace EagleEye.Defects
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Defects));
 
-        private EagleEyeSettings settings = null;
-        private List<Employee> employees = null;
-
-        public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator)
-        {
-            settings = EagleEyeSettingsReader.GetEagleEyeSettings();
-            employees = EmployeesReader.GetEmployees();
-        }
-
+        /// <summary>
+        /// Filtered reviews data.
+        /// </summary>
         private List<string[]> _filteredEmployeesDefectsData = null;
 
+        /// <summary>
+        /// Index of "Creator Login" column in defects.csv file
+        /// </summary>
+        private const int indexCreatorLogin = 8;
+
+        public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
+        
         public List<string[]> FilteredEmployeesDefectsData
         {
             get
             {
                 if (_filteredEmployeesDefectsData == null)
                 {
-                    List<string[]> defectsRawData = GetDefectsRawData();
-
-                    int reviewsCreatorLoginIndex = 8;
-
                     IEnumerable<string[]> defectsQuery =
-                        from row in defectsRawData
-                        where employees.Any(employee => employee.LoginName == row[reviewsCreatorLoginIndex])
+                        from row in GetDefectsRawData()
+                        where EmployeesReader.GetEmployees().Any(employee => employee.LoginName == row[indexCreatorLogin])
                         select row;
 
                     _filteredEmployeesDefectsData = defectsQuery.ToList<string[]>();
@@ -53,6 +50,8 @@ namespace EagleEye.Defects
             // API: <https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table>
 
             log.Info("Sending data to EagleEye platform ...");
+
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
 
             HttpClient httpClient = new HttpClient();
 
@@ -80,22 +79,22 @@ namespace EagleEye.Defects
         {
             log.Info("Generating: Defect Count By Product ...");
 
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
             // collect all products
-            foreach (Employee employee in employees)
+            foreach (Employee employee in EmployeesReader.GetEmployees())
             {
                 if (!product2count.ContainsKey(employee.ProductName))
                 {
                     product2count.Add(employee.ProductName, 0);
                 }
             }
-
-            int employeeLoginNameIndex = 8;
-
+            
             var query =
                 from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[employeeLoginNameIndex])
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
                 group row by productName into productGroup
                 select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
 
@@ -150,11 +149,13 @@ namespace EagleEye.Defects
             // }
 
             log.Info("Generating: Defect Severity By Product ...");
-            
+
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+
             Dictionary<string, List<int>> product2severitycount = new Dictionary<string, List<int>>();
 
             // collect all products
-            foreach (Employee employee in employees)
+            foreach (Employee employee in EmployeesReader.GetEmployees())
             {
                 if (!product2severitycount.ContainsKey(employee.ProductName))
                 {

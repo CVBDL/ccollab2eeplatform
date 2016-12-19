@@ -14,7 +14,7 @@ namespace EagleEye
     ///     ]
     /// }
     /// </summary>
-    public class Chart
+    internal class Chart
     {
         public List<List<object>> datatable { get; set; }
     }
