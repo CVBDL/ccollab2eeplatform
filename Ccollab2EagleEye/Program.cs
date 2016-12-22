@@ -89,12 +89,14 @@ namespace Ccollab2EagleEye
             (
                 new GenerateDefectCountByProductCommand(defects),
                 new GenerateDefectCountBySeverityCommand(defects),
-                new GenerateDefectCountByInjectionStageCommand(defects)
+                new GenerateDefectCountByInjectionStageCommand(defects),
+                new GenerateDefectCountByTypeCommand(defects)
             );
 
             defectsManager.GenerateDefectCountByProduct();
             defectsManager.GenerateDefectSeverityByProduct();
             defectsManager.GenerateDefectCountByInjectionStage();
+            defectsManager.GenerateDefectCountByType();
 
             // notify task state
             if (string.IsNullOrEmpty(taskId))

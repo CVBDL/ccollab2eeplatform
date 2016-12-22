@@ -1,13 +1,16 @@
 ﻿{
   "ApiRootEndpoint": "http://localhost:3000/api/v1/",
   "Charts": {
-    "DefectCountByProduct": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
     "DefectCountByInjectionStage": {
       "ChartId": "5799641be24561202bc7190d"
     },
+    "DefectCountByProduct": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
     "DefectCountBySeverity": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectCountByType": {
       "ChartId": "5799641be24561202bc7190d"
     },
     "ReviewCountByEmployeeOfFTSP_FTAE": {
@@ -33,7 +36,7 @@
     "Integration/Test"
   ],
   "DefectSeverityTypes": [ "Major", "Minor" ],
-  "DefectType": [
+  "DefectTypes": [
     "algorithm/logic",
     "build",
     "data access",

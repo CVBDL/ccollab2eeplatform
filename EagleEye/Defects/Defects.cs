@@ -26,10 +26,15 @@ namespace EagleEye.Defects
         private const int indexCreatorLogin = 8;
 
         /// <summary>
+        /// Index of "Type_CVB" column in defects.csv file
+        /// </summary>
+        private const int indexType = 22;
+
+        /// <summary>
         /// Index of "Injection Stage" column in defects.csv file
         /// </summary>
         private const int indexInjectionStage = 23;
-
+        
         public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
         
         public List<string[]> FilteredEmployeesDefectsData
@@ -226,13 +231,13 @@ namespace EagleEye.Defects
             //    "datatable": [
             //     ["InjectionStage", "Count"],
             //     ["code/unit test", 20],
-            //     ["design", 16]
+            //     ["design", 16],
             //     ["requirements", 16]
             //     ["integration/test", 16]
             //   ]
             // }
 
-            log.Info("Generating: Defect Injection Stage Count By Product ...");
+            log.Info("Generating: Defect Count By Injection Stage ...");
 
             EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
 
@@ -276,7 +281,66 @@ namespace EagleEye.Defects
             // send request to eagleeye platform
             //PutDataTableToEagleEye(chartSettings.ChartId, json);
 
-            log.Info("Generating: Defect Injection Stage Count By Product ... Done.");
+            log.Info("Generating: Defect Count By Injection Stage ... Done.");
+        }
+
+        public void GenerateDefectCountByType()
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Type", "Count"],
+            //     ["algorithm/logic", 20],
+            //     ["build", 16],
+            //     ...
+            //   ]
+            // }
+
+            log.Info("Generating: Defect Count By Type ...");
+
+            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+
+            Dictionary<string, int> type2count = new Dictionary<string, int>();
+
+            // collect all products
+            foreach (var type in EagleEyeSettingsReader.GetEagleEyeSettings().DefectTypes)
+            {
+                type2count.Add(type.ToLower(), 0);
+            }
+
+            var query =
+                from row in FilteredEmployeesDefectsData
+                group row by row[indexType] into typeGroup
+                select new { Type = typeGroup.Key.ToLower(), Count = typeGroup.Count() };
+
+            foreach (var item in query)
+            {
+                if (type2count.ContainsKey(item.Type))
+                {
+                    type2count[item.Type] = item.Count;
+                }
+            }
+
+            Chart chart = new Chart();
+            chart.datatable = new List<List<object>>();
+            chart.datatable.Add(new List<object> { "Type", "Count" });
+
+            foreach (KeyValuePair<string, int> item in type2count)
+            {
+                chart.datatable.Add(new List<object> { item.Key, item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(chart);
+            Console.WriteLine(json);
+
+            ChartSettings chartSettings = null;
+            string chartSettingsKeyName = "DefectCountByType";
+            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
+
+            // send request to eagleeye platform
+            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+
+            log.Info("Generating: Defect Count By Type ... Done.");
         }
     }
 }

@@ -5,5 +5,6 @@
         void GenerateDefectCountByProduct();
         void GenerateDefectCountBySeverity();
         void GenerateDefectCountByInjectionStage();
+        void GenerateDefectCountByType();
     }
 }

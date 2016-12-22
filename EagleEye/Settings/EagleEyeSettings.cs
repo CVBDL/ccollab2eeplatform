@@ -8,6 +8,7 @@ namespace EagleEye.Settings
         public Dictionary<string, ChartSettings> Charts { get; set; }
         public List<string> DefectInjectionStage { get; set; }
         public List<string> DefectSeverityTypes { get; set; }
+        public List<string> DefectTypes { get; set; }
         public List<ReviewCountByEmployeeOfProductSettings> ReviewCountByEmployeeOfProduct { get; set; }
     }
 
