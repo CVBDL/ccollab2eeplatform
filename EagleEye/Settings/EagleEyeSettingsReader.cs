@@ -32,7 +32,9 @@ namespace EagleEye.Settings
                 }
 
                 if (string.IsNullOrWhiteSpace(json))
+                {
                     return null;
+                }
 
                 try
                 {
@@ -41,11 +43,42 @@ namespace EagleEye.Settings
                 catch (Exception exp)
                 {
                     log.Error(string.Format("Failed to load from json: {0}", exp.Message));
-                    throw;
                 }
             }
 
             return settings;
+        }
+
+        public static EagleEyeSettings Settings
+        {
+            get
+            {
+                if (settings == null)
+                {
+                    string json = string.Empty;
+
+                    StreamReader sr = new StreamReader(EAGLEEYE_SETTINGS_JSON_FILENAME, Encoding.UTF8);
+                    using (sr)
+                    {
+                        json = sr.ReadToEnd();
+                    }
+
+                    if (string.IsNullOrWhiteSpace(json))
+                        return null;
+
+                    try
+                    {
+                        settings = JsonConvert.DeserializeObject<EagleEyeSettings>(json);
+                    }
+                    catch (Exception exp)
+                    {
+                        log.Error(string.Format("Failed to load from json: {0}", exp.Message));
+                        throw;
+                    }
+                }
+
+                return settings;
+            }
         }
     }
 }

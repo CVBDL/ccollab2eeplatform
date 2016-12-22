@@ -91,6 +91,8 @@ namespace EagleEye.Reviews
         /// </summary>
         public void GenerateReviewCountByMonth()
         {
+            log.Info("Generating: Review Count By Month ...");
+
             // Expected data table format:
             // {
             //    "datatable": [
@@ -100,38 +102,44 @@ namespace EagleEye.Reviews
             //   ]
             // }
 
-            log.Info("Generating: Review Count By Month ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
-
+            // `Review Creation Date` column data format is "2016-09-30 23:33 UTC"
             var query =
                 from row in FilteredEmployeesReviewsData
-                
-                // `Review Creation Date` column data format is "2016-09-30 23:33 UTC"
                 group row by row[indexReviewCreationDate].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
             
             List<List<object>> datatable = new List<List<object>>();
 
+            // data table header
             List<object> header = new List<object> { "Month", "Count" };
             datatable.Add(header);
 
-            foreach (var date in query)
+            foreach (var item in query)
             {
-                datatable.Add(new List<object> { date.Month, date.Count });
+                datatable.Add(new List<object> { item.Month, item.Count });
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "ReviewCountByMonth";
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
+            string chartSettingsKey = "ReviewCountByMonth";
+            if (EagleEyeSettingsReader.Settings != null)
+            {
+                ChartSettings chartSettings = null;
 
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+                if (EagleEyeSettingsReader.Settings.Charts != null)
+                {
+                    EagleEyeSettingsReader.Settings.Charts.TryGetValue(chartSettingsKey, out chartSettings);
+                }
 
+                if (chartSettings != null)
+                {
+                    // send request to eagleeye platform
+                    //PutDataTableToEagleEye(chartSettings.ChartId, json);
+                }
+            }
+            
             log.Info("Generating: Review Count By Month ... Done.");
         }
 
