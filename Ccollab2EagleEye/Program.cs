@@ -92,7 +92,7 @@ namespace Ccollab2EagleEye
                 new GenerateDefectCountByInjectionStageCommand(defects)
             );
 
-            defectsManager.GenerateReviewCountByMonth();
+            defectsManager.GenerateDefectCountByProduct();
             defectsManager.GenerateDefectSeverityByProduct();
             defectsManager.GenerateDefectCountByInjectionStage();
 

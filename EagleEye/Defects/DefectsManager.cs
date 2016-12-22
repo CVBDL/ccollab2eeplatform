@@ -18,7 +18,7 @@
             _cmdGenerateDefectCountByInjectionStage = cmdGenerateDefectCountByInjectionStage;
         }
 
-        public void GenerateReviewCountByMonth()
+        public void GenerateDefectCountByProduct()
         {
             _cmdGenerateDefectCountByProduct.Execute();
         }
