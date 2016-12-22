@@ -124,17 +124,18 @@ namespace EagleEye.Defects
             //     ["Team2", 16]
             //   ]
             // }
+            
+            List<List<object>> datatable = new List<List<object>>();
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "Product", "Count" });
+            List<object> header = new List<object> { "Product", "Count" };
+            datatable.Add(header);
 
             foreach (KeyValuePair<string, int> item in product2count)
             {
-                chart.datatable.Add(new List<object> { item.Key, item.Value });
+                datatable.Add(new List<object> { item.Key, item.Value });
             }
-
-            string json = JsonConvert.SerializeObject(chart);
+            
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;
@@ -194,10 +195,11 @@ namespace EagleEye.Defects
                     }
                 }
             }
+            
+            List<List<object>> datatable = new List<List<object>>();
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "Product" }.Concat<object>(settings.DefectSeverityTypes).ToList());
+            List<object> header = new List<object> { "Product" }.Concat(settings.DefectSeverityTypes).ToList();
+            datatable.Add(header);
 
             foreach (KeyValuePair<string, List<int>> item in product2severitycount)
             {
@@ -208,10 +210,10 @@ namespace EagleEye.Defects
                     row.Add(count);
                 }
 
-                chart.datatable.Add(row);
+                datatable.Add(row);
             }
 
-            string json = JsonConvert.SerializeObject(chart);
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;
@@ -262,16 +264,17 @@ namespace EagleEye.Defects
                 }
             }
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "InjectionStage", "Count" });
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "InjectionStage", "Count" };
+            datatable.Add(header);
 
             foreach (KeyValuePair<string, int> item in injectionstage2count)
             {
-                chart.datatable.Add(new List<object> { item.Key, item.Value });
+                datatable.Add(new List<object> { item.Key, item.Value });
             }
 
-            string json = JsonConvert.SerializeObject(chart);
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;
@@ -320,17 +323,18 @@ namespace EagleEye.Defects
                     type2count[item.Type] = item.Count;
                 }
             }
+            
+            List<List<object>> datatable = new List<List<object>>();
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "Type", "Count" });
+            List<object> header = new List<object> { "Type", "Count" };
+            datatable.Add(header);
 
             foreach (KeyValuePair<string, int> item in type2count)
             {
-                chart.datatable.Add(new List<object> { item.Key, item.Value });
+                datatable.Add(new List<object> { item.Key, item.Value });
             }
 
-            string json = JsonConvert.SerializeObject(chart);
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;

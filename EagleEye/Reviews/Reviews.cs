@@ -111,17 +111,18 @@ namespace EagleEye.Reviews
                 group row by row[indexReviewCreationDate].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
+            
+            List<List<object>> datatable = new List<List<object>>();
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "Month", "Count" });
+            List<object> header = new List<object> { "Month", "Count" };
+            datatable.Add(header);
 
             foreach (var date in query)
             {
-                chart.datatable.Add(new List<object> { date.Month, date.Count });
+                datatable.Add(new List<object> { date.Month, date.Count });
             }
 
-            string json = JsonConvert.SerializeObject(chart);
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;
@@ -177,17 +178,18 @@ namespace EagleEye.Reviews
                     product2count[product.ProductName] = product.DefectCount;
                 }
             }
+            
+            List<List<object>> datatable = new List<List<object>>();
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "Product", "Count" });
+            List<object> header = new List<object> { "Product", "Count" };
+            datatable.Add(header);
 
             foreach (KeyValuePair<string, int> item in product2count)
             {
-                chart.datatable.Add(new List<object> { item.Key, item.Value });
+                datatable.Add(new List<object> { item.Key, item.Value });
             }
 
-            string json = JsonConvert.SerializeObject(chart);
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;
@@ -250,17 +252,18 @@ namespace EagleEye.Reviews
                     employee2count[employee.LoginName] = employee.ReviewCount;
                 }
             }
+            
+            List<List<object>> datatable = new List<List<object>>();
 
-            Chart chart = new Chart();
-            chart.datatable = new List<List<object>>();
-            chart.datatable.Add(new List<object> { "EmployeeName", "ReviewCount" });
+            List<object> header = new List<object> { "EmployeeName", "ReviewCount" };
+            datatable.Add(header);
 
             foreach (KeyValuePair<string, int> item in employee2count)
             {
-                chart.datatable.Add(new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key), item.Value });
+                datatable.Add(new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key), item.Value });
             }
 
-            string json = JsonConvert.SerializeObject(chart);
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
             ChartSettings chartSettings = null;

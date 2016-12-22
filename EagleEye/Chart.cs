@@ -17,5 +17,10 @@ namespace EagleEye
     internal class Chart
     {
         public List<List<object>> datatable { get; set; }
+
+        public Chart(List<List<object>> dt = null)
+        {
+            datatable = dt;
+        }
     }
 }
