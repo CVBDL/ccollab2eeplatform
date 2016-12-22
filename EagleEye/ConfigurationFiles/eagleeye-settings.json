@@ -26,8 +26,27 @@
       "ChartId": "5799641be24561202bc7190d"
     }
   },
-  "DefectInjectionStage": [ "Code/Unit Test", "Design", "Requirements", "Integration/Test" ],
+  "DefectInjectionStage": [
+    "Code/Unit Test",
+    "Design",
+    "Requirements",
+    "Integration/Test"
+  ],
   "DefectSeverityTypes": [ "Major", "Minor" ],
+  "DefectType": [
+    "algorithm/logic",
+    "build",
+    "data access",
+    "documentation",
+    "initialization",
+    "interface",
+    "maintainability",
+    "performance",
+    "requirements/design",
+    "robustness/error handling",
+    "style",
+    "testing"
+  ],
   "ReviewCountByEmployeeOfProduct": [
     {
       "ProductName": "ViewPoint",

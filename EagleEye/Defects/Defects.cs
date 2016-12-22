@@ -225,10 +225,10 @@ namespace EagleEye.Defects
             // {
             //    "datatable": [
             //     ["InjectionStage", "Count"],
-            //     ["Code/Unit Test", 20],
-            //     ["Design", 16]
-            //     ["Requirements", 16]
-            //     ["Integration/Test", 16]
+            //     ["code/unit test", 20],
+            //     ["design", 16]
+            //     ["requirements", 16]
+            //     ["integration/test", 16]
             //   ]
             // }
 
@@ -241,13 +241,13 @@ namespace EagleEye.Defects
             // collect all products
             foreach (var injectionStage in EagleEyeSettingsReader.GetEagleEyeSettings().DefectInjectionStage)
             {
-                injectionstage2count.Add(injectionStage, 0);
+                injectionstage2count.Add(injectionStage.ToLower(), 0);
             }
 
             var query =
                 from row in FilteredEmployeesDefectsData
                 group row by row[indexInjectionStage] into injectionStageGroup
-                select new { InjectionStage = injectionStageGroup.Key, Count = injectionStageGroup.Count() };
+                select new { InjectionStage = injectionStageGroup.Key.ToLower(), Count = injectionStageGroup.Count() };
 
             foreach (var item in query)
             {
