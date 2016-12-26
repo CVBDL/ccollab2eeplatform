@@ -19,6 +19,11 @@ namespace EagleEye.Defects
         private const int indexCreatorLogin = 8;
 
         /// <summary>
+        /// Index of "Severity" column in defects.csv file
+        /// </summary>
+        private const int indexSeverity = 20;
+
+        /// <summary>
         /// Index of "Type_CVB" column in defects.csv file
         /// </summary>
         private const int indexType = 22;
@@ -142,15 +147,13 @@ namespace EagleEye.Defects
                 group row by productName into productGroup
                 select productGroup;
 
-            int defectSeverityIndex = 20;
-
             foreach (var item in query)
             {
                 if (!product2severitycount.ContainsKey(item.Key)) continue;
 
                 foreach (var defect in item)
                 {
-                    int index = settings.DefectSeverityTypes.IndexOf(defect[defectSeverityIndex]);
+                    int index = settings.DefectSeverityTypes.IndexOf(defect[indexSeverity]);
 
                     if (index >= 0)
                     {
@@ -286,6 +289,75 @@ namespace EagleEye.Defects
             Save2EagleEye("DefectCountByType", json);
 
             log.Info("Generating: Defect Count By Type ... Done.");
+        }
+
+        public void GenerateDefectsDistributionByType()
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "algorithm/logic", "build", ..., "testing"],
+            //     ["ViewPoint", 1, 3, ..., 0],
+            //     ...
+            //   ]
+            // }
+            log.Info("Generating: Defects Distribution by Type ...");
+
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
+
+            Dictionary<string, List<int>> product2typecount = new Dictionary<string, List<int>>();
+
+            // collect all products
+            foreach (Employee employee in EmployeesReader.Employees)
+            {
+                if (!product2typecount.ContainsKey(employee.ProductName))
+                {
+                    product2typecount.Add(employee.ProductName, new List<int>(new int[settings.DefectTypes.Count]));
+                }
+            }
+            var query =
+                from row in FilteredEmployeesDefectsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                group row by productName into productGroup
+                select productGroup;
+
+            foreach (var item in query)
+            {
+                if (!product2typecount.ContainsKey(item.Key)) continue;
+
+                foreach (var defect in item)
+                {
+                    int index = settings.DefectTypes.IndexOf(defect[indexType]);
+
+                    if (index >= 0)
+                    {
+                        product2typecount[item.Key][index] += 1;
+                    }
+                }
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Product" }.Concat(settings.DefectTypes).ToList();
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, List<int>> item in product2typecount)
+            {
+                List<object> row = new List<object> { item.Key };
+
+                foreach (int count in item.Value)
+                {
+                    row.Add(count);
+                }
+
+                datatable.Add(row);
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye("DefectsDistributionByType", json);
+
+            log.Info("Generating: Defects Distribution by Type ... Done.");
         }
     }
 }
