@@ -6,8 +6,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 
 namespace EagleEye.Defects
 {
@@ -31,17 +29,20 @@ namespace EagleEye.Defects
         private const int indexInjectionStage = 23;
 
         /// <summary>
-        /// Filtered reviews data.
+        /// Holds filtered raw defects data of local employees.
         /// </summary>
         private List<string[]> filteredEmployeesDefectsData = null;
 
         public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
-        
+
+        /// <summary>
+        /// Filter raw defects data of local employees.
+        /// </summary>
         public List<string[]> FilteredEmployeesDefectsData
         {
             get
             {
-                if (filteredEmployeesDefectsData == null)
+                if (filteredEmployeesDefectsData == null && EmployeesReader.Employees != null)
                 {
                     IEnumerable<string[]> defectsQuery =
                         from row in GetDefectsRawData()
@@ -54,13 +55,20 @@ namespace EagleEye.Defects
                 return filteredEmployeesDefectsData;
             }
         }
-        
+
         public void GenerateDefectCountByProduct()
         {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Count"],
+            //     ["Team1", 20],
+            //     ["Team2", 16]
+            //   ]
+            // }
+
             log.Info("Generating: Defect Count By Product ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
-
+            
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
             // collect all products
@@ -71,30 +79,21 @@ namespace EagleEye.Defects
                     product2count.Add(employee.ProductName, 0);
                 }
             }
-            
+
             var query =
                 from row in FilteredEmployeesDefectsData
                 let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
                 group row by productName into productGroup
                 select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
 
-            foreach (var product in query)
+            foreach (var item in query)
             {
-                if (product2count.ContainsKey(product.ProductName))
+                if (product2count.ContainsKey(item.ProductName))
                 {
-                    product2count[product.ProductName] = product.DefectCount;
+                    product2count[item.ProductName] = item.DefectCount;
                 }
             }
 
-            // Expected data table format:
-            // {
-            //    "datatable": [
-            //     ["Product", "Count"],
-            //     ["Team1", 20],
-            //     ["Team2", 16]
-            //   ]
-            // }
-            
             List<List<object>> datatable = new List<List<object>>();
 
             List<object> header = new List<object> { "Product", "Count" };
@@ -104,10 +103,10 @@ namespace EagleEye.Defects
             {
                 datatable.Add(new List<object> { item.Key, item.Value });
             }
-            
+
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-            
+
             Save2EagleEye("DefectCountByProduct", json);
 
             log.Info("Generating: Defect Count By Product ... Done.");
@@ -146,21 +145,21 @@ namespace EagleEye.Defects
 
             int defectSeverityIndex = 20;
 
-            foreach (var productDefects in query)
+            foreach (var item in query)
             {
-                if (!product2severitycount.ContainsKey(productDefects.Key)) continue;
+                if (!product2severitycount.ContainsKey(item.Key)) continue;
 
-                foreach (var defect in productDefects)
+                foreach (var defect in item)
                 {
                     int index = settings.DefectSeverityTypes.IndexOf(defect[defectSeverityIndex]);
 
                     if (index >= 0)
                     {
-                        product2severitycount[productDefects.Key][index] += 1;
+                        product2severitycount[item.Key][index] += 1;
                     }
                 }
             }
-            
+
             List<List<object>> datatable = new List<List<object>>();
 
             List<object> header = new List<object> { "Product" }.Concat(settings.DefectSeverityTypes).ToList();
@@ -180,7 +179,7 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-            
+
             Save2EagleEye("DefectCountBySeverity", json);
 
             log.Info("Generating: Defect Severity Count By Product ... Done.");
@@ -200,8 +199,6 @@ namespace EagleEye.Defects
             // }
 
             log.Info("Generating: Defect Count By Injection Stage ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> injectionstage2count = new Dictionary<string, int>();
 
@@ -236,7 +233,7 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-            
+
             Save2EagleEye("DefectCountByInjectionStage", json);
 
             log.Info("Generating: Defect Count By Injection Stage ... Done.");
@@ -255,8 +252,6 @@ namespace EagleEye.Defects
             // }
 
             log.Info("Generating: Defect Count By Type ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> type2count = new Dictionary<string, int>();
 
@@ -278,7 +273,7 @@ namespace EagleEye.Defects
                     type2count[item.Type] = item.Count;
                 }
             }
-            
+
             List<List<object>> datatable = new List<List<object>>();
 
             List<object> header = new List<object> { "Type", "Count" };
@@ -291,7 +286,7 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-            
+
             Save2EagleEye("DefectCountByType", json);
 
             log.Info("Generating: Defect Count By Type ... Done.");

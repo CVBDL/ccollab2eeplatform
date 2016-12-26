@@ -26,17 +26,20 @@ namespace EagleEye.Reviews
         private const int indexCreatorLogin = 9;
 
         /// <summary>
-        /// Filtered reviews data.
+        /// Holds filtered raw reviews data of local employees.
         /// </summary>
         private List<string[]> filteredEmployeesReviewsData = null;
 
         public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
-        
+
+        /// <summary>
+        /// Filter raw reviews data of local employees.
+        /// </summary>
         public List<string[]> FilteredEmployeesReviewsData
         {
             get
             {
-                if (filteredEmployeesReviewsData == null)
+                if (filteredEmployeesReviewsData == null && EmployeesReader.Employees != null)
                 {
                     IEnumerable<string[]> reviewsQuery =
                         from row in GetReviewsRawData()
@@ -49,7 +52,7 @@ namespace EagleEye.Reviews
                 return filteredEmployeesReviewsData;
             }
         }
-        
+
         /// <summary>
         /// Generate review count by month.
         /// </summary>
@@ -72,7 +75,7 @@ namespace EagleEye.Reviews
                 group row by row[indexReviewCreationDate].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
-            
+
             List<List<object>> datatable = new List<List<object>>();
 
             // data table header
@@ -88,7 +91,7 @@ namespace EagleEye.Reviews
             Console.WriteLine(json);
 
             Save2EagleEye("ReviewCountByMonth", json);
-            
+
             log.Info("Generating: Review Count By Month ... Done.");
         }
 
@@ -107,35 +110,32 @@ namespace EagleEye.Reviews
             // }
 
             log.Info("Generating: Review Count By Product ...");
-
-            List<Employee> employees = EmployeesReader.Employees;
-            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
-
+            
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
             // collect all products
-            foreach (Employee employee in employees)
+            foreach (Employee employee in EmployeesReader.Employees)
             {
                 if (!product2count.ContainsKey(employee.ProductName))
                 {
                     product2count.Add(employee.ProductName, 0);
                 }
             }
-            
+
             var query =
                 from row in FilteredEmployeesReviewsData
                 let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
                 group row by productName into productGroup
                 select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
 
-            foreach (var product in query)
+            foreach (var item in query)
             {
-                if (product2count.ContainsKey(product.ProductName))
+                if (product2count.ContainsKey(item.ProductName))
                 {
-                    product2count[product.ProductName] = product.DefectCount;
+                    product2count[item.ProductName] = item.DefectCount;
                 }
             }
-            
+
             List<List<object>> datatable = new List<List<object>>();
 
             List<object> header = new List<object> { "Product", "Count" };
@@ -148,12 +148,15 @@ namespace EagleEye.Reviews
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-            
+
             Save2EagleEye("ReviewCountByProduct", json);
 
             log.Info("Generating: Review Count By Product ... Done.");
         }
 
+        /// <summary>
+        /// Generate review count of employees inside a specific product team.
+        /// </summary>
         public void GenerateReviewCountByEmployeeOfProduct()
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByEmployeeOfProduct)
@@ -180,8 +183,6 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count For " + productName + " ...");
 
-            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
-
             Dictionary<string, int> employee2count = new Dictionary<string, int>();
 
             // collect all employees of the product
@@ -189,7 +190,7 @@ namespace EagleEye.Reviews
             {
                 employee2count.Add(employee.LoginName, 0);
             }
-            
+
             var query =
                 from row in FilteredEmployeesReviewsData
                 let _productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
@@ -197,14 +198,14 @@ namespace EagleEye.Reviews
                 group row by row[indexCreatorLogin] into employeeReviewsGroup
                 select new { LoginName = employeeReviewsGroup.Key, ReviewCount = employeeReviewsGroup.Count() };
 
-            foreach (var employee in query)
+            foreach (var item in query)
             {
-                if (employee2count.ContainsKey(employee.LoginName))
+                if (employee2count.ContainsKey(item.LoginName))
                 {
-                    employee2count[employee.LoginName] = employee.ReviewCount;
+                    employee2count[item.LoginName] = item.ReviewCount;
                 }
             }
-            
+
             List<List<object>> datatable = new List<List<object>>();
 
             List<object> header = new List<object> { "EmployeeName", "ReviewCount" };
