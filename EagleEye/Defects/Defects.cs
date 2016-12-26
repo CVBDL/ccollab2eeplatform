@@ -42,7 +42,7 @@ namespace EagleEye.Defects
         {
             get
             {
-                if (filteredEmployeesDefectsData == null && EmployeesReader.Employees != null)
+                if (filteredEmployeesDefectsData == null)
                 {
                     IEnumerable<string[]> defectsQuery =
                         from row in GetDefectsRawData()
@@ -105,7 +105,6 @@ namespace EagleEye.Defects
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye("DefectCountByProduct", json);
 
@@ -178,7 +177,6 @@ namespace EagleEye.Defects
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye("DefectCountBySeverity", json);
 
@@ -232,7 +230,6 @@ namespace EagleEye.Defects
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye("DefectCountByInjectionStage", json);
 
@@ -285,7 +282,6 @@ namespace EagleEye.Defects
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye("DefectCountByType", json);
 

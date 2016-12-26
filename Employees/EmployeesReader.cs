@@ -52,8 +52,8 @@ namespace Employees
         /// <summary>
         /// Get employee's product name.
         /// </summary>
-        /// <param name="loginName">Employee's login name.</param>
-        /// <returns></returns>
+        /// <param name="loginName">Employee's login name, like "pzhong".</param>
+        /// <returns>Product name like "ViewPoint".</returns>
         public static string GetEmployeeProductName(string loginName)
         {
             foreach (Employee employee in Employees)
@@ -67,6 +67,11 @@ namespace Employees
             return "";
         }
 
+        /// <summary>
+        /// Get all employees inside a product team.
+        /// </summary>
+        /// <param name="productName">For example: "ViewPoint"</param>
+        /// <returns>Employees list.</returns>
         public static List<Employee> GetEmployeesByProduct(string productName)
         {
             List<Employee> employeesOfProduct = new List<Employee>();
@@ -82,6 +87,11 @@ namespace Employees
             return employeesOfProduct;
         }
 
+        /// <summary>
+        /// Get an employee's full name by his/her login name.
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns>Full name, like "Patrick Zhong".</returns>
         public static string GetEmployeeFullNameByLoginName(string loginName)
         {
             string fullName = string.Empty;

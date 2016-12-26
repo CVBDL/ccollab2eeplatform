@@ -21,6 +21,8 @@ namespace EagleEye
 
         protected void Save2EagleEye(string settingsKey, string json)
         {
+            Console.WriteLine(json);
+
             if (string.IsNullOrWhiteSpace(json))
             {
                 return;

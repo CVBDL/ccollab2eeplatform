@@ -39,7 +39,7 @@ namespace EagleEye.Reviews
         {
             get
             {
-                if (filteredEmployeesReviewsData == null && EmployeesReader.Employees != null)
+                if (filteredEmployeesReviewsData == null)
                 {
                     IEnumerable<string[]> reviewsQuery =
                         from row in GetReviewsRawData()
@@ -88,7 +88,6 @@ namespace EagleEye.Reviews
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye("ReviewCountByMonth", json);
 
@@ -147,7 +146,6 @@ namespace EagleEye.Reviews
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye("ReviewCountByProduct", json);
 
@@ -217,7 +215,6 @@ namespace EagleEye.Reviews
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
-            Console.WriteLine(json);
 
             Save2EagleEye(settingsKey, json);
 
