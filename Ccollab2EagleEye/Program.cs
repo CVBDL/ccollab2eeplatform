@@ -1,4 +1,5 @@
 ﻿using Ccollab;
+using Employees;
 using EagleEye;
 using EagleEye.Defects;
 using EagleEye.Reviews;
@@ -65,39 +66,65 @@ namespace Ccollab2EagleEye
                 return;
             }
 
+            if (EmployeesReader.Employees == null)
+            {
+                log.Info("Error occured when reading employee settings.");
+                return;
+            }
+
+            if (EagleEyeSettingsReader.Settings == null)
+            {
+                log.Info("Error occured when reading EagleEye settings.");
+                return;
+            }
+
             // ccollab data source
             ICcollabDataSource ccollabDataGenerator = new CcollabDataGenerator();
-
+            
             // ccollab reviews charts related
             Reviews reviews = new Reviews(ccollabDataGenerator);
 
-            ReviewsManager reviewsManager = new ReviewsManager
-            (
-                new GenerateReviewCountByMonthCommand(reviews),
-                new GenerateReviewCountByProductCommand(reviews),
-                new GenerateReviewCountByEmployeeOfProductCommand(reviews)
-            );
+            if (reviews.FilteredEmployeesReviewsData == null)
+            {
+                log.Info("No filtered reviews data.");
+            }
+            else
+            {
+                ReviewsManager reviewsManager = new ReviewsManager
+                (
+                    new GenerateReviewCountByMonthCommand(reviews),
+                    new GenerateReviewCountByProductCommand(reviews),
+                    new GenerateReviewCountByEmployeeOfProductCommand(reviews)
+                );
 
-            reviewsManager.GenerateReviewCountByMonth();
-            reviewsManager.GenerateReviewCountByProduct();
-            reviewsManager.GenerateReviewCountByEmployeeOfProduct();
+                reviewsManager.GenerateReviewCountByMonth();
+                reviewsManager.GenerateReviewCountByProduct();
+                reviewsManager.GenerateReviewCountByEmployeeOfProduct();
+            }
 
             // ccollab defects charts related
             Defects defects = new Defects(ccollabDataGenerator);
 
-            DefectsManager defectsManager = new DefectsManager
-            (
-                new GenerateDefectCountByProductCommand(defects),
-                new GenerateDefectCountBySeverityCommand(defects),
-                new GenerateDefectCountByInjectionStageCommand(defects),
-                new GenerateDefectCountByTypeCommand(defects)
-            );
+            if (defects.FilteredEmployeesDefectsData == null)
+            {
+                log.Info("No filtered defects data.");
+            }
+            else
+            {
+                DefectsManager defectsManager = new DefectsManager
+                (
+                    new GenerateDefectCountByProductCommand(defects),
+                    new GenerateDefectCountBySeverityCommand(defects),
+                    new GenerateDefectCountByInjectionStageCommand(defects),
+                    new GenerateDefectCountByTypeCommand(defects)
+                );
 
-            defectsManager.GenerateDefectCountByProduct();
-            defectsManager.GenerateDefectSeverityByProduct();
-            defectsManager.GenerateDefectCountByInjectionStage();
-            defectsManager.GenerateDefectCountByType();
-
+                defectsManager.GenerateDefectCountByProduct();
+                defectsManager.GenerateDefectSeverityByProduct();
+                defectsManager.GenerateDefectCountByInjectionStage();
+                defectsManager.GenerateDefectCountByType();
+            }
+            
             // notify task state
             if (string.IsNullOrEmpty(taskId))
             {
