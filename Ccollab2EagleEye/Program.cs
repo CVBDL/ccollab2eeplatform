@@ -92,9 +92,9 @@ namespace Ccollab2EagleEye
             {
                 ReviewsManager reviewsManager = new ReviewsManager
                 (
-                    new GenerateReviewCountByMonthCommand(reviews),
-                    new GenerateReviewCountByProductCommand(reviews),
-                    new GenerateReviewCountByEmployeeOfProductCommand(reviews)
+                    new ReviewCountByMonthCommand(reviews),
+                    new ReviewCountByProductCommand(reviews),
+                    new ReviewCountByEmployeeOfProductCommand(reviews)
                 );
 
                 reviewsManager.GenerateReviewCountByMonth();
@@ -113,10 +113,10 @@ namespace Ccollab2EagleEye
             {
                 DefectsManager defectsManager = new DefectsManager
                 (
-                    new GenerateDefectCountByProductCommand(defects),
-                    new GenerateDefectCountBySeverityCommand(defects),
-                    new GenerateDefectCountByInjectionStageCommand(defects),
-                    new GenerateDefectCountByTypeCommand(defects),
+                    new DefectCountByProductCommand(defects),
+                    new DefectCountBySeverityCommand(defects),
+                    new DefectCountByInjectionStageCommand(defects),
+                    new DefectCountByTypeCommand(defects),
                     new DefectsDistributionByTypeCommand(defects)
                 );
 

@@ -1,10 +1,10 @@
 ﻿namespace EagleEye.Reviews
 {
-    public class GenerateReviewCountByProductCommand : ICommand
+    public class ReviewCountByProductCommand : ICommand
     {
         private Reviews _reviews;
 
-        public GenerateReviewCountByProductCommand(Reviews reviews)
+        public ReviewCountByProductCommand(Reviews reviews)
         {
             _reviews = reviews;
         }

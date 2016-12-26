@@ -1,10 +1,10 @@
 ﻿namespace EagleEye.Defects
 {
-    public class GenerateDefectCountByInjectionStageCommand: ICommand
+    public class DefectCountByInjectionStageCommand: ICommand
     {
         private Defects _defects;
 
-        public GenerateDefectCountByInjectionStageCommand(Defects defects)
+        public DefectCountByInjectionStageCommand(Defects defects)
         {
             _defects = defects;
         }
