@@ -16,11 +16,6 @@ namespace EagleEye.Reviews
         private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
 
         /// <summary>
-        /// Filtered reviews data.
-        /// </summary>
-        private List<string[]> _filteredEmployeesReviewsData = null;
-
-        /// <summary>
         /// Index of "Review Creation Date" column in reviews.csv file
         /// </summary>
         private const int indexReviewCreationDate = 2;
@@ -29,63 +24,32 @@ namespace EagleEye.Reviews
         /// Index of "Creator Login" column in reviews.csv file
         /// </summary>
         private const int indexCreatorLogin = 9;
-        
+
+        /// <summary>
+        /// Filtered reviews data.
+        /// </summary>
+        private List<string[]> filteredEmployeesReviewsData = null;
+
         public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
         
-
         public List<string[]> FilteredEmployeesReviewsData
         {
             get
             {
-                if (_filteredEmployeesReviewsData == null)
+                if (filteredEmployeesReviewsData == null)
                 {
                     IEnumerable<string[]> reviewsQuery =
                         from row in GetReviewsRawData()
-                        where EmployeesReader.GetEmployees().Any(employee => employee.LoginName == row[indexCreatorLogin])
+                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[indexCreatorLogin])
                         select row;
 
-                    _filteredEmployeesReviewsData = reviewsQuery.ToList<string[]>();
+                    filteredEmployeesReviewsData = reviewsQuery.ToList<string[]>();
                 }
 
-                return _filteredEmployeesReviewsData;
+                return filteredEmployeesReviewsData;
             }
         }
         
-        /// <summary>
-        /// Send chart data table to EagleEye platform via a PUT request.
-        /// </summary>
-        /// <param name="chartId">The chart's _id property.</param>
-        /// <param name="json">The data table json.</param>
-        private void PutDataTableToEagleEye(string chartId, string json)
-        {
-            // API: <https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table>
-
-            log.Info("Sending data to EagleEye platform ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
-
-            HttpClient httpClient = new HttpClient();
-
-            try
-            {
-                StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PutAsync(settings.ApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
-                response.EnsureSuccessStatusCode();
-
-                // use for debugging
-                var responseContent = response.Content;
-                string responseBody = responseContent.ReadAsStringAsync().Result;
-                Console.WriteLine(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                log.Info("Error: Put data table to chart with id '" + chartId + "'");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            log.Info("Sending data to EagleEye platform ... Done.");
-        }
-
         /// <summary>
         /// Generate review count by month.
         /// </summary>
@@ -123,22 +87,7 @@ namespace EagleEye.Reviews
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
-            string chartSettingsKey = "ReviewCountByMonth";
-            if (EagleEyeSettingsReader.Settings != null)
-            {
-                ChartSettings chartSettings = null;
-
-                if (EagleEyeSettingsReader.Settings.Charts != null)
-                {
-                    EagleEyeSettingsReader.Settings.Charts.TryGetValue(chartSettingsKey, out chartSettings);
-                }
-
-                if (chartSettings != null)
-                {
-                    // send request to eagleeye platform
-                    //PutDataTableToEagleEye(chartSettings.ChartId, json);
-                }
-            }
+            Save2EagleEye("ReviewCountByMonth", json);
             
             log.Info("Generating: Review Count By Month ... Done.");
         }
@@ -159,8 +108,8 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count By Product ...");
 
-            List<Employee> employees = EmployeesReader.GetEmployees();
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            List<Employee> employees = EmployeesReader.Employees;
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
@@ -199,20 +148,15 @@ namespace EagleEye.Reviews
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "ReviewCountByProduct";
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
-
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+            
+            Save2EagleEye("ReviewCountByProduct", json);
 
             log.Info("Generating: Review Count By Product ... Done.");
         }
 
         public void GenerateReviewCountByEmployeeOfProduct()
         {
-            foreach (var item in EagleEyeSettingsReader.GetEagleEyeSettings().ReviewCountByEmployeeOfProduct)
+            foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByEmployeeOfProduct)
             {
                 ReviewCountByEmployeeOfProduct(item.ProductName, item.ChartSettingsKey);
             }
@@ -236,7 +180,7 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count For " + productName + " ...");
 
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> employee2count = new Dictionary<string, int>();
 
@@ -274,12 +218,8 @@ namespace EagleEye.Reviews
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
 
-            ChartSettings chartSettings = null;
-            settings.Charts.TryGetValue(settingsKey, out chartSettings);
+            Save2EagleEye(settingsKey, json);
 
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
-            
             log.Info("Generating: Review Count For " + productName + " ... Done.");
         }
     }

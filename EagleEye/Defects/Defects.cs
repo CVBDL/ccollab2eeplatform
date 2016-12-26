@@ -16,11 +16,6 @@ namespace EagleEye.Defects
         private static readonly ILog log = LogManager.GetLogger(typeof(Defects));
 
         /// <summary>
-        /// Filtered reviews data.
-        /// </summary>
-        private List<string[]> _filteredEmployeesDefectsData = null;
-
-        /// <summary>
         /// Index of "Creator Login" column in defects.csv file
         /// </summary>
         private const int indexCreatorLogin = 8;
@@ -34,67 +29,42 @@ namespace EagleEye.Defects
         /// Index of "Injection Stage" column in defects.csv file
         /// </summary>
         private const int indexInjectionStage = 23;
-        
+
+        /// <summary>
+        /// Filtered reviews data.
+        /// </summary>
+        private List<string[]> filteredEmployeesDefectsData = null;
+
         public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
         
         public List<string[]> FilteredEmployeesDefectsData
         {
             get
             {
-                if (_filteredEmployeesDefectsData == null)
+                if (filteredEmployeesDefectsData == null)
                 {
                     IEnumerable<string[]> defectsQuery =
                         from row in GetDefectsRawData()
-                        where EmployeesReader.GetEmployees().Any(employee => employee.LoginName == row[indexCreatorLogin])
+                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[indexCreatorLogin])
                         select row;
 
-                    _filteredEmployeesDefectsData = defectsQuery.ToList<string[]>();
+                    filteredEmployeesDefectsData = defectsQuery.ToList<string[]>();
                 }
 
-                return _filteredEmployeesDefectsData;
+                return filteredEmployeesDefectsData;
             }
         }
-
-        private void PutDataTableToEagleEye(string chartId, string json)
-        {
-            // API: <https://github.com/CVBDL/EagleEye-Docs/blob/master/rest-api/rest-api.md#edit-data-table>
-
-            log.Info("Sending data to EagleEye platform ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
-
-            HttpClient httpClient = new HttpClient();
-
-            try
-            {
-                StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PutAsync(settings.ApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
-                response.EnsureSuccessStatusCode();
-
-                // use for debugging
-                var responseContent = response.Content;
-                string responseBody = responseContent.ReadAsStringAsync().Result;
-                Console.WriteLine(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                log.Info("Error: Put data table to chart with id '" + chartId + "'");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            log.Info("Sending data to EagleEye platform ... Done.");
-        }
-
+        
         public void GenerateDefectCountByProduct()
         {
             log.Info("Generating: Defect Count By Product ...");
 
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
             // collect all products
-            foreach (Employee employee in EmployeesReader.GetEmployees())
+            foreach (Employee employee in EmployeesReader.Employees)
             {
                 if (!product2count.ContainsKey(employee.ProductName))
                 {
@@ -137,13 +107,8 @@ namespace EagleEye.Defects
             
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "DefectCountByProduct";
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
-
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+            
+            Save2EagleEye("DefectCountByProduct", json);
 
             log.Info("Generating: Defect Count By Product ... Done.");
         }
@@ -161,12 +126,12 @@ namespace EagleEye.Defects
 
             log.Info("Generating: Defect Severity Count By Product ...");
 
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, List<int>> product2severitycount = new Dictionary<string, List<int>>();
 
             // collect all products
-            foreach (Employee employee in EmployeesReader.GetEmployees())
+            foreach (Employee employee in EmployeesReader.Employees)
             {
                 if (!product2severitycount.ContainsKey(employee.ProductName))
                 {
@@ -215,13 +180,8 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "DefectCountBySeverity";
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
-
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+            
+            Save2EagleEye("DefectCountBySeverity", json);
 
             log.Info("Generating: Defect Severity Count By Product ... Done.");
         }
@@ -241,12 +201,12 @@ namespace EagleEye.Defects
 
             log.Info("Generating: Defect Count By Injection Stage ...");
 
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> injectionstage2count = new Dictionary<string, int>();
 
             // collect all products
-            foreach (var injectionStage in EagleEyeSettingsReader.GetEagleEyeSettings().DefectInjectionStage)
+            foreach (var injectionStage in EagleEyeSettingsReader.Settings.DefectInjectionStage)
             {
                 injectionstage2count.Add(injectionStage.ToLower(), 0);
             }
@@ -276,13 +236,8 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "DefectCountByInjectionStage";
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
-
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+            
+            Save2EagleEye("DefectCountByInjectionStage", json);
 
             log.Info("Generating: Defect Count By Injection Stage ... Done.");
         }
@@ -301,12 +256,12 @@ namespace EagleEye.Defects
 
             log.Info("Generating: Defect Count By Type ...");
 
-            EagleEyeSettings settings = EagleEyeSettingsReader.GetEagleEyeSettings();
+            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
             Dictionary<string, int> type2count = new Dictionary<string, int>();
 
             // collect all products
-            foreach (var type in EagleEyeSettingsReader.GetEagleEyeSettings().DefectTypes)
+            foreach (var type in EagleEyeSettingsReader.Settings.DefectTypes)
             {
                 type2count.Add(type.ToLower(), 0);
             }
@@ -336,13 +291,8 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
             Console.WriteLine(json);
-
-            ChartSettings chartSettings = null;
-            string chartSettingsKeyName = "DefectCountByType";
-            settings.Charts.TryGetValue(chartSettingsKeyName, out chartSettings);
-
-            // send request to eagleeye platform
-            //PutDataTableToEagleEye(chartSettings.ChartId, json);
+            
+            Save2EagleEye("DefectCountByType", json);
 
             log.Info("Generating: Defect Count By Type ... Done.");
         }

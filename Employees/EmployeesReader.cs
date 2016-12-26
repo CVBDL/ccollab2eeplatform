@@ -11,42 +11,42 @@ namespace Employees
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EmployeesReader));
 
-        private const string EMPLOYEES_JSON_FILENAME = "ConfigurationFiles/employees.json";
+        private static readonly string EMPLOYEES_JSON_FILENAME = "ConfigurationFiles/employees.json";
 
-        private static List<Employee> _employees = null;
+        private static List<Employee> employees = null;
 
-        /// <summary>
-        /// Read employees from json file.
-        /// </summary>
-        /// <returns>Deserialized employees json object.</returns>
-        public static List<Employee> GetEmployees()
+        public static List<Employee> Employees
         {
-
-            if (_employees == null)
+            get
             {
-                string json = string.Empty;
+                if (employees == null)
+                {
+                    string json = string.Empty;
 
-                StreamReader sr = new StreamReader(EMPLOYEES_JSON_FILENAME, Encoding.UTF8);
-                using (sr)
-                {
-                    json = sr.ReadToEnd();
+                    StreamReader sr = new StreamReader(EMPLOYEES_JSON_FILENAME, Encoding.UTF8);
+                    using (sr)
+                    {
+                        json = sr.ReadToEnd();
+                    }
+
+                    if (string.IsNullOrWhiteSpace(json))
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        employees = JsonConvert.DeserializeObject<List<Employee>>(json);
+                    }
+                    catch (Exception exp)
+                    {
+                        log.Error(string.Format("Failed to load from json: {0}", exp.Message));
+                        return null;
+                    }
                 }
 
-                if (string.IsNullOrWhiteSpace(json))
-                    return null;
-                
-                try
-                {
-                    _employees = JsonConvert.DeserializeObject<List<Employee>>(json);
-                }
-                catch (Exception exp)
-                {
-                    log.Error(string.Format("Failed to load from json: {0}", exp.Message));
-                    throw;
-                }
+                return employees;
             }
-
-            return _employees;
         }
 
         /// <summary>
@@ -56,9 +56,7 @@ namespace Employees
         /// <returns></returns>
         public static string GetEmployeeProductName(string loginName)
         {
-            List<Employee> employees = GetEmployees();
-
-            foreach (Employee employee in employees)
+            foreach (Employee employee in Employees)
             {
                 if (employee.LoginName == loginName)
                 {
@@ -71,11 +69,9 @@ namespace Employees
 
         public static List<Employee> GetEmployeesByProduct(string productName)
         {
-            List<Employee> employees = GetEmployees();
-
             List<Employee> employeesOfProduct = new List<Employee>();
 
-            foreach (Employee employee in employees)
+            foreach (Employee employee in Employees)
             {
                 if (employee.ProductName == productName)
                 {
@@ -88,11 +84,9 @@ namespace Employees
 
         public static string GetEmployeeFullNameByLoginName(string loginName)
         {
-            List<Employee> employees = GetEmployees();
-
             string fullName = string.Empty;
 
-            foreach (Employee employee in employees)
+            foreach (Employee employee in Employees)
             {
                 if (employee.LoginName == loginName)
                 {

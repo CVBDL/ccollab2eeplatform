@@ -122,15 +122,13 @@ namespace Ccollab2EagleEye
             log.Info("Sending task notification to server ...");
 
             HttpClient client = new HttpClient();
-
-            var settings = EagleEyeSettingsReader.GetEagleEyeSettings();
-
+            
             string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
 
             try
             {
                 StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PutAsync(settings.ApiRootEndpoint + "tasks/" + taskId, payload).Result;
+                HttpResponseMessage response = client.PutAsync(EagleEyeSettingsReader.Settings.ApiRootEndpoint + "tasks/" + taskId, payload).Result;
                 response.EnsureSuccessStatusCode();
 
                 // use for debugging
