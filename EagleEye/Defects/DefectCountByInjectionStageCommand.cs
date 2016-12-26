@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _defects.GenerateDefectCountByInjectionStage();
+            _defects.GenerateDefectCountByInjectionStage("DefectCountByInjectionStage");
         }
     }
 }

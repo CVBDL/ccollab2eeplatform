@@ -61,7 +61,7 @@ namespace EagleEye.Defects
             }
         }
 
-        public void GenerateDefectCountByProduct()
+        public void GenerateDefectCountByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -111,12 +111,12 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("DefectCountByProduct", json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Defect Count By Product ... Done.");
         }
 
-        public void GenerateDefectCountBySeverity()
+        public void GenerateDefectCountBySeverity(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -181,12 +181,12 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("DefectCountBySeverity", json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Defect Severity Count By Product ... Done.");
         }
 
-        public void GenerateDefectCountByInjectionStage()
+        public void GenerateDefectCountByInjectionStage(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -234,12 +234,12 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("DefectCountByInjectionStage", json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Defect Count By Injection Stage ... Done.");
         }
 
-        public void GenerateDefectCountByType()
+        public void GenerateDefectCountByType(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -286,12 +286,12 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("DefectCountByType", json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Defect Count By Type ... Done.");
         }
 
-        public void GenerateDefectsDistributionByType()
+        public void GenerateDefectsDistributionByType(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -355,7 +355,7 @@ namespace EagleEye.Defects
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("DefectsDistributionByType", json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Defects Distribution by Type ... Done.");
         }

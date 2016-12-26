@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _reviews.GenerateReviewCountByMonth();
+            _reviews.GenerateReviewCountByMonth("ReviewCountByMonth");
         }
     }
 }

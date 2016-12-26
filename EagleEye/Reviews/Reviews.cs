@@ -56,7 +56,7 @@ namespace EagleEye.Reviews
         /// <summary>
         /// Generate review count by month.
         /// </summary>
-        public void GenerateReviewCountByMonth()
+        public void GenerateReviewCountByMonth(string settingskey)
         {
             log.Info("Generating: Review Count By Month ...");
 
@@ -89,7 +89,7 @@ namespace EagleEye.Reviews
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("ReviewCountByMonth", json);
+            Save2EagleEye(settingskey, json);
 
             log.Info("Generating: Review Count By Month ... Done.");
         }
@@ -97,7 +97,7 @@ namespace EagleEye.Reviews
         /// <summary>
         /// Generate review count by product.
         /// </summary>
-        public void GenerateReviewCountByProduct()
+        public void GenerateReviewCountByProduct(string settingskey)
         {
             // Expected data table format:
             // {
@@ -147,7 +147,7 @@ namespace EagleEye.Reviews
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye("ReviewCountByProduct", json);
+            Save2EagleEye(settingskey, json);
 
             log.Info("Generating: Review Count By Product ... Done.");
         }
@@ -159,16 +159,16 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByEmployeeOfProduct)
             {
-                ReviewCountByEmployeeOfProduct(item.ProductName, item.ChartSettingsKey);
+                ReviewCountByEmployeeOfProduct(item.ChartSettingsKey, item.ProductName);
             }
         }
 
         /// <summary>
         /// Generate review count submitted by employees belongs to the given product.
         /// </summary>
-        /// <param name="productName">Product name.</param>
         /// <param name="settingsKey">EagleEye settings key name.</param>
-        private void ReviewCountByEmployeeOfProduct(string productName, string settingsKey)
+        /// <param name="productName">Product name.</param>
+        private void ReviewCountByEmployeeOfProduct(string settingsKey, string productName)
         {
             // Expected data table format:
             // {

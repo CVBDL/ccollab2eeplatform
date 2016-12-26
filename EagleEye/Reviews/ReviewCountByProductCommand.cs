@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _reviews.GenerateReviewCountByProduct();
+            _reviews.GenerateReviewCountByProduct("ReviewCountByProduct");
         }
     }
 }

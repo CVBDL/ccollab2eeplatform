@@ -2,35 +2,35 @@
 {
     public class ReviewsManager
     {
-        ICommand _cmdGenerateReviewCountByMonth;
-        ICommand _cmdGenerateReviewCountByProduct;
-        ICommand _cmdGenerateReviewCountByEmployeeOfProduct;
+        ICommand _cmdReviewCountByMonth;
+        ICommand _cmdReviewCountByProduct;
+        ICommand _cmdReviewCountByEmployeeOfProduct;
 
         public ReviewsManager
         (
-            ICommand cmdGenerateReviewCountByMonth,
-            ICommand cmdGenerateReviewCountByProduct,
-            ICommand cmdGenerateReviewCountByEmployeeOfProduct
+            ICommand cmdReviewCountByMonth,
+            ICommand cmdReviewCountByProduct,
+            ICommand cmdReviewCountByEmployeeOfProduct
         )
         {
-            _cmdGenerateReviewCountByMonth = cmdGenerateReviewCountByMonth;
-            _cmdGenerateReviewCountByProduct = cmdGenerateReviewCountByProduct;
-            _cmdGenerateReviewCountByEmployeeOfProduct = cmdGenerateReviewCountByEmployeeOfProduct;
+            _cmdReviewCountByMonth = cmdReviewCountByMonth;
+            _cmdReviewCountByProduct = cmdReviewCountByProduct;
+            _cmdReviewCountByEmployeeOfProduct = cmdReviewCountByEmployeeOfProduct;
         }
 
         public void GenerateReviewCountByMonth()
         {
-            _cmdGenerateReviewCountByMonth.Execute();
+            _cmdReviewCountByMonth.Execute();
         }
 
         public void GenerateReviewCountByProduct()
         {
-            _cmdGenerateReviewCountByProduct.Execute();
+            _cmdReviewCountByProduct.Execute();
         }
 
         public void GenerateReviewCountByEmployeeOfProduct()
         {
-            _cmdGenerateReviewCountByEmployeeOfProduct.Execute();
+            _cmdReviewCountByEmployeeOfProduct.Execute();
         }
     }
 }

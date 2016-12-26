@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _defects.GenerateDefectCountBySeverity();
+            _defects.GenerateDefectCountBySeverity("DefectCountBySeverity");
         }
     }
 }

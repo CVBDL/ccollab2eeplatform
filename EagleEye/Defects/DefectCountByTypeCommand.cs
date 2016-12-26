@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _defects.GenerateDefectCountByType();
+            _defects.GenerateDefectCountByType("DefectCountByType");
         }
     }
 }

@@ -2,46 +2,46 @@
 {
     public class DefectsManager
     {
-        ICommand _cmdGenerateDefectCountByProduct;
-        ICommand _cmdGenerateDefectSeverityByProduct;
-        ICommand _cmdGenerateDefectCountByInjectionStage;
-        ICommand _cmdGenerateDefectCountByType;
+        ICommand _cmdDefectCountByProduct;
+        ICommand _cmdDefectSeverityByProduct;
+        ICommand _cmdDefectCountByInjectionStage;
+        ICommand _cmdDefectCountByType;
         ICommand _cmdDefectsDistributionByType;
 
         public DefectsManager
         (
-            ICommand cmdGenerateDefectCountByProduct,
-            ICommand cmdGenerateDefectSeverityByProduct,
-            ICommand cmdGenerateDefectCountByInjectionStage,
-            ICommand cmdGenerateDefectCountByType,
+            ICommand cmdDefectCountByProduct,
+            ICommand cmdDefectSeverityByProduct,
+            ICommand cmdDefectCountByInjectionStage,
+            ICommand cmdDefectCountByType,
             ICommand cmdDefectsDistributionByType
         )
         {
-            _cmdGenerateDefectCountByProduct = cmdGenerateDefectCountByProduct;
-            _cmdGenerateDefectSeverityByProduct = cmdGenerateDefectSeverityByProduct;
-            _cmdGenerateDefectCountByInjectionStage = cmdGenerateDefectCountByInjectionStage;
-            _cmdGenerateDefectCountByType = cmdGenerateDefectCountByType;
+            _cmdDefectCountByProduct = cmdDefectCountByProduct;
+            _cmdDefectSeverityByProduct = cmdDefectSeverityByProduct;
+            _cmdDefectCountByInjectionStage = cmdDefectCountByInjectionStage;
+            _cmdDefectCountByType = cmdDefectCountByType;
             _cmdDefectsDistributionByType = cmdDefectsDistributionByType;
         }
 
         public void GenerateDefectCountByProduct()
         {
-            _cmdGenerateDefectCountByProduct.Execute();
+            _cmdDefectCountByProduct.Execute();
         }
 
         public void GenerateDefectSeverityByProduct()
         {
-            _cmdGenerateDefectSeverityByProduct.Execute();
+            _cmdDefectSeverityByProduct.Execute();
         }
 
         public void GenerateDefectCountByInjectionStage()
         {
-            _cmdGenerateDefectCountByInjectionStage.Execute();
+            _cmdDefectCountByInjectionStage.Execute();
         }
 
         public void GenerateDefectCountByType()
         {
-            _cmdGenerateDefectCountByType.Execute();
+            _cmdDefectCountByType.Execute();
         }
 
         public void GenerateDefectsDistributionByType()

@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _defects.GenerateDefectsDistributionByType();
+            _defects.GenerateDefectsDistributionByType("DefectsDistributionByType");
         }
     }
 }
