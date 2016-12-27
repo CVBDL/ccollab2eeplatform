@@ -44,13 +44,13 @@ namespace EagleEye.Reviews
         /// Index of "LOC Changed" column in reviews.csv file
         /// </summary>
         private const int indexLOCChanged = 27;
+        
+        public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
 
         /// <summary>
         /// Holds filtered raw reviews data of local employees.
         /// </summary>
         private List<string[]> filteredEmployeesReviewsData = null;
-
-        public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
 
         /// <summary>
         /// Filter raw reviews data of local employees.
@@ -70,6 +70,77 @@ namespace EagleEye.Reviews
                 }
 
                 return filteredEmployeesReviewsData;
+            }
+        }
+
+        private Dictionary<string, DensityStatistics> densityStatistics = null;
+
+        /// <summary>
+        /// Provided density related statistics.
+        /// </summary>
+        private Dictionary<string, DensityStatistics> DensityStatistics
+        {
+            get
+            {
+                if (densityStatistics != null)
+                {
+                    return densityStatistics;
+                }
+
+                densityStatistics = new Dictionary<string, DensityStatistics>();
+
+                var query =
+                    from row in FilteredEmployeesReviewsData
+                    let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                    group row by productName into productGroup
+                    select productGroup;
+
+                foreach (var group in query)
+                {
+                    if (EagleEyeSettingsReader.Settings.Products.IndexOf(group.Key) < 0) continue;
+
+                    long totalComments = 0;
+                    long totalDefects = 0;
+                    long totalLineOfCode = 0;
+                    long totalLineOfCodeChanged = 0;
+
+                    foreach (var defect in group)
+                    {
+                        long commentCount = 0;
+                        if (long.TryParse(defect[indexCommentCount], out commentCount))
+                        {
+                            totalComments += commentCount;
+                        }
+
+                        long defectCount = 0;
+                        if (long.TryParse(defect[indexDefectCount], out defectCount))
+                        {
+                            totalDefects += defectCount;
+                        }
+
+                        long lineOfCode = 0;
+                        if (long.TryParse(defect[indexLOC], out lineOfCode))
+                        {
+                            totalLineOfCode += lineOfCode;
+                        }
+
+                        long lineOfCodeChanged = 0;
+                        if (long.TryParse(defect[indexLOCChanged], out lineOfCodeChanged))
+                        {
+                            totalLineOfCodeChanged += lineOfCodeChanged;
+                        }
+                    }
+
+                    DensityStatistics stat = new DensityStatistics();
+                    stat.TotalComments = totalComments;
+                    stat.TotalDefects = totalDefects;
+                    stat.LineOfCode = totalLineOfCode;
+                    stat.LineOfCodeChanged = totalLineOfCodeChanged;
+
+                    densityStatistics.Add(group.Key, stat);
+                }
+
+                return densityStatistics;
             }
         }
 
@@ -240,7 +311,7 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count For " + productName + " ... Done.");
         }
-        
+
         /// <summary>
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Uploaded)
         /// </summary>
@@ -259,49 +330,21 @@ namespace EagleEye.Reviews
             log.Info("Generating: Code Comment Density (Uploaded) ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
-
-            // collect all products
+            
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
-                product2density.Add(product, 0);
-            }
-
-            var query =
-                from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
-                group row by productName into productGroup
-                select productGroup;
-
-            foreach (var group in query)
-            {
-                if (!product2density.ContainsKey(group.Key)) continue;
-
-                long totalComments = 0;
-                long totalLineOfCode = 0;
-
-                foreach (var defect in group)
+                DensityStatistics stat = null;
+                if (DensityStatistics.TryGetValue(product, out stat))
                 {
-                    long commentCount = 0;
-                    if (long.TryParse(defect[indexCommentCount], out commentCount))
+                    // Formula: TotalComments * 1000 / TotalLOC
+                    double density = 0;
+                    if (stat.LineOfCode != 0)
                     {
-                        totalComments += commentCount;
+                        density = (stat.TotalComments * 1000) / stat.LineOfCode;
                     }
 
-                    long lineOfCode = 0;
-                    if (long.TryParse(defect[indexLOC], out lineOfCode))
-                    {
-                        totalLineOfCode += lineOfCode;
-                    }
+                    product2density.Add(product, density);
                 }
-
-                // Formula: TotalComments * 1000 / TotalLOC
-                double density = 0;
-                if (totalLineOfCode != 0)
-                {
-                    density = (totalComments * 1000) / totalLineOfCode;
-                }
-
-                product2density[group.Key] = density;
             }
 
             List<List<object>> datatable = new List<List<object>>();
@@ -339,51 +382,23 @@ namespace EagleEye.Reviews
             log.Info("Generating: Code Comment Density (Changed) ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
-
-            // collect all products
+            
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
-                product2density.Add(product, 0);
-            }
-
-            var query =
-                from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
-                group row by productName into productGroup
-                select productGroup;
-
-            foreach (var group in query)
-            {
-                if (!product2density.ContainsKey(group.Key)) continue;
-
-                long totalComments = 0;
-                long totalLineOfCodeChanged = 0;
-
-                foreach (var defect in group)
+                DensityStatistics stat = null;
+                if (DensityStatistics.TryGetValue(product, out stat))
                 {
-                    long commentCount = 0;
-                    if (long.TryParse(defect[indexCommentCount], out commentCount))
+                    // Formula: TotalComments * 1000 / TotalLOCC
+                    double density = 0;
+                    if (stat.LineOfCodeChanged != 0)
                     {
-                        totalComments += commentCount;
+                        density = (stat.TotalComments * 1000) / stat.LineOfCodeChanged;
                     }
 
-                    long lineOfCodeChanged = 0;
-                    if (long.TryParse(defect[indexLOCChanged], out lineOfCodeChanged))
-                    {
-                        totalLineOfCodeChanged += lineOfCodeChanged;
-                    }
+                    product2density.Add(product, density);
                 }
-
-                // Formula: TotalComments * 1000 / TotalLOCC
-                double density = 0;
-                if (totalLineOfCodeChanged != 0)
-                {
-                    density = (totalComments * 1000) / totalLineOfCodeChanged;
-                }
-
-                product2density[group.Key] = density;
             }
-
+            
             List<List<object>> datatable = new List<List<object>>();
 
             List<object> header = new List<object> { "Product", "Code Comment Density(Changed)" };
@@ -419,49 +434,21 @@ namespace EagleEye.Reviews
             log.Info("Generating: Code Defect Density (Uploaded) ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
-
-            // collect all products
+            
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
-                product2density.Add(product, 0);
-            }
-
-            var query =
-                from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
-                group row by productName into productGroup
-                select productGroup;
-
-            foreach (var group in query)
-            {
-                if (!product2density.ContainsKey(group.Key)) continue;
-
-                long totalDefects = 0;
-                long totalLineOfCode = 0;
-
-                foreach (var defect in group)
+                DensityStatistics stat = null;
+                if (DensityStatistics.TryGetValue(product, out stat))
                 {
-                    long defectCount = 0;
-                    if (long.TryParse(defect[indexDefectCount], out defectCount))
+                    // Formula: TotalDefects * 1000 / TotalLOC
+                    double density = 0;
+                    if (stat.LineOfCode != 0)
                     {
-                        totalDefects += defectCount;
+                        density = (stat.TotalDefects * 1000) / stat.LineOfCode;
                     }
 
-                    long lineOfCode = 0;
-                    if (long.TryParse(defect[indexLOC], out lineOfCode))
-                    {
-                        totalLineOfCode += lineOfCode;
-                    }
+                    product2density.Add(product, density);
                 }
-
-                // Formula: TotalDefects * 1000 / TotalLOC
-                double density = 0;
-                if (totalLineOfCode != 0)
-                {
-                    density = (totalDefects * 1000) / totalLineOfCode;
-                }
-
-                product2density[group.Key] = density;
             }
 
             List<List<object>> datatable = new List<List<object>>();
@@ -499,49 +486,21 @@ namespace EagleEye.Reviews
             log.Info("Generating: Code Defect Density (Changed) ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
-
-            // collect all products
+            
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
-                product2density.Add(product, 0);
-            }
-
-            var query =
-                from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
-                group row by productName into productGroup
-                select productGroup;
-
-            foreach (var group in query)
-            {
-                if (!product2density.ContainsKey(group.Key)) continue;
-
-                long totalDefects = 0;
-                long totalLineOfCodeChanged = 0;
-
-                foreach (var defect in group)
+                DensityStatistics stat = null;
+                if (DensityStatistics.TryGetValue(product, out stat))
                 {
-                    long defectCount = 0;
-                    if (long.TryParse(defect[indexDefectCount], out defectCount))
+                    // Formula: TotalDefects * 1000 / TotalLOCC
+                    double density = 0;
+                    if (stat.LineOfCodeChanged != 0)
                     {
-                        totalDefects += defectCount;
+                        density = (stat.TotalDefects * 1000) / stat.LineOfCodeChanged;
                     }
 
-                    long lineOfCodeChanged = 0;
-                    if (long.TryParse(defect[indexLOCChanged], out lineOfCodeChanged))
-                    {
-                        totalLineOfCodeChanged += lineOfCodeChanged;
-                    }
+                    product2density.Add(product, density);
                 }
-
-                // Formula: TotalComments * 1000 / TotalLOCC
-                double density = 0;
-                if (totalLineOfCodeChanged != 0)
-                {
-                    density = (totalDefects * 1000) / totalLineOfCodeChanged;
-                }
-
-                product2density[group.Key] = density;
             }
 
             List<List<object>> datatable = new List<List<object>>();

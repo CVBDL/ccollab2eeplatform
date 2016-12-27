@@ -57,6 +57,7 @@
     <Compile Include="Defects\DefectCountBySeverityCommand.cs" />
     <Compile Include="Defects\DefectCountByTypeCommand.cs" />
     <Compile Include="Defects\IDefectsCommands.cs" />
+    <Compile Include="DensityStatistics.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Reviews\CodeCommentDensityChangedCommand.cs" />
     <Compile Include="Reviews\CodeCommentDensityUploadedCommand.cs" />
