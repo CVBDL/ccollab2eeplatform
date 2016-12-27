@@ -7,6 +7,7 @@
         void GenerateCodeCommentDensityUploaded(string settingsKey);
         void GenerateCodeCommentDensityChanged(string settingsKey);
         void GenerateCodeDefectDensityUploaded(string settingsKey);
+        void GenerateCodeDefectDensityChanged(string settingsKey);
         void GenerateReviewCountByEmployeeOfProduct();
     }
 }

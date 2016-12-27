@@ -480,5 +480,85 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Code Defect Density (Uploaded) ... Done");
         }
+
+        /// <summary>
+        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Changed)
+        /// </summary>
+        /// <param name="settingsKey"></param>
+        public void GenerateCodeDefectDensityChanged(string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Code Defect Density(Changed)"],
+            //     ["Team1", 0.1],
+            //     ["Team2", 0.034]
+            //   ]
+            // }
+
+            log.Info("Generating: Code Defect Density (Changed) ...");
+
+            Dictionary<string, double> product2density = new Dictionary<string, double>();
+
+            // collect all products
+            foreach (var product in EagleEyeSettingsReader.Settings.Products)
+            {
+                product2density.Add(product, 0);
+            }
+
+            var query =
+                from row in FilteredEmployeesReviewsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                group row by productName into productGroup
+                select productGroup;
+
+            foreach (var group in query)
+            {
+                if (!product2density.ContainsKey(group.Key)) continue;
+
+                long totalDefects = 0;
+                long totalLineOfCodeChanged = 0;
+
+                foreach (var defect in group)
+                {
+                    long defectCount = 0;
+                    if (long.TryParse(defect[indexDefectCount], out defectCount))
+                    {
+                        totalDefects += defectCount;
+                    }
+
+                    long lineOfCodeChanged = 0;
+                    if (long.TryParse(defect[indexLOCChanged], out lineOfCodeChanged))
+                    {
+                        totalLineOfCodeChanged += lineOfCodeChanged;
+                    }
+                }
+
+                // Formula: TotalComments * 1000 / TotalLOCC
+                double density = 0;
+                if (totalLineOfCodeChanged != 0)
+                {
+                    density = (totalDefects * 1000) / totalLineOfCodeChanged;
+                }
+
+                product2density[group.Key] = density;
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Product", "Code Defect Density(Changed)" };
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, double> item in product2density)
+            {
+                datatable.Add(new List<object> { item.Key, item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+
+            log.Info("Generating: Code Comment Density (Defect) ... Done");
+        }
     }
 }

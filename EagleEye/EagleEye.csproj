@@ -60,6 +60,7 @@
     <Compile Include="ICommand.cs" />
     <Compile Include="Reviews\CodeCommentDensityChangedCommand.cs" />
     <Compile Include="Reviews\CodeCommentDensityUploadedCommand.cs" />
+    <Compile Include="Reviews\CodeDefectDensityChangedCommand.cs" />
     <Compile Include="Reviews\CodeDefectDensityUploadedCommand.cs" />
     <Compile Include="Reviews\ReviewCountByProductCommand.cs" />
     <Compile Include="Reviews\ReviewCountByEmployeeOfProductCommand.cs" />
