@@ -95,13 +95,17 @@ namespace Ccollab2EagleEye
                     new ReviewCountByMonthCommand(reviews),
                     new ReviewCountByProductCommand(reviews),
                     new ReviewCountByEmployeeOfProductCommand(reviews),
-                    new CodeCommentDensityUploadedCommand(reviews)
+                    new CodeCommentDensityUploadedCommand(reviews),
+                    new CodeCommentDensityChangedCommand(reviews),
+                    new CodeDefectDensityUploadedCommand(reviews)
                 );
 
                 reviewsManager.GenerateReviewCountByMonth();
                 reviewsManager.GenerateReviewCountByProduct();
                 reviewsManager.GenerateReviewCountByEmployeeOfProduct();
                 reviewsManager.GenerateCodeCommentDensityUploaded();
+                reviewsManager.GenerateCodeCommentDensityChanged();
+                reviewsManager.GenerateCodeDefectDensityUploaded();
             }
 
             // ccollab defects charts related

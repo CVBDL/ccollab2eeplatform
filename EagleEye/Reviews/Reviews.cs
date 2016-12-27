@@ -26,6 +26,11 @@ namespace EagleEye.Reviews
         private const int indexCreatorLogin = 9;
 
         /// <summary>
+        /// Index of "Defect Count" column in reviews.csv file
+        /// </summary>
+        private const int indexDefectCount = 19;
+
+        /// <summary>
         /// Index of "Comment Count" column in reviews.csv file
         /// </summary>
         private const int indexCommentCount = 22;
@@ -34,6 +39,11 @@ namespace EagleEye.Reviews
         /// Index of "LOC" column in reviews.csv file
         /// </summary>
         private const int indexLOC = 26;
+
+        /// <summary>
+        /// Index of "LOC Changed" column in reviews.csv file
+        /// </summary>
+        private const int indexLOCChanged = 27;
 
         /// <summary>
         /// Holds filtered raw reviews data of local employees.
@@ -230,7 +240,7 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review Count For " + productName + " ... Done.");
         }
-
+        
         /// <summary>
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Uploaded)
         /// </summary>
@@ -309,6 +319,166 @@ namespace EagleEye.Reviews
             Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Code Comment Density (Uploaded) ... Done");
+        }
+
+        /// <summary>
+        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Changed)
+        /// </summary>
+        /// <param name="settingsKey"></param>
+        public void GenerateCodeCommentDensityChanged(string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Code Comment Density(Changed)"],
+            //     ["Team1", 0.1],
+            //     ["Team2", 0.034]
+            //   ]
+            // }
+
+            log.Info("Generating: Code Comment Density (Changed) ...");
+
+            Dictionary<string, double> product2density = new Dictionary<string, double>();
+
+            // collect all products
+            foreach (var product in EagleEyeSettingsReader.Settings.Products)
+            {
+                product2density.Add(product, 0);
+            }
+
+            var query =
+                from row in FilteredEmployeesReviewsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                group row by productName into productGroup
+                select productGroup;
+
+            foreach (var group in query)
+            {
+                if (!product2density.ContainsKey(group.Key)) continue;
+
+                long totalComments = 0;
+                long totalLineOfCodeChanged = 0;
+
+                foreach (var defect in group)
+                {
+                    long commentCount = 0;
+                    if (long.TryParse(defect[indexCommentCount], out commentCount))
+                    {
+                        totalComments += commentCount;
+                    }
+
+                    long lineOfCodeChanged = 0;
+                    if (long.TryParse(defect[indexLOCChanged], out lineOfCodeChanged))
+                    {
+                        totalLineOfCodeChanged += lineOfCodeChanged;
+                    }
+                }
+
+                // Formula: TotalComments * 1000 / TotalLOCC
+                double density = 0;
+                if (totalLineOfCodeChanged != 0)
+                {
+                    density = (totalComments * 1000) / totalLineOfCodeChanged;
+                }
+
+                product2density[group.Key] = density;
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Product", "Code Comment Density(Changed)" };
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, double> item in product2density)
+            {
+                datatable.Add(new List<object> { item.Key, item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+
+            log.Info("Generating: Code Comment Density (Changed) ... Done");
+        }
+
+        /// <summary>
+        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Uploaded)
+        /// </summary>
+        /// <param name="settingsKey"></param>
+        public void GenerateCodeDefectDensityUploaded(string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Code Defect Density(Uploaded)"],
+            //     ["Team1", 0.1],
+            //     ["Team2", 0.034]
+            //   ]
+            // }
+
+            log.Info("Generating: Code Defect Density (Uploaded) ...");
+
+            Dictionary<string, double> product2density = new Dictionary<string, double>();
+
+            // collect all products
+            foreach (var product in EagleEyeSettingsReader.Settings.Products)
+            {
+                product2density.Add(product, 0);
+            }
+
+            var query =
+                from row in FilteredEmployeesReviewsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                group row by productName into productGroup
+                select productGroup;
+
+            foreach (var group in query)
+            {
+                if (!product2density.ContainsKey(group.Key)) continue;
+
+                long totalDefects = 0;
+                long totalLineOfCode = 0;
+
+                foreach (var defect in group)
+                {
+                    long defectCount = 0;
+                    if (long.TryParse(defect[indexDefectCount], out defectCount))
+                    {
+                        totalDefects += defectCount;
+                    }
+
+                    long lineOfCode = 0;
+                    if (long.TryParse(defect[indexLOC], out lineOfCode))
+                    {
+                        totalLineOfCode += lineOfCode;
+                    }
+                }
+
+                // Formula: TotalDefects * 1000 / TotalLOC
+                double density = 0;
+                if (totalLineOfCode != 0)
+                {
+                    density = (totalDefects * 1000) / totalLineOfCode;
+                }
+
+                product2density[group.Key] = density;
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Product", "Code Defect Density(Uploaded)" };
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, double> item in product2density)
+            {
+                datatable.Add(new List<object> { item.Key, item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+
+            log.Info("Generating: Code Defect Density (Uploaded) ... Done");
         }
     }
 }
