@@ -26,6 +26,16 @@ namespace EagleEye.Reviews
         private const int indexCreatorLogin = 9;
 
         /// <summary>
+        /// Index of "Comment Count" column in reviews.csv file
+        /// </summary>
+        private const int indexCommentCount = 22;
+
+        /// <summary>
+        /// Index of "LOC" column in reviews.csv file
+        /// </summary>
+        private const int indexLOC = 26;
+
+        /// <summary>
         /// Holds filtered raw reviews data of local employees.
         /// </summary>
         private List<string[]> filteredEmployeesReviewsData = null;
@@ -56,7 +66,7 @@ namespace EagleEye.Reviews
         /// <summary>
         /// Generate review count by month.
         /// </summary>
-        public void GenerateReviewCountByMonth(string settingskey)
+        public void GenerateReviewCountByMonth(string settingsKey)
         {
             log.Info("Generating: Review Count By Month ...");
 
@@ -89,7 +99,7 @@ namespace EagleEye.Reviews
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye(settingskey, json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Review Count By Month ... Done.");
         }
@@ -97,7 +107,7 @@ namespace EagleEye.Reviews
         /// <summary>
         /// Generate review count by product.
         /// </summary>
-        public void GenerateReviewCountByProduct(string settingskey)
+        public void GenerateReviewCountByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -147,7 +157,7 @@ namespace EagleEye.Reviews
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye(settingskey, json);
+            Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Review Count By Product ... Done.");
         }
@@ -219,6 +229,86 @@ namespace EagleEye.Reviews
             Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Review Count For " + productName + " ... Done.");
+        }
+
+        /// <summary>
+        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Uploaded)
+        /// </summary>
+        /// <param name="settingsKey"></param>
+        public void GenerateCodeCommentDensityUploaded(string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Product", "Code Comment Density(Uploaded)"],
+            //     ["Team1", 0.1],
+            //     ["Team2", 0.034]
+            //   ]
+            // }
+
+            log.Info("Generating: Code Comment Density (Uploaded) ...");
+
+            Dictionary<string, double> product2density = new Dictionary<string, double>();
+
+            // collect all products
+            foreach (var product in EagleEyeSettingsReader.Settings.Products)
+            {
+                product2density.Add(product, 0);
+            }
+
+            var query =
+                from row in FilteredEmployeesReviewsData
+                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                group row by productName into productGroup
+                select productGroup;
+
+            foreach (var group in query)
+            {
+                if (!product2density.ContainsKey(group.Key)) continue;
+
+                long totalComments = 0;
+                long totalLineOfCode = 0;
+
+                foreach (var defect in group)
+                {
+                    long commentCount = 0;
+                    if (long.TryParse(defect[indexCommentCount], out commentCount))
+                    {
+                        totalComments += commentCount;
+                    }
+
+                    long lineOfCode = 0;
+                    if (long.TryParse(defect[indexLOC], out lineOfCode))
+                    {
+                        totalLineOfCode += lineOfCode;
+                    }
+                }
+
+                // Formula: TotalComments * 1000 / TotalLOC
+                double density = 0;
+                if (totalLineOfCode != 0)
+                {
+                    density = (totalComments * 1000) / totalLineOfCode;
+                }
+
+                product2density[group.Key] = density;
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Product", "Code Comment Density(Uploaded)" };
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, double> item in product2density)
+            {
+                datatable.Add(new List<object> { item.Key, item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+
+            log.Info("Generating: Code Comment Density (Uploaded) ... Done");
         }
     }
 }

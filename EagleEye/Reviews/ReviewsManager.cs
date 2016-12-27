@@ -5,18 +5,21 @@
         ICommand _cmdReviewCountByMonth;
         ICommand _cmdReviewCountByProduct;
         ICommand _cmdReviewCountByEmployeeOfProduct;
+        ICommand _cmdCodeCommentDensityUploaded;
 
         public ReviewsManager
         (
             ICommand cmdReviewCountByMonth,
             ICommand cmdReviewCountByProduct,
-            ICommand cmdReviewCountByEmployeeOfProduct
+            ICommand cmdReviewCountByEmployeeOfProduct,
+            ICommand cmdCodeCommentDensityUploaded
         )
         {
             _cmdReviewCountByMonth = cmdReviewCountByMonth;
             _cmdReviewCountByProduct = cmdReviewCountByProduct;
             _cmdReviewCountByEmployeeOfProduct = cmdReviewCountByEmployeeOfProduct;
-        }
+            _cmdCodeCommentDensityUploaded = cmdCodeCommentDensityUploaded;
+    }
 
         public void GenerateReviewCountByMonth()
         {
@@ -31,6 +34,11 @@
         public void GenerateReviewCountByEmployeeOfProduct()
         {
             _cmdReviewCountByEmployeeOfProduct.Execute();
+        }
+
+        public void GenerateCodeCommentDensityUploaded()
+        {
+            _cmdCodeCommentDensityUploaded.Execute();
         }
     }
 }

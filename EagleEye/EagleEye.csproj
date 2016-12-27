@@ -58,6 +58,7 @@
     <Compile Include="Defects\DefectCountByTypeCommand.cs" />
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="Reviews\CodeCommentDensityUploadedCommand.cs" />
     <Compile Include="Reviews\ReviewCountByProductCommand.cs" />
     <Compile Include="Reviews\ReviewCountByEmployeeOfProductCommand.cs" />
     <Compile Include="Reviews\IReviewsCommands.cs" />

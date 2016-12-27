@@ -1,6 +1,18 @@
 ﻿{
   "ApiRootEndpoint": "http://localhost:3000/api/v1/",
   "Charts": {
+    "CodeCommentDensityChanged": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "CodeCommentDensityUploaded": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "CodeDefectDensityChanged": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "CodeDefectDensityUploaded": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
     "DefectCountByInjectionStage": {
       "ChartId": "5799641be24561202bc7190d"
     },
@@ -53,6 +65,7 @@
     "style",
     "testing"
   ],
+  "Products": [ "FTView", "FTSP_FTAE", "ViewPoint" ],
   "ReviewCountByEmployeeOfProduct": [
     {
       "ProductName": "ViewPoint",

@@ -359,5 +359,6 @@ namespace EagleEye.Defects
 
             log.Info("Generating: Defects Distribution by Type ... Done.");
         }
+        
     }
 }

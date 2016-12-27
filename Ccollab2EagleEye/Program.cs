@@ -94,12 +94,14 @@ namespace Ccollab2EagleEye
                 (
                     new ReviewCountByMonthCommand(reviews),
                     new ReviewCountByProductCommand(reviews),
-                    new ReviewCountByEmployeeOfProductCommand(reviews)
+                    new ReviewCountByEmployeeOfProductCommand(reviews),
+                    new CodeCommentDensityUploadedCommand(reviews)
                 );
 
                 reviewsManager.GenerateReviewCountByMonth();
                 reviewsManager.GenerateReviewCountByProduct();
                 reviewsManager.GenerateReviewCountByEmployeeOfProduct();
+                reviewsManager.GenerateCodeCommentDensityUploaded();
             }
 
             // ccollab defects charts related
