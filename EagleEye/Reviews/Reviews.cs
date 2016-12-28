@@ -40,21 +40,21 @@ namespace EagleEye.Reviews
             }
         }
 
-        private Dictionary<string, DensityStatistics> densityStatistics = null;
+        private Dictionary<string, DensityStatistics> densityStatisticsByProduct = null;
 
         /// <summary>
         /// Provided density related statistics.
         /// </summary>
-        private Dictionary<string, DensityStatistics> DensityStatistics
+        private Dictionary<string, DensityStatistics> DensityStatisticsByProduct
         {
             get
             {
-                if (densityStatistics != null)
+                if (densityStatisticsByProduct != null)
                 {
-                    return densityStatistics;
+                    return densityStatisticsByProduct;
                 }
 
-                densityStatistics = new Dictionary<string, DensityStatistics>();
+                densityStatisticsByProduct = new Dictionary<string, DensityStatistics>();
 
                 var query =
                     from row in FilteredEmployeesReviewsData
@@ -104,10 +104,10 @@ namespace EagleEye.Reviews
                     stat.LineOfCode = totalLineOfCode;
                     stat.LineOfCodeChanged = totalLineOfCodeChanged;
 
-                    densityStatistics.Add(group.Key, stat);
+                    densityStatisticsByProduct.Add(group.Key, stat);
                 }
 
-                return densityStatistics;
+                return densityStatisticsByProduct;
             }
         }
 
@@ -169,14 +169,10 @@ namespace EagleEye.Reviews
             log.Info("Generating: Review Count By Product ...");
             
             Dictionary<string, int> product2count = new Dictionary<string, int>();
-
-            // collect all products
-            foreach (Employee employee in EmployeesReader.Employees)
+            
+            foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
-                if (!product2count.ContainsKey(employee.ProductName))
-                {
-                    product2count.Add(employee.ProductName, 0);
-                }
+                product2count.Add(product, 0);
             }
 
             var query =
@@ -301,7 +297,7 @@ namespace EagleEye.Reviews
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
                 DensityStatistics stat = null;
-                if (DensityStatistics.TryGetValue(product, out stat))
+                if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
                     // Formula: TotalComments * 1000 / TotalLOC
                     double density = 0;
@@ -353,7 +349,7 @@ namespace EagleEye.Reviews
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
                 DensityStatistics stat = null;
-                if (DensityStatistics.TryGetValue(product, out stat))
+                if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
                     // Formula: TotalComments * 1000 / TotalLOCC
                     double density = 0;
@@ -405,7 +401,7 @@ namespace EagleEye.Reviews
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
                 DensityStatistics stat = null;
-                if (DensityStatistics.TryGetValue(product, out stat))
+                if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
                     // Formula: TotalDefects * 1000 / TotalLOC
                     double density = 0;
@@ -457,7 +453,7 @@ namespace EagleEye.Reviews
             foreach (var product in EagleEyeSettingsReader.Settings.Products)
             {
                 DensityStatistics stat = null;
-                if (DensityStatistics.TryGetValue(product, out stat))
+                if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
                     // Formula: TotalDefects * 1000 / TotalLOCC
                     double density = 0;
