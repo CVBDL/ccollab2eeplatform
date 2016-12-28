@@ -12,27 +12,7 @@ namespace EagleEye.Defects
     public class Defects : EagleEyeDataGeneratorDecorator, IDefectsCommands
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Defects));
-
-        /// <summary>
-        /// Index of "Creator Login" column in defects.csv file
-        /// </summary>
-        private const int indexCreatorLogin = 8;
-
-        /// <summary>
-        /// Index of "Severity" column in defects.csv file
-        /// </summary>
-        private const int indexSeverity = 20;
-
-        /// <summary>
-        /// Index of "Type_CVB" column in defects.csv file
-        /// </summary>
-        private const int indexType = 22;
-
-        /// <summary>
-        /// Index of "Injection Stage" column in defects.csv file
-        /// </summary>
-        private const int indexInjectionStage = 23;
-
+        
         /// <summary>
         /// Holds filtered raw defects data of local employees.
         /// </summary>
@@ -51,7 +31,7 @@ namespace EagleEye.Defects
                 {
                     IEnumerable<string[]> defectsQuery =
                         from row in GetDefectsRawData()
-                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[indexCreatorLogin])
+                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[DefectCsvColumnIndex.CreatorLogin])
                         select row;
 
                     filteredEmployeesDefectsData = defectsQuery.ToList<string[]>();
@@ -87,7 +67,7 @@ namespace EagleEye.Defects
 
             var query =
                 from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                let productName = EmployeesReader.GetEmployeeProductName(row[DefectCsvColumnIndex.CreatorLogin])
                 group row by productName into productGroup
                 select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
 
@@ -143,7 +123,7 @@ namespace EagleEye.Defects
             }
             var query =
                 from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                let productName = EmployeesReader.GetEmployeeProductName(row[DefectCsvColumnIndex.CreatorLogin])
                 group row by productName into productGroup
                 select productGroup;
 
@@ -153,7 +133,7 @@ namespace EagleEye.Defects
 
                 foreach (var defect in item)
                 {
-                    int index = settings.DefectSeverityTypes.IndexOf(defect[indexSeverity]);
+                    int index = settings.DefectSeverityTypes.IndexOf(defect[DefectCsvColumnIndex.Severity]);
 
                     if (index >= 0)
                     {
@@ -211,7 +191,7 @@ namespace EagleEye.Defects
 
             var query =
                 from row in FilteredEmployeesDefectsData
-                group row by row[indexInjectionStage] into injectionStageGroup
+                group row by row[DefectCsvColumnIndex.InjectionStage] into injectionStageGroup
                 select new { InjectionStage = injectionStageGroup.Key.ToLower(), Count = injectionStageGroup.Count() };
 
             foreach (var item in query)
@@ -263,7 +243,7 @@ namespace EagleEye.Defects
 
             var query =
                 from row in FilteredEmployeesDefectsData
-                group row by row[indexType] into typeGroup
+                group row by row[DefectCsvColumnIndex.Type] into typeGroup
                 select new { Type = typeGroup.Key.ToLower(), Count = typeGroup.Count() };
 
             foreach (var item in query)
@@ -317,7 +297,7 @@ namespace EagleEye.Defects
             }
             var query =
                 from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                let productName = EmployeesReader.GetEmployeeProductName(row[DefectCsvColumnIndex.CreatorLogin])
                 group row by productName into productGroup
                 select productGroup;
 
@@ -327,7 +307,7 @@ namespace EagleEye.Defects
 
                 foreach (var defect in item)
                 {
-                    int index = settings.DefectTypes.IndexOf(defect[indexType]);
+                    int index = settings.DefectTypes.IndexOf(defect[DefectCsvColumnIndex.Type]);
 
                     if (index >= 0)
                     {

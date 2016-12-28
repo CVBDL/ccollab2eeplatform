@@ -3,47 +3,14 @@ using EagleEye.Settings;
 using Employees;
 using log4net;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 
 namespace EagleEye.Reviews
 {
     public class Reviews : EagleEyeDataGeneratorDecorator, IReviewsCommands
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
-
-        /// <summary>
-        /// Index of "Review Creation Date" column in reviews.csv file
-        /// </summary>
-        private const int indexReviewCreationDate = 2;
-
-        /// <summary>
-        /// Index of "Creator Login" column in reviews.csv file
-        /// </summary>
-        private const int indexCreatorLogin = 9;
-
-        /// <summary>
-        /// Index of "Defect Count" column in reviews.csv file
-        /// </summary>
-        private const int indexDefectCount = 19;
-
-        /// <summary>
-        /// Index of "Comment Count" column in reviews.csv file
-        /// </summary>
-        private const int indexCommentCount = 22;
-
-        /// <summary>
-        /// Index of "LOC" column in reviews.csv file
-        /// </summary>
-        private const int indexLOC = 26;
-
-        /// <summary>
-        /// Index of "LOC Changed" column in reviews.csv file
-        /// </summary>
-        private const int indexLOCChanged = 27;
         
         public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
 
@@ -63,7 +30,7 @@ namespace EagleEye.Reviews
                 {
                     IEnumerable<string[]> reviewsQuery =
                         from row in GetReviewsRawData()
-                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[indexCreatorLogin])
+                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[ReviewCsvColumnIndex.CreatorLogin])
                         select row;
 
                     filteredEmployeesReviewsData = reviewsQuery.ToList<string[]>();
@@ -91,7 +58,7 @@ namespace EagleEye.Reviews
 
                 var query =
                     from row in FilteredEmployeesReviewsData
-                    let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                    let productName = EmployeesReader.GetEmployeeProductName(row[ReviewCsvColumnIndex.CreatorLogin])
                     group row by productName into productGroup
                     select productGroup;
 
@@ -107,25 +74,25 @@ namespace EagleEye.Reviews
                     foreach (var defect in group)
                     {
                         long commentCount = 0;
-                        if (long.TryParse(defect[indexCommentCount], out commentCount))
+                        if (long.TryParse(defect[ReviewCsvColumnIndex.CommentCount], out commentCount))
                         {
                             totalComments += commentCount;
                         }
 
                         long defectCount = 0;
-                        if (long.TryParse(defect[indexDefectCount], out defectCount))
+                        if (long.TryParse(defect[ReviewCsvColumnIndex.DefectCount], out defectCount))
                         {
                             totalDefects += defectCount;
                         }
 
                         long lineOfCode = 0;
-                        if (long.TryParse(defect[indexLOC], out lineOfCode))
+                        if (long.TryParse(defect[ReviewCsvColumnIndex.LOC], out lineOfCode))
                         {
                             totalLineOfCode += lineOfCode;
                         }
 
                         long lineOfCodeChanged = 0;
-                        if (long.TryParse(defect[indexLOCChanged], out lineOfCodeChanged))
+                        if (long.TryParse(defect[ReviewCsvColumnIndex.LOCChanged], out lineOfCodeChanged))
                         {
                             totalLineOfCodeChanged += lineOfCodeChanged;
                         }
@@ -163,7 +130,7 @@ namespace EagleEye.Reviews
             // `Review Creation Date` column data format is "2016-09-30 23:33 UTC"
             var query =
                 from row in FilteredEmployeesReviewsData
-                group row by row[indexReviewCreationDate].Substring(0, 7) into month
+                group row by row[ReviewCsvColumnIndex.ReviewCreationDate].Substring(0, 7) into month
                 orderby month.Key ascending
                 select new { Month = month.Key, Count = month.Count() };
 
@@ -214,7 +181,7 @@ namespace EagleEye.Reviews
 
             var query =
                 from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                let productName = EmployeesReader.GetEmployeeProductName(row[ReviewCsvColumnIndex.CreatorLogin])
                 group row by productName into productGroup
                 select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
 
@@ -282,9 +249,9 @@ namespace EagleEye.Reviews
 
             var query =
                 from row in FilteredEmployeesReviewsData
-                let _productName = EmployeesReader.GetEmployeeProductName(row[indexCreatorLogin])
+                let _productName = EmployeesReader.GetEmployeeProductName(row[ReviewCsvColumnIndex.CreatorLogin])
                 where _productName == productName
-                group row by row[indexCreatorLogin] into employeeReviewsGroup
+                group row by row[ReviewCsvColumnIndex.CreatorLogin] into employeeReviewsGroup
                 select new { LoginName = employeeReviewsGroup.Key, ReviewCount = employeeReviewsGroup.Count() };
 
             foreach (var item in query)
