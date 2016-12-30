@@ -50,7 +50,10 @@
     "Requirements",
     "Integration/Test"
   ],
-  "DefectSeverityTypes": [ "Major", "Minor" ],
+  "DefectSeverityTypes": [
+    "Major",
+    "Minor"
+  ],
   "DefectTypes": [
     "algorithm/logic",
     "build",
@@ -65,7 +68,11 @@
     "style",
     "testing"
   ],
-  "Products": [ "FTView", "FTSP_FTAE", "ViewPoint" ],
+  "Products": [
+    "FTView",
+    "FTSP_FTAE",
+    "ViewPoint"
+  ],
   "ReviewCountByEmployeeOfProduct": [
     {
       "ProductName": "ViewPoint",

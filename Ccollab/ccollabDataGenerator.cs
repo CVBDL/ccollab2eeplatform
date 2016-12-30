@@ -14,12 +14,12 @@ namespace Ccollab
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CcollabDataGenerator));
 
-        private const string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
-
-        private bool _hasFetchedCcollabData = false;
+        private static readonly string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
 
         private List<string[]> _reviewsRawData = null;
         private List<string[]> _defectsRawData = null;
+
+        private bool _hasFetchedCcollabData = false;
 
         public List<string[]> GetReviewsRawData()
         {
@@ -41,6 +41,10 @@ namespace Ccollab
             return _defectsRawData;
         }
         
+        /// <summary>
+        /// Read ccollab raw CSV files.
+        /// </summary>
+        /// <returns>true for success.</returns>
         private bool FetchCcollabData()
         {
             _hasFetchedCcollabData = true;

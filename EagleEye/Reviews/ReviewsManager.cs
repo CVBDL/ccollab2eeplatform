@@ -28,7 +28,7 @@
             _cmdCodeCommentDensityChanged = cmdCodeCommentDensityChanged;
             _cmdCodeDefectDensityUploaded = cmdCodeDefectDensityUploaded;
             _cmdCodeDefectDensityChanged = cmdCodeDefectDensityChanged;
-    }
+        }
 
         public void GenerateReviewCountByMonth()
         {

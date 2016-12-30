@@ -16,7 +16,7 @@ namespace Employees
         private static List<Employee> employees = null;
 
         /// <summary>
-        /// Get all employees
+        /// Get a list of all employees.
         /// </summary>
         public static List<Employee> Employees
         {

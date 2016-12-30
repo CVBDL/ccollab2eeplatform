@@ -1,5 +1,8 @@
 ﻿namespace EagleEye.Reviews
 {
+    /// <summary>
+    /// Mapping to column index for reviews.csv
+    /// </summary>
     public static class ReviewCsvColumnIndex
     {
         public const int ReviewCreationDate = 2;
