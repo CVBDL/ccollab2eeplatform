@@ -54,54 +54,31 @@ namespace EagleEye.Reviews
                 }
 
                 densityStatisticsByProduct = new Dictionary<string, DensityStatistics>();
-                
+
                 var query = FilteredEmployeesReviewsData
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(grp => grp);
+                            .GroupBy(record => record.CreatorProductName)
+                            .Select(
+                                group => new
+                                {
+                                    CreatorProductName = group.Key,
+                                    TotalCommentCount  = group.Sum(record => record.CommentCount),
+                                    TotalDefectCount   = group.Sum(record => record.DefectCount),
+                                    TotalLOC           = group.Sum(record => record.LOC),
+                                    TotalLOCChanged    = group.Sum(record => record.LOCChanged)
+                                }
+                            );
 
-                foreach (var group in query)
+                foreach (var item in query)
                 {
-                    if (EagleEyeSettingsReader.Settings.Products.IndexOf(group.Key) < 0) continue;
-
-                    long totalComments = 0;
-                    long totalDefects = 0;
-                    long totalLineOfCode = 0;
-                    long totalLineOfCodeChanged = 0;
-
-                    foreach (var record in group)
-                    {
-                        long commentCount = 0;
-                        if (long.TryParse(record.CommentCount, out commentCount))
-                        {
-                            totalComments += commentCount;
-                        }
-
-                        long defectCount = 0;
-                        if (long.TryParse(record.DefectCount, out defectCount))
-                        {
-                            totalDefects += defectCount;
-                        }
-
-                        long lineOfCode = 0;
-                        if (long.TryParse(record.LOC, out lineOfCode))
-                        {
-                            totalLineOfCode += lineOfCode;
-                        }
-
-                        long lineOfCodeChanged = 0;
-                        if (long.TryParse(record.LOCChanged, out lineOfCodeChanged))
-                        {
-                            totalLineOfCodeChanged += lineOfCodeChanged;
-                        }
-                    }
-
+                    if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.CreatorProductName) < 0) continue;
+                    
                     DensityStatistics stat = new DensityStatistics();
-                    stat.TotalComments = totalComments;
-                    stat.TotalDefects = totalDefects;
-                    stat.LineOfCode = totalLineOfCode;
-                    stat.LineOfCodeChanged = totalLineOfCodeChanged;
+                    stat.TotalCommentCount = item.TotalCommentCount;
+                    stat.TotalDefectCount  = item.TotalDefectCount;
+                    stat.TotalLOC          = item.TotalLOC;
+                    stat.TotalLOCChanged   = item.TotalLOCChanged;
 
-                    densityStatisticsByProduct.Add(group.Key, stat);
+                    densityStatisticsByProduct.Add(item.CreatorProductName, stat);
                 }
 
                 return densityStatisticsByProduct;
@@ -126,8 +103,8 @@ namespace EagleEye.Reviews
             
             var query = FilteredEmployeesReviewsData
                     .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
-                    .OrderBy(grp => grp.Key)
-                    .Select(grp => new { ReviewCreationYYYYMM = grp.Key, Count = grp.Count() });
+                    .OrderBy(group => group.Key)
+                    .Select(group => new { ReviewCreationYYYYMM = group.Key, Count = group.Count() });
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -172,7 +149,7 @@ namespace EagleEye.Reviews
             
             var query = FilteredEmployeesReviewsData
                     .GroupBy(record => record.CreatorProductName)
-                    .Select(grp => new { ProductName = grp.Key, ReviewCount = grp.Count() });
+                    .Select(group => new { ProductName = group.Key, ReviewCount = group.Count() });
 
             foreach (var item in query)
             {
@@ -239,7 +216,7 @@ namespace EagleEye.Reviews
             var query = FilteredEmployeesReviewsData
                     .Where(record => record.CreatorProductName == productName)
                     .GroupBy(record => record.CreatorLogin)
-                    .Select(grp => new { LoginName = grp.Key, ReviewCount = grp.Count() });
+                    .Select(group => new { LoginName = group.Key, ReviewCount = group.Count() });
 
             foreach (var item in query)
             {
@@ -290,11 +267,11 @@ namespace EagleEye.Reviews
                 DensityStatistics stat = null;
                 if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
-                    // Formula: TotalComments * 1000 / TotalLOC
+                    // Formula: TotalCommentCount * 1000 / TotalLOC
                     double density = 0;
-                    if (stat.LineOfCode != 0)
+                    if (stat.TotalLOC != 0)
                     {
-                        density = (stat.TotalComments * 1000) / stat.LineOfCode;
+                        density = (stat.TotalCommentCount * 1000) / stat.TotalLOC;
                     }
 
                     product2density.Add(product, density);
@@ -342,11 +319,11 @@ namespace EagleEye.Reviews
                 DensityStatistics stat = null;
                 if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
-                    // Formula: TotalComments * 1000 / TotalLOCC
+                    // Formula: TotalCommentCount * 1000 / TotalLOCC
                     double density = 0;
-                    if (stat.LineOfCodeChanged != 0)
+                    if (stat.TotalLOCChanged != 0)
                     {
-                        density = (stat.TotalComments * 1000) / stat.LineOfCodeChanged;
+                        density = (stat.TotalCommentCount * 1000) / stat.TotalLOCChanged;
                     }
 
                     product2density.Add(product, density);
@@ -394,11 +371,11 @@ namespace EagleEye.Reviews
                 DensityStatistics stat = null;
                 if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
-                    // Formula: TotalDefects * 1000 / TotalLOC
+                    // Formula: TotalDefectCount * 1000 / TotalLOC
                     double density = 0;
-                    if (stat.LineOfCode != 0)
+                    if (stat.TotalLOC != 0)
                     {
-                        density = (stat.TotalDefects * 1000) / stat.LineOfCode;
+                        density = (stat.TotalDefectCount * 1000) / stat.TotalLOC;
                     }
 
                     product2density.Add(product, density);
@@ -446,11 +423,11 @@ namespace EagleEye.Reviews
                 DensityStatistics stat = null;
                 if (DensityStatisticsByProduct.TryGetValue(product, out stat))
                 {
-                    // Formula: TotalDefects * 1000 / TotalLOCC
+                    // Formula: TotalDefectCount * 1000 / TotalLOCC
                     double density = 0;
-                    if (stat.LineOfCodeChanged != 0)
+                    if (stat.TotalLOCChanged != 0)
                     {
-                        density = (stat.TotalDefects * 1000) / stat.LineOfCodeChanged;
+                        density = (stat.TotalDefectCount * 1000) / stat.TotalLOCChanged;
                     }
 
                     product2density.Add(product, density);

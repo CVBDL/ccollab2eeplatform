@@ -141,46 +141,70 @@ namespace Ccollab
         }
 
         /// <summary>
-        /// Review comment count, e.g., "15".
+        /// Review comment count, e.g., 15.
         /// </summary>
-        public string CommentCount
+        public int CommentCount
         {
             get
             {
-                return row[ReviewCsvColumnIndex.CommentCount];
+                int commentCount = 0;
+                if (int.TryParse(row[ReviewCsvColumnIndex.CommentCount], out commentCount))
+                {
+                    return commentCount;
+                }
+
+                return 0;
             }
         }
 
         /// <summary>
-        /// Review defect count, e.g., "6".
+        /// Review defect count, e.g., 6.
         /// </summary>
-        public string DefectCount
+        public int DefectCount
         {
             get
             {
-                return row[ReviewCsvColumnIndex.DefectCount];
+                int defectCount = 0;
+                if (int.TryParse(row[ReviewCsvColumnIndex.DefectCount], out defectCount))
+                {
+                    return defectCount;
+                }
+
+                return 0;
             }
         }
 
         /// <summary>
-        /// Review total lines of code, e.g., "15061".
+        /// Review total lines of code, e.g., 15061.
         /// </summary>
-        public string LOC
+        public int LOC
         {
             get
             {
-                return row[ReviewCsvColumnIndex.LOC];
+                int lineOfCode = 0;
+                if (int.TryParse(row[ReviewCsvColumnIndex.LOC], out lineOfCode))
+                {
+                    return lineOfCode;
+                }
+
+                return 0;
             }
         }
 
         /// <summary>
-        /// Review total lines of code changed, e.g., "28".
+        /// Review total lines of code changed, e.g., 28.
         /// </summary>
-        public string LOCChanged
+        public int LOCChanged
         {
             get
             {
-                return row[ReviewCsvColumnIndex.LOCChanged];
+                int lineOfCodeChanged = 0;
+                if (int.TryParse(row[ReviewCsvColumnIndex.LOCChanged], out lineOfCodeChanged))
+                {
+                    return lineOfCodeChanged;
+                }
+
+                return 0;
             }
         }
     }

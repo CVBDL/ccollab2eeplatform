@@ -66,7 +66,7 @@ namespace EagleEye.Defects
             
             var query = FilteredEmployeesDefectsData
                         .GroupBy(record => record.CreatorProductName)
-                        .Select(grp => new { ProductName = grp.Key, DefectCount = grp.Count() });
+                        .Select(group => new { ProductName = group.Key, DefectCount = group.Count() });
 
             foreach (var item in query)
             {
@@ -121,7 +121,7 @@ namespace EagleEye.Defects
 
             var query = FilteredEmployeesDefectsData
                         .GroupBy(record => record.CreatorProductName)
-                        .Select(grp => grp);
+                        .Select(group => group);
 
             foreach (var item in query)
             {
@@ -187,7 +187,7 @@ namespace EagleEye.Defects
             
             var query = FilteredEmployeesDefectsData
                         .GroupBy(record => record.InjectionStage)
-                        .Select(grp => new { InjectionStage = grp.Key.ToLower(), Count = grp.Count() });
+                        .Select(group => new { InjectionStage = group.Key.ToLower(), Count = group.Count() });
 
             foreach (var item in query)
             {
@@ -238,7 +238,7 @@ namespace EagleEye.Defects
             
             var query = FilteredEmployeesDefectsData
                         .GroupBy(record => record.Type)
-                        .Select(grp => new { Type = grp.Key.ToLower(), Count = grp.Count() });
+                        .Select(group => new { Type = group.Key.ToLower(), Count = group.Count() });
 
             foreach (var item in query)
             {
@@ -292,7 +292,7 @@ namespace EagleEye.Defects
 
             var query = FilteredEmployeesDefectsData
                         .GroupBy(record => record.CreatorProductName)
-                        .Select(grp => grp);
+                        .Select(group => group);
 
             foreach (var item in query)
             {

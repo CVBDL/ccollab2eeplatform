@@ -5,21 +5,21 @@
         /// <summary>
         /// Comment count.
         /// </summary>
-        public long TotalComments { get; set; } = 0;
+        public long TotalCommentCount { get; set; } = 0;
 
         /// <summary>
         /// Defect count.
         /// </summary>
-        public long TotalDefects { get; set; } = 0;
+        public long TotalDefectCount { get; set; } = 0;
 
         /// <summary>
         /// "LOC" for short.
         /// </summary>
-        public long LineOfCode { get; set; } = 0;
+        public long TotalLOC { get; set; } = 0;
 
         /// <summary>
         /// "LOCC" for short.
         /// </summary>
-        public long LineOfCodeChanged { get; set; } = 0;
+        public long TotalLOCChanged { get; set; } = 0;
     }
 }
