@@ -16,12 +16,13 @@ namespace Ccollab
 
         private static readonly string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
 
-        private List<string[]> _reviewsRawData = null;
-        private List<string[]> _defectsRawData = null;
+        //private List<string[]> _reviewsRawData = null;
+        private List<ReviewRecord> _reviewsRawData = null;
+        private List<DefectRecord> _defectsRawData = null;
 
         private bool _hasFetchedCcollabData = false;
 
-        public List<string[]> GetReviewsRawData()
+        public List<ReviewRecord> GetReviewsRawData()
         {
             if (!_hasFetchedCcollabData)
             {
@@ -31,7 +32,7 @@ namespace Ccollab
             return _reviewsRawData;
         }
 
-        public List<string[]> GetDefectsRawData()
+        public List<DefectRecord> GetDefectsRawData()
         {
             if (!_hasFetchedCcollabData)
             {
@@ -64,7 +65,14 @@ namespace Ccollab
 
             if (ccRawFiles.TryGetValue("Reviews", out reviewsRawFileName))
             {
-                _reviewsRawData = ReadInCsvFile(reviewsRawFileName);
+                _reviewsRawData = new List<ReviewRecord>();
+
+                foreach (var row in ReadInCsvFile(reviewsRawFileName))
+                {
+                    ReviewRecord record = new ReviewRecord(row);
+
+                    _reviewsRawData.Add(record);
+                }
             }
             else
             {
@@ -75,7 +83,14 @@ namespace Ccollab
 
             if (ccRawFiles.TryGetValue("Defects", out defectsRawFileName))
             {
-                _defectsRawData = ReadInCsvFile(defectsRawFileName);
+                _defectsRawData = new List<DefectRecord>();
+
+                foreach (var row in ReadInCsvFile(defectsRawFileName))
+                {
+                    DefectRecord record = new DefectRecord(row);
+
+                    _defectsRawData.Add(record);
+                }
             }
             else
             {

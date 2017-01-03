@@ -16,25 +16,24 @@ namespace EagleEye.Defects
         /// <summary>
         /// Holds filtered raw defects data of local employees.
         /// </summary>
-        private List<string[]> filteredEmployeesDefectsData = null;
+        private List<DefectRecord> filteredEmployeesDefectsData = null;
 
         public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
 
         /// <summary>
         /// Filter raw defects data of local employees.
         /// </summary>
-        public List<string[]> FilteredEmployeesDefectsData
+        public List<DefectRecord> FilteredEmployeesDefectsData
         {
             get
             {
                 if (filteredEmployeesDefectsData == null)
                 {
-                    IEnumerable<string[]> defectsQuery =
-                        from row in GetDefectsRawData()
-                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[DefectCsvColumnIndex.CreatorLogin])
-                        select row;
+                    var query = GetDefectsRawData()
+                                .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
+                                .Select(record => record);
 
-                    filteredEmployeesDefectsData = defectsQuery.ToList<string[]>();
+                    filteredEmployeesDefectsData = query.ToList<DefectRecord>();
                 }
 
                 return filteredEmployeesDefectsData;
@@ -64,12 +63,10 @@ namespace EagleEye.Defects
                     product2count.Add(employee.ProductName, 0);
                 }
             }
-
-            var query =
-                from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[DefectCsvColumnIndex.CreatorLogin])
-                group row by productName into productGroup
-                select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
+            
+            var query = FilteredEmployeesDefectsData
+                        .GroupBy(record => record.CreatorProductName)
+                        .Select(grp => new { ProductName = grp.Key, DefectCount = grp.Count() });
 
             foreach (var item in query)
             {
@@ -121,11 +118,10 @@ namespace EagleEye.Defects
                     product2severitycount.Add(employee.ProductName, new List<int>(new int[settings.DefectSeverityTypes.Count]));
                 }
             }
-            var query =
-                from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[DefectCsvColumnIndex.CreatorLogin])
-                group row by productName into productGroup
-                select productGroup;
+
+            var query = FilteredEmployeesDefectsData
+                        .GroupBy(record => record.CreatorProductName)
+                        .Select(grp => grp);
 
             foreach (var item in query)
             {
@@ -133,7 +129,7 @@ namespace EagleEye.Defects
 
                 foreach (var defect in item)
                 {
-                    int index = settings.DefectSeverityTypes.IndexOf(defect[DefectCsvColumnIndex.Severity]);
+                    int index = settings.DefectSeverityTypes.IndexOf(defect.Severity);
 
                     if (index >= 0)
                     {
@@ -188,11 +184,10 @@ namespace EagleEye.Defects
             {
                 injectionstage2count.Add(injectionStage.ToLower(), 0);
             }
-
-            var query =
-                from row in FilteredEmployeesDefectsData
-                group row by row[DefectCsvColumnIndex.InjectionStage] into injectionStageGroup
-                select new { InjectionStage = injectionStageGroup.Key.ToLower(), Count = injectionStageGroup.Count() };
+            
+            var query = FilteredEmployeesDefectsData
+                        .GroupBy(record => record.InjectionStage)
+                        .Select(grp => new { InjectionStage = grp.Key.ToLower(), Count = grp.Count() });
 
             foreach (var item in query)
             {
@@ -240,11 +235,10 @@ namespace EagleEye.Defects
             {
                 type2count.Add(type.ToLower(), 0);
             }
-
-            var query =
-                from row in FilteredEmployeesDefectsData
-                group row by row[DefectCsvColumnIndex.Type] into typeGroup
-                select new { Type = typeGroup.Key.ToLower(), Count = typeGroup.Count() };
+            
+            var query = FilteredEmployeesDefectsData
+                        .GroupBy(record => record.Type)
+                        .Select(grp => new { Type = grp.Key.ToLower(), Count = grp.Count() });
 
             foreach (var item in query)
             {
@@ -295,11 +289,10 @@ namespace EagleEye.Defects
                     product2typecount.Add(employee.ProductName, new List<int>(new int[settings.DefectTypes.Count]));
                 }
             }
-            var query =
-                from row in FilteredEmployeesDefectsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[DefectCsvColumnIndex.CreatorLogin])
-                group row by productName into productGroup
-                select productGroup;
+
+            var query = FilteredEmployeesDefectsData
+                        .GroupBy(record => record.CreatorProductName)
+                        .Select(grp => grp);
 
             foreach (var item in query)
             {
@@ -307,7 +300,7 @@ namespace EagleEye.Defects
 
                 foreach (var defect in item)
                 {
-                    int index = settings.DefectTypes.IndexOf(defect[DefectCsvColumnIndex.Type]);
+                    int index = settings.DefectTypes.IndexOf(defect.Type);
 
                     if (index >= 0)
                     {

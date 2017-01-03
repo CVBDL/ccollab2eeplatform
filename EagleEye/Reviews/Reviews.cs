@@ -17,23 +17,22 @@ namespace EagleEye.Reviews
         /// <summary>
         /// Holds filtered raw reviews data of local employees.
         /// </summary>
-        private List<string[]> filteredEmployeesReviewsData = null;
+        private List<ReviewRecord> filteredEmployeesReviewsData = null;
 
         /// <summary>
         /// Filter raw reviews data of local employees.
         /// </summary>
-        public List<string[]> FilteredEmployeesReviewsData
+        public List<ReviewRecord> FilteredEmployeesReviewsData
         {
             get
             {
                 if (filteredEmployeesReviewsData == null)
                 {
-                    IEnumerable<string[]> reviewsQuery =
-                        from row in GetReviewsRawData()
-                        where EmployeesReader.Employees.Any(employee => employee.LoginName == row[ReviewCsvColumnIndex.CreatorLogin])
-                        select row;
-
-                    filteredEmployeesReviewsData = reviewsQuery.ToList<string[]>();
+                    var query = GetReviewsRawData()
+                                .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
+                                .Select(record => record);
+                    
+                    filteredEmployeesReviewsData = query.ToList();
                 }
 
                 return filteredEmployeesReviewsData;
@@ -55,12 +54,10 @@ namespace EagleEye.Reviews
                 }
 
                 densityStatisticsByProduct = new Dictionary<string, DensityStatistics>();
-
-                var query =
-                    from row in FilteredEmployeesReviewsData
-                    let productName = EmployeesReader.GetEmployeeProductName(row[ReviewCsvColumnIndex.CreatorLogin])
-                    group row by productName into productGroup
-                    select productGroup;
+                
+                var query = FilteredEmployeesReviewsData
+                        .GroupBy(record => record.CreatorProductName)
+                        .Select(grp => grp);
 
                 foreach (var group in query)
                 {
@@ -71,28 +68,28 @@ namespace EagleEye.Reviews
                     long totalLineOfCode = 0;
                     long totalLineOfCodeChanged = 0;
 
-                    foreach (var defect in group)
+                    foreach (var record in group)
                     {
                         long commentCount = 0;
-                        if (long.TryParse(defect[ReviewCsvColumnIndex.CommentCount], out commentCount))
+                        if (long.TryParse(record.CommentCount, out commentCount))
                         {
                             totalComments += commentCount;
                         }
 
                         long defectCount = 0;
-                        if (long.TryParse(defect[ReviewCsvColumnIndex.DefectCount], out defectCount))
+                        if (long.TryParse(record.DefectCount, out defectCount))
                         {
                             totalDefects += defectCount;
                         }
 
                         long lineOfCode = 0;
-                        if (long.TryParse(defect[ReviewCsvColumnIndex.LOC], out lineOfCode))
+                        if (long.TryParse(record.LOC, out lineOfCode))
                         {
                             totalLineOfCode += lineOfCode;
                         }
 
                         long lineOfCodeChanged = 0;
-                        if (long.TryParse(defect[ReviewCsvColumnIndex.LOCChanged], out lineOfCodeChanged))
+                        if (long.TryParse(record.LOCChanged, out lineOfCodeChanged))
                         {
                             totalLineOfCodeChanged += lineOfCodeChanged;
                         }
@@ -126,13 +123,11 @@ namespace EagleEye.Reviews
             //     ["2016-02", 30]
             //   ]
             // }
-
-            // `Review Creation Date` column data format is "2016-09-30 23:33 UTC"
-            var query =
-                from row in FilteredEmployeesReviewsData
-                group row by row[ReviewCsvColumnIndex.ReviewCreationDate].Substring(0, 7) into month
-                orderby month.Key ascending
-                select new { Month = month.Key, Count = month.Count() };
+            
+            var query = FilteredEmployeesReviewsData
+                    .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                    .OrderBy(grp => grp.Key)
+                    .Select(grp => new { ReviewCreationYYYYMM = grp.Key, Count = grp.Count() });
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -142,7 +137,7 @@ namespace EagleEye.Reviews
 
             foreach (var item in query)
             {
-                datatable.Add(new List<object> { item.Month, item.Count });
+                datatable.Add(new List<object> { item.ReviewCreationYYYYMM, item.Count });
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
@@ -174,18 +169,16 @@ namespace EagleEye.Reviews
             {
                 product2count.Add(product, 0);
             }
-
-            var query =
-                from row in FilteredEmployeesReviewsData
-                let productName = EmployeesReader.GetEmployeeProductName(row[ReviewCsvColumnIndex.CreatorLogin])
-                group row by productName into productGroup
-                select new { ProductName = productGroup.Key, DefectCount = productGroup.Count() };
+            
+            var query = FilteredEmployeesReviewsData
+                    .GroupBy(record => record.CreatorProductName)
+                    .Select(grp => new { ProductName = grp.Key, ReviewCount = grp.Count() });
 
             foreach (var item in query)
             {
                 if (product2count.ContainsKey(item.ProductName))
                 {
-                    product2count[item.ProductName] = item.DefectCount;
+                    product2count[item.ProductName] = item.ReviewCount;
                 }
             }
 
@@ -243,12 +236,10 @@ namespace EagleEye.Reviews
                 employee2count.Add(employee.LoginName, 0);
             }
 
-            var query =
-                from row in FilteredEmployeesReviewsData
-                let _productName = EmployeesReader.GetEmployeeProductName(row[ReviewCsvColumnIndex.CreatorLogin])
-                where _productName == productName
-                group row by row[ReviewCsvColumnIndex.CreatorLogin] into employeeReviewsGroup
-                select new { LoginName = employeeReviewsGroup.Key, ReviewCount = employeeReviewsGroup.Count() };
+            var query = FilteredEmployeesReviewsData
+                    .Where(record => record.CreatorProductName == productName)
+                    .GroupBy(record => record.CreatorLogin)
+                    .Select(grp => new { LoginName = grp.Key, ReviewCount = grp.Count() });
 
             foreach (var item in query)
             {

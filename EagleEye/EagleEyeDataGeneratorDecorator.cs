@@ -76,12 +76,12 @@ namespace EagleEye
             log.Info("Sending data to EagleEye platform ... Done.");
         }
 
-        public List<string[]> GetReviewsRawData()
+        public List<ReviewRecord> GetReviewsRawData()
         {
             return _ccollabDataGenerator.GetReviewsRawData();
         }
 
-        public List<string[]> GetDefectsRawData()
+        public List<DefectRecord> GetDefectsRawData()
         {
             return _ccollabDataGenerator.GetDefectsRawData();
         }
