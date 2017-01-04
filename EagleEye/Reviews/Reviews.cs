@@ -453,6 +453,8 @@ namespace EagleEye.Reviews
 
         /// <summary>
         /// All.xlsx -> Summary -> All Inspection Rate By Month
+        /// Formula:
+        ///     InspectionRate = (LOCC) / (TotalPersonTime * 1000)
         /// </summary>
         /// <param name="settingsKey"></param>
         public void GenerateInspectionRateByMonth(string settingsKey)

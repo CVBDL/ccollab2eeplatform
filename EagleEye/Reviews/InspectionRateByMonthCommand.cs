@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _reviews.GenerateInspectionRateByMonth("ReviewCountByMonth");
+            _reviews.GenerateInspectionRateByMonth("AllInspectionRateByMonth");
         }
     }
 }
