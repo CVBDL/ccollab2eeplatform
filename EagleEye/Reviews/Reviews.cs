@@ -38,7 +38,7 @@ namespace EagleEye.Reviews
                 return filteredEmployeesReviewsData;
             }
         }
-
+        
         private Dictionary<string, DensityStatistics> densityStatisticsByProduct = null;
 
         /// <summary>

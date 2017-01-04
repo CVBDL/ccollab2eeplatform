@@ -72,6 +72,7 @@
     <Compile Include="Reviews\ReviewCountByMonthCommand.cs" />
     <Compile Include="Reviews\Reviews.cs" />
     <Compile Include="Reviews\ReviewsManager.cs" />
+    <Compile Include="Reviews\ReviewsStatistics.cs" />
     <Compile Include="Settings\EagleEyeSettings.cs" />
     <Compile Include="Settings\EagleEyeSettingsReader.cs" />
   </ItemGroup>
