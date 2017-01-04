@@ -12,5 +12,6 @@
         public const int CommentCount = 22;
         public const int LOC = 26;
         public const int LOCChanged = 27;
+        public const int TotalPersonTime = 33;
     }
 }

@@ -1,6 +1,9 @@
 ﻿{
   "ApiRootEndpoint": "http://localhost:3000/api/v1/",
   "Charts": {
+    "AllInspectionRateByMonth": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
     "CodeCommentDensityChanged": {
       "ChartId": "5799641be24561202bc7190d"
     },

@@ -207,5 +207,26 @@ namespace Ccollab
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Review total person time, e.g., "1:01:41".
+        /// </summary>
+        public double TotalPersonTimeInSecond
+        {
+            get
+            {
+                double seconds = 0;
+                try
+                {
+                    seconds = TimeSpan.Parse(row[ReviewCsvColumnIndex.TotalPersonTime]).TotalSeconds;
+                }
+                catch (Exception)
+                {
+                    seconds = 0;
+                }
+
+                return seconds;
+            }
+        }
     }
 }

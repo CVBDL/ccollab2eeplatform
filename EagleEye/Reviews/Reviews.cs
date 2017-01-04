@@ -450,5 +450,59 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Code Comment Density (Defect) ... Done");
         }
+
+        /// <summary>
+        /// All.xlsx -> Summary -> All Inspection Rate By Month
+        /// </summary>
+        /// <param name="settingsKey"></param>
+        public void GenerateInspectionRateByMonth(string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Month", "Rate"],
+            //     ["2016-01", 0.18],
+            //     ["2016-02", 0.6]
+            //   ]
+            // }
+
+            log.Info("Generating: All Inspection Rate By Month ...");
+
+            var query = FilteredEmployeesReviewsData
+                        .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                        .OrderBy(group => group.Key)
+                        .Select(
+                            group => new
+                            {
+                                Month = group.Key,
+                                TotalLOCChanged = group.Sum(record => record.LOCChanged),
+                                TotalPersonTime = group.Sum(record => record.TotalPersonTimeInSecond)
+                            }
+                        );
+            
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Month", "Rate" };
+            datatable.Add(header);
+
+            foreach (var item in query)
+            {
+                double totalPersonTimeInHour = item.TotalPersonTime / (60 * 60);
+
+                double inspectionRate = 0;
+                if (totalPersonTimeInHour != 0)
+                {
+                    inspectionRate = item.TotalLOCChanged / (totalPersonTimeInHour * 1000);
+                }
+                
+                datatable.Add(new List<object> { item.Month, inspectionRate });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+
+            log.Info("Generating: All Inspection Rate By Month ... Done");
+        }
     }
 }
