@@ -473,14 +473,7 @@ namespace EagleEye.Reviews
             var query = FilteredEmployeesReviewsData
                         .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
                         .OrderBy(group => group.Key)
-                        .Select(
-                            group => new
-                            {
-                                Month = group.Key,
-                                TotalLOCChanged = group.Sum(record => record.LOCChanged),
-                                TotalPersonTime = group.Sum(record => record.TotalPersonTimeInSecond)
-                            }
-                        );
+                        .Select(group => group);
             
             List<List<object>> datatable = new List<List<object>>();
 
@@ -489,15 +482,18 @@ namespace EagleEye.Reviews
 
             foreach (var item in query)
             {
-                double totalPersonTimeInHour = item.TotalPersonTime / (60 * 60);
+                List<ReviewRecord> records = item.ToList();
+
+                ReviewsStatistics stat = new ReviewsStatistics(records);
+                double totalPersonTimeInHour = stat.TotalPersonTimeInSecond / (60 * 60);
 
                 double inspectionRate = 0;
                 if (totalPersonTimeInHour != 0)
                 {
-                    inspectionRate = item.TotalLOCChanged / (totalPersonTimeInHour * 1000);
+                    inspectionRate = stat.TotalLOCChanged / (totalPersonTimeInHour * 1000);
                 }
                 
-                datatable.Add(new List<object> { item.Month, inspectionRate });
+                datatable.Add(new List<object> { item.Key, inspectionRate });
             }
 
             string json = JsonConvert.SerializeObject(new Chart(datatable));
