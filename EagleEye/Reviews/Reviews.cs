@@ -457,7 +457,7 @@ namespace EagleEye.Reviews
         ///     InspectionRate = (LOCC) / (TotalPersonTime * 1000)
         /// </summary>
         /// <param name="settingsKey"></param>
-        public void GenerateInspectionRateByMonth(string settingsKey)
+        private void GenerateInspectionRateByMonth(List<ReviewRecord> datasource, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -470,7 +470,7 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: All Inspection Rate By Month ...");
 
-            var query = FilteredEmployeesReviewsData
+            var query = datasource
                         .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
                         .OrderBy(group => group.Key)
                         .Select(group => group);
@@ -501,6 +501,11 @@ namespace EagleEye.Reviews
             Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: All Inspection Rate By Month ... Done");
+        }
+
+        public void GenerateAllInspectionRateByMonth(string settingsKey)
+        {
+            GenerateInspectionRateByMonth(FilteredEmployeesReviewsData, settingsKey);
         }
     }
 }

@@ -13,6 +13,17 @@ namespace EagleEye.Reviews
             this.records = records;
         }
 
+        /// <summary>
+        /// Reviews count
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return records.Count;
+            }
+        }
+
         private int totalCommentCount = -1;
 
         /// <summary>
