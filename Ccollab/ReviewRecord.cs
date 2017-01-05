@@ -35,6 +35,7 @@ namespace Ccollab
 
         /// <summary>
         /// Creator full name, e.g., "Patrick Zhong".
+        /// Note: it's not used for display in chart, we're using employee full name from employees.json
         /// </summary>
         public string CreatorFullName
         {

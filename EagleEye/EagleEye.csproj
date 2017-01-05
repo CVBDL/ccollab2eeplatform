@@ -65,7 +65,7 @@
     <Compile Include="Reviews\CodeDefectDensityUploadedCommand.cs" />
     <Compile Include="Reviews\InspectionRateByMonthCommand.cs" />
     <Compile Include="Reviews\ReviewCountByProductCommand.cs" />
-    <Compile Include="Reviews\ReviewCountByEmployeeOfProductCommand.cs" />
+    <Compile Include="Reviews\ReviewCountByCreatorCommand.cs" />
     <Compile Include="Reviews\IReviewsCommands.cs" />
     <Compile Include="EagleEyeDataGeneratorDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

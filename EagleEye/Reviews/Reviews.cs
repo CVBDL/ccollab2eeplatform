@@ -3,6 +3,7 @@ using EagleEye.Settings;
 using Employees;
 using log4net;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -177,70 +178,97 @@ namespace EagleEye.Reviews
         }
 
         /// <summary>
-        /// Generate review count of employees inside a specific product team.
+        /// Generate review count by creator.
+        /// Including several charts:
+        ///     1. Review count by creator of ViewPoint.
+        ///     2. Review count by creator of FTView.
+        ///     3. (All other products)...
         /// </summary>
-        public void GenerateReviewCountByEmployeeOfProduct()
+        public void GenerateReviewCountByCreator()
         {
-            foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByEmployeeOfProduct)
+            foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByCreator)
             {
-                ReviewCountByEmployeeOfProduct(item.ChartSettingsKey, item.ProductName);
+                List<ReviewRecord> datasource = null;
+
+                // for all products
+                if (string.IsNullOrEmpty(item.ProductName))
+                {
+                    datasource = FilteredEmployeesReviewsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesReviewsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "" ? "All Products" : "") + " ...");
+
+                    ReviewCountByCreator(datasource, item);
+
+                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "" ? "All Products" : "") + " ... Done");
+                }
             }
         }
 
         /// <summary>
-        /// Generate review count submitted by employees belongs to the given product.
+        /// Generate review count by creator for a specific product
         /// </summary>
-        /// <param name="settingsKey">EagleEye settings key name.</param>
-        /// <param name="productName">Product name.</param>
-        private void ReviewCountByEmployeeOfProduct(string settingsKey, string productName)
+        /// <param name="datasource"></param>
+        /// <param name="settingsKey"></param>
+        private void ReviewCountByCreator(List<ReviewRecord> datasource, ChartOfProduct chartSettings)
         {
             // Expected data table format:
             // {
             //    "datatable": [
-            //     ["EmployeeName", "ReviewCount"],
+            //     ["Creator", "Count"],
             //     ["Patrick Zhong", 16],
             //     ["Merlin Mo", 16]
             //   ]
             // }
 
-            log.Info("Generating: Review Count For " + productName + " ...");
-
-            Dictionary<string, int> employee2count = new Dictionary<string, int>();
+            Dictionary<string, int> creator2count = new Dictionary<string, int>();
 
             // collect all employees of the product
-            foreach (Employee employee in EmployeesReader.GetEmployeesByProduct(productName))
+            foreach (Employee employee in EmployeesReader.GetEmployeesByProduct(chartSettings.ProductName))
             {
-                employee2count.Add(employee.LoginName, 0);
+                creator2count.Add(employee.LoginName, 0);
             }
 
-            var query = FilteredEmployeesReviewsData
-                    .Where(record => record.CreatorProductName == productName)
-                    .GroupBy(record => record.CreatorLogin)
-                    .Select(group => new { LoginName = group.Key, ReviewCount = group.Count() });
+            var query = datasource
+                        .GroupBy(record => record.CreatorLogin)
+                        .Select(group => group);
 
             foreach (var item in query)
             {
-                if (employee2count.ContainsKey(item.LoginName))
+                string creatorLoginName = item.Key;
+
+                if (creator2count.ContainsKey(creatorLoginName))
                 {
-                    employee2count[item.LoginName] = item.ReviewCount;
+                    List<ReviewRecord> records = item.ToList();
+
+                    ReviewsStatistics stat = new ReviewsStatistics(records);
+                    int count = stat.Count;
+
+                    creator2count[creatorLoginName] = count;
                 }
             }
 
             List<List<object>> datatable = new List<List<object>>();
 
-            List<object> header = new List<object> { "EmployeeName", "ReviewCount" };
+            List<object> header = new List<object> { "Creator", "Count" };
             datatable.Add(header);
 
-            foreach (KeyValuePair<string, int> item in employee2count)
+            foreach (KeyValuePair<string, int> item in creator2count)
             {
                 datatable.Add(new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key), item.Value });
             }
-
+            
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
-            Save2EagleEye(settingsKey, json);
-
-            log.Info("Generating: Review Count For " + productName + " ... Done.");
+            Save2EagleEye(chartSettings.ChartId, json);
         }
 
         /// <summary>
@@ -452,12 +480,11 @@ namespace EagleEye.Reviews
         }
 
         /// <summary>
-        /// All.xlsx -> Summary -> All Inspection Rate By Month
         /// Formula:
         ///     InspectionRate = (LOCC) / (TotalPersonTime * 1000)
         /// </summary>
         /// <param name="settingsKey"></param>
-        private void GenerateInspectionRateByMonth(List<ReviewRecord> datasource, string settingsKey)
+        private void InspectionRateByMonth(List<ReviewRecord> datasource, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -467,9 +494,7 @@ namespace EagleEye.Reviews
             //     ["2016-02", 0.6]
             //   ]
             // }
-
-            log.Info("Generating: All Inspection Rate By Month ...");
-
+            
             var query = datasource
                         .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
                         .OrderBy(group => group.Key)
@@ -499,13 +524,41 @@ namespace EagleEye.Reviews
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
             Save2EagleEye(settingsKey, json);
-
-            log.Info("Generating: All Inspection Rate By Month ... Done");
         }
 
-        public void GenerateAllInspectionRateByMonth(string settingsKey)
+        /// <summary>
+        /// Generate Inspection Rate By Month Chart.
+        /// Including several charts:
+        ///     1. Inspection rate by month for all products
+        ///     2. Inspection rate by month for a specific product, like ViewPoint.
+        /// </summary>
+        public void GenerateInspectionRateByMonth()
         {
-            GenerateInspectionRateByMonth(FilteredEmployeesReviewsData, settingsKey);
+            foreach (var item in EagleEyeSettingsReader.Settings.InspectionRateByMonth)
+            {
+                List<ReviewRecord> datasource = null;
+
+                // for all products
+                if (string.IsNullOrEmpty(item.ProductName))
+                {
+                    datasource = FilteredEmployeesReviewsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesReviewsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "" ? "All Products" : "") + " ...");
+
+                    InspectionRateByMonth(datasource, item.ChartId);
+
+                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "" ? "All Products" : "") + " ... Done");
+                }
+            }
         }
     }
 }

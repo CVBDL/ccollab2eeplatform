@@ -8,6 +8,7 @@
         void GenerateCodeCommentDensityChanged(string settingsKey);
         void GenerateCodeDefectDensityUploaded(string settingsKey);
         void GenerateCodeDefectDensityChanged(string settingsKey);
-        void GenerateReviewCountByEmployeeOfProduct();
+        void GenerateReviewCountByCreator();
+        void GenerateInspectionRateByMonth();
     }
 }

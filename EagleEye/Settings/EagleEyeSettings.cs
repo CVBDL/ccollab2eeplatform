@@ -10,7 +10,8 @@ namespace EagleEye.Settings
         public List<string> DefectSeverityTypes { get; set; }
         public List<string> DefectTypes { get; set; }
         public List<string> Products { get; set; }
-        public List<ReviewCountByEmployeeOfProductSettings> ReviewCountByEmployeeOfProduct { get; set; }
+        public List<ChartOfProduct> ReviewCountByCreator { get; set; }
+        public List<ChartOfProduct> InspectionRateByMonth { get; set; }
     }
 
     public class ChartSettings
@@ -22,5 +23,11 @@ namespace EagleEye.Settings
     {
         public string ProductName { get; set; }
         public string ChartSettingsKey { get; set; }
+    }
+
+    public class ChartOfProduct
+    {
+        public string ProductName { get; set; }
+        public string ChartId { get; set; }
     }
 }

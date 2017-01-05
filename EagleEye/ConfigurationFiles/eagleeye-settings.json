@@ -76,18 +76,36 @@
     "FTSP_FTAE",
     "ViewPoint"
   ],
-  "ReviewCountByEmployeeOfProduct": [
+  "ReviewCountByCreator": [
     {
       "ProductName": "ViewPoint",
-      "ChartSettingsKey": "ReviewCountByEmployeeOfViewPoint"
+      "ChartId": "5809b2827e9254582e54116d"
     },
     {
       "ProductName": "FTView",
-      "ChartSettingsKey": "ReviewCountByEmployeeOfFTView"
+      "ChartId": "5809b2827e9254582e54116d"
     },
     {
       "ProductName": "FTSP_FTAE",
-      "ChartSettingsKey": "ReviewCountByEmployeeOfFTSP_FTAE"
+      "ChartId": "5809b2827e9254582e54116d"
+    }
+  ],
+  "InspectionRateByMonth": [
+    {
+      "ProductName": "",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "ViewPoint",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTView",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTSP_FTAE",
+      "ChartId": "5809b2827e9254582e54116d"
     }
   ]
 }

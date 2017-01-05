@@ -1,17 +1,17 @@
 ﻿namespace EagleEye.Reviews
 {
-    public class InspectionRateByMonthCommand : ICommand
+    public class ReviewCountByCreatorCommand : ICommand
     {
         private Reviews _reviews;
 
-        public InspectionRateByMonthCommand(Reviews reviews)
+        public ReviewCountByCreatorCommand(Reviews reviews)
         {
             _reviews = reviews;
         }
 
         public void Execute()
         {
-            _reviews.GenerateInspectionRateByMonth();
+            _reviews.GenerateReviewCountByCreator();
         }
     }
 }

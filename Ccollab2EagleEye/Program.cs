@@ -94,7 +94,7 @@ namespace Ccollab2EagleEye
                 (
                     new ReviewCountByMonthCommand(reviews),
                     new ReviewCountByProductCommand(reviews),
-                    new ReviewCountByEmployeeOfProductCommand(reviews),
+                    new ReviewCountByCreatorCommand(reviews),
                     new CodeCommentDensityUploadedCommand(reviews),
                     new CodeCommentDensityChangedCommand(reviews),
                     new CodeDefectDensityUploadedCommand(reviews),
