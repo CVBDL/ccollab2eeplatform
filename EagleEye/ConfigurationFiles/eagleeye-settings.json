@@ -31,15 +31,6 @@
     "DefectsDistributionByType": {
       "ChartId": "5799641be24561202bc7190d"
     },
-    "ReviewCountByEmployeeOfFTSP_FTAE": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "ReviewCountByEmployeeOfFTView": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "ReviewCountByEmployeeOfViewPoint": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
     "ReviewCountByMonth": {
       "ChartId": "5809b2827e9254582e54116d"
     },

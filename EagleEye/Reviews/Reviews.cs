@@ -218,7 +218,7 @@ namespace EagleEye.Reviews
         /// </summary>
         /// <param name="datasource"></param>
         /// <param name="settingsKey"></param>
-        private void ReviewCountByCreator(List<ReviewRecord> datasource, ChartOfProduct chartSettings)
+        private void ReviewCountByCreator(List<ReviewRecord> datasource, ProductChartSettings chartSettings)
         {
             // Expected data table format:
             // {
