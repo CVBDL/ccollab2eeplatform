@@ -83,7 +83,25 @@
   ],
   "InspectionRateByMonth": [
     {
-      "ProductName": "",
+      "ProductName": "*",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "ViewPoint",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTView",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTSP_FTAE",
+      "ChartId": "5809b2827e9254582e54116d"
+    }
+  ],
+  "DefectDensityChangedByMonth": [
+    {
+      "ProductName": "*",
       "ChartId": "5809b2827e9254582e54116d"
     },
     {

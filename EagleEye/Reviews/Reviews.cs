@@ -191,7 +191,7 @@ namespace EagleEye.Reviews
                 List<ReviewRecord> datasource = null;
 
                 // for all products
-                if (string.IsNullOrEmpty(item.ProductName))
+                if (item.ProductName == "*")
                 {
                     datasource = FilteredEmployeesReviewsData;
                 }
@@ -204,11 +204,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "" ? "All Products" : "") + " ...");
+                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ...");
 
                     ReviewCountByCreator(datasource, item);
 
-                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "" ? "All Products" : "") + " ... Done");
+                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ... Done");
                 }
             }
         }
@@ -431,7 +431,7 @@ namespace EagleEye.Reviews
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Changed)
         /// </summary>
         /// <param name="settingsKey"></param>
-        public void GenerateCodeDefectDensityChanged(string settingsKey)
+        public void GenerateDefectDensityChangedByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -479,6 +479,119 @@ namespace EagleEye.Reviews
             log.Info("Generating: Code Comment Density (Defect) ... Done");
         }
 
+        public void GenerateDefectDensityChangedByMonthFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.DefectDensityChangedByMonth)
+            {
+                List<ReviewRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesReviewsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesReviewsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Code defect density (changed) for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    DefectDensityChangedByMonth(datasource, item.ChartId);
+
+                    log.Info("Generating: Code defect density (changed) for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Formula:
+        ///     Density = (TotalDefectCount * 1000) / TotalLOCChanged
+        /// </summary>
+        /// <param name="datasource"></param>
+        /// <param name="settingsKey"></param>
+        private void DefectDensityChangedByMonth(List<ReviewRecord> datasource, string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Month", "Defects/KLOCC"],
+            //     ["2016-01", 20],
+            //     ["2016-02", 30]
+            //   ]
+            // }
+            
+            var query = datasource
+                        .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                        .OrderBy(group => group.Key)
+                        .Select(group => group);
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Month", "Defects/KLOCC" };
+            datatable.Add(header);
+
+            foreach (var item in query)
+            {
+                List<ReviewRecord> records = item.ToList();
+                
+                ReviewsStatistics stat = new ReviewsStatistics(records);
+                var totalDefectCount = stat.TotalDefectCount;
+                var totalLOCChanged = stat.TotalLOCChanged;
+
+                double density = 0;
+                if (totalLOCChanged != 0)
+                {
+                    density = totalDefectCount * 1000 / totalLOCChanged;
+                }
+
+                datatable.Add(new List<object> { item.Key, density });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+        }
+
+        /// <summary>
+        /// Generate Inspection Rate By Month Chart.
+        /// Including several charts:
+        ///     1. Inspection rate by month for all products
+        ///     2. Inspection rate by month for a specific product, like ViewPoint.
+        /// </summary>
+        public void GenerateInspectionRateByMonthFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.InspectionRateByMonth)
+            {
+                List<ReviewRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesReviewsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesReviewsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ...");
+
+                    InspectionRateByMonth(datasource, item.ChartId);
+
+                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
         /// <summary>
         /// Formula:
         ///     InspectionRate = (LOCC) / (TotalPersonTime * 1000)
@@ -524,41 +637,6 @@ namespace EagleEye.Reviews
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
             Save2EagleEye(settingsKey, json);
-        }
-
-        /// <summary>
-        /// Generate Inspection Rate By Month Chart.
-        /// Including several charts:
-        ///     1. Inspection rate by month for all products
-        ///     2. Inspection rate by month for a specific product, like ViewPoint.
-        /// </summary>
-        public void GenerateInspectionRateByMonth()
-        {
-            foreach (var item in EagleEyeSettingsReader.Settings.InspectionRateByMonth)
-            {
-                List<ReviewRecord> datasource = null;
-
-                // for all products
-                if (string.IsNullOrEmpty(item.ProductName))
-                {
-                    datasource = FilteredEmployeesReviewsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesReviewsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
-
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
-                {
-                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "" ? "All Products" : "") + " ...");
-
-                    InspectionRateByMonth(datasource, item.ChartId);
-
-                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "" ? "All Products" : "") + " ... Done");
-                }
-            }
         }
     }
 }

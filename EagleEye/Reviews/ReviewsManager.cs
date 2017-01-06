@@ -10,6 +10,7 @@
         ICommand _cmdCodeDefectDensityUploaded;
         ICommand _cmdCodeDefectDensityChanged;
         ICommand _cmdInspectionRateByMonthCommand;
+        ICommand _cmdDefectDensityChangedByMonthCommand;
 
         public ReviewsManager
         (
@@ -20,7 +21,8 @@
             ICommand cmdCodeCommentDensityChanged,
             ICommand cmdCodeDefectDensityUploaded,
             ICommand cmdCodeDefectDensityChanged,
-            ICommand cmdInspectionRateByMonthCommand
+            ICommand cmdInspectionRateByMonthCommand,
+            ICommand cmdDefectDensityChangedByMonthCommand
         )
         {
             _cmdReviewCountByMonth = cmdReviewCountByMonth;
@@ -31,6 +33,7 @@
             _cmdCodeDefectDensityUploaded = cmdCodeDefectDensityUploaded;
             _cmdCodeDefectDensityChanged = cmdCodeDefectDensityChanged;
             _cmdInspectionRateByMonthCommand = cmdInspectionRateByMonthCommand;
+            _cmdDefectDensityChangedByMonthCommand = cmdDefectDensityChangedByMonthCommand;
         }
 
         public void GenerateReviewCountByMonth()
@@ -71,6 +74,11 @@
         public void GenerateInspectionRateByMonth()
         {
             _cmdInspectionRateByMonthCommand.Execute();
+        }
+
+        public void GenerateDefectDensityChangedByMonth()
+        {
+            _cmdDefectDensityChangedByMonthCommand.Execute();
         }
     }
 }

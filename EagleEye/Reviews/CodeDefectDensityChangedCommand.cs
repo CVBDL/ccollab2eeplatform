@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _reviews.GenerateCodeDefectDensityChanged("CodeDefectDensityChanged");
+            _reviews.GenerateDefectDensityChangedByProduct("CodeDefectDensityChanged");
         }
     }
 }

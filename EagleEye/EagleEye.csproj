@@ -63,7 +63,8 @@
     <Compile Include="Reviews\CodeCommentDensityUploadedCommand.cs" />
     <Compile Include="Reviews\CodeDefectDensityChangedCommand.cs" />
     <Compile Include="Reviews\CodeDefectDensityUploadedCommand.cs" />
-    <Compile Include="Reviews\InspectionRateByMonthCommand.cs" />
+    <Compile Include="Reviews\DefectDensityChangedByMonthCommand.cs" />
+    <Compile Include="Reviews\InspectionRateByMonthFromProductCommand.cs" />
     <Compile Include="Reviews\ReviewCountByProductCommand.cs" />
     <Compile Include="Reviews\ReviewCountByCreatorCommand.cs" />
     <Compile Include="Reviews\IReviewsCommands.cs" />
