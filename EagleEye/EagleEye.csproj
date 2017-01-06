@@ -60,9 +60,9 @@
     <Compile Include="DensityStatistics.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Reviews\CodeCommentDensityChangedCommand.cs" />
-    <Compile Include="Reviews\CodeCommentDensityUploadedCommand.cs" />
+    <Compile Include="Reviews\CommentDensityUploadedByProductCommand.cs" />
     <Compile Include="Reviews\CodeDefectDensityChangedCommand.cs" />
-    <Compile Include="Reviews\CodeDefectDensityUploadedCommand.cs" />
+    <Compile Include="Reviews\DefectDensityUploadedByProductCommand.cs" />
     <Compile Include="Reviews\DefectDensityChangedByMonthCommand.cs" />
     <Compile Include="Reviews\InspectionRateByMonthFromProductCommand.cs" />
     <Compile Include="Reviews\ReviewCountByProductCommand.cs" />

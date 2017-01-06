@@ -275,7 +275,7 @@ namespace EagleEye.Reviews
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Uploaded)
         /// </summary>
         /// <param name="settingsKey"></param>
-        public void GenerateCodeCommentDensityUploaded(string settingsKey)
+        public void GenerateCommentDensityUploadedByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -327,7 +327,7 @@ namespace EagleEye.Reviews
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Changed)
         /// </summary>
         /// <param name="settingsKey"></param>
-        public void GenerateCodeCommentDensityChanged(string settingsKey)
+        public void GenerateCommentDensityChangedByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -379,7 +379,7 @@ namespace EagleEye.Reviews
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Uploaded)
         /// </summary>
         /// <param name="settingsKey"></param>
-        public void GenerateCodeDefectDensityUploaded(string settingsKey)
+        public void GenerateDefectDensityUploadedByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -426,7 +426,7 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Code Defect Density (Uploaded) ... Done");
         }
-
+        
         /// <summary>
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Changed)
         /// </summary>
