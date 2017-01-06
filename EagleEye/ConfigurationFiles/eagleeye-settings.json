@@ -99,7 +99,7 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
-  "DefectDensityChangedByMonth": [
+  "CommentDensityChangedByMonth": [
     {
       "ProductName": "*",
       "ChartId": "5809b2827e9254582e54116d"
@@ -117,7 +117,7 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
-  "DefectDensityUploadedByMonth": [
+  "DefectDensityChangedByMonth": [
     {
       "ProductName": "*",
       "ChartId": "5809b2827e9254582e54116d"

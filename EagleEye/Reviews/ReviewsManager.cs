@@ -9,8 +9,9 @@
         ICommand _cmdCodeCommentDensityChanged;
         ICommand _cmdCodeDefectDensityUploaded;
         ICommand _cmdCodeDefectDensityChanged;
-        ICommand _cmdInspectionRateByMonthCommand;
-        ICommand _cmdDefectDensityChangedByMonthCommand;
+        ICommand _cmdInspectionRateByMonth;
+        ICommand _cmdDefectDensityChangedByMonth;
+        ICommand _cmdCommentDensityChangedByMonth;
 
         public ReviewsManager
         (
@@ -21,8 +22,9 @@
             ICommand cmdCodeCommentDensityChanged,
             ICommand cmdCodeDefectDensityUploaded,
             ICommand cmdCodeDefectDensityChanged,
-            ICommand cmdInspectionRateByMonthCommand,
-            ICommand cmdDefectDensityChangedByMonthCommand
+            ICommand cmdInspectionRateByMonth,
+            ICommand cmdDefectDensityChangedByMonthCommand,
+            ICommand cmdCommentDensityChangedByMonth
         )
         {
             _cmdReviewCountByMonth = cmdReviewCountByMonth;
@@ -32,8 +34,9 @@
             _cmdCodeCommentDensityChanged = cmdCodeCommentDensityChanged;
             _cmdCodeDefectDensityUploaded = cmdCodeDefectDensityUploaded;
             _cmdCodeDefectDensityChanged = cmdCodeDefectDensityChanged;
-            _cmdInspectionRateByMonthCommand = cmdInspectionRateByMonthCommand;
-            _cmdDefectDensityChangedByMonthCommand = cmdDefectDensityChangedByMonthCommand;
+            _cmdInspectionRateByMonth = cmdInspectionRateByMonth;
+            _cmdDefectDensityChangedByMonth = cmdDefectDensityChangedByMonthCommand;
+            _cmdCommentDensityChangedByMonth = cmdCommentDensityChangedByMonth;
         }
 
         public void GenerateReviewCountByMonth()
@@ -73,12 +76,17 @@
 
         public void GenerateInspectionRateByMonth()
         {
-            _cmdInspectionRateByMonthCommand.Execute();
+            _cmdInspectionRateByMonth.Execute();
         }
 
         public void GenerateDefectDensityChangedByMonth()
         {
-            _cmdDefectDensityChangedByMonthCommand.Execute();
+            _cmdDefectDensityChangedByMonth.Execute();
+        }
+
+        public void GenerateCommentDensityChangedByMonth()
+        {
+            _cmdCommentDensityChangedByMonth.Execute();
         }
     }
 }

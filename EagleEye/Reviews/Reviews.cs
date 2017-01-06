@@ -375,6 +375,78 @@ namespace EagleEye.Reviews
             log.Info("Generating: Code Comment Density (Changed) ... Done");
         }
 
+        public void GenerateCommentDensityChangedByMonthFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.CommentDensityChangedByMonth)
+            {
+                List<ReviewRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesReviewsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesReviewsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Code comment density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    CommentDensityChangedByMonth(datasource, item.ChartId);
+
+                    log.Info("Generating: Code comment density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void CommentDensityChangedByMonth(List<ReviewRecord> datasource, string settingsKey)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Month", "Comments/KLOCC"],
+            //     ["2016-01", 0.1],
+            //     ["2016-02", 0.03]
+            //   ]
+            // }
+
+            var query = datasource
+                        .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                        .OrderBy(group => group.Key)
+                        .Select(group => group);
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Month", "Comments/KLOCC" };
+            datatable.Add(header);
+
+            foreach (var item in query)
+            {
+                List<ReviewRecord> records = item.ToList();
+
+                ReviewsStatistics stat = new ReviewsStatistics(records);
+                var totalCommentCount = stat.TotalCommentCount;
+                var totalLOCChanged = stat.TotalLOCChanged;
+
+                double density = 0;
+                if (totalLOCChanged != 0)
+                {
+                    density = (totalCommentCount * 1000) / totalLOCChanged;
+                }
+
+                datatable.Add(new List<object> { item.Key, density });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(settingsKey, json);
+        }
+
         /// <summary>
         /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Uploaded)
         /// </summary>
@@ -499,11 +571,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Code defect density (changed) for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Code defect density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     DefectDensityChangedByMonth(datasource, item.ChartId);
 
-                    log.Info("Generating: Code defect density (changed) for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Code defect density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }

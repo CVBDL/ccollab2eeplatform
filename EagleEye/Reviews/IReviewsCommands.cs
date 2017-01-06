@@ -11,5 +11,6 @@
         void GenerateReviewCountByCreator();
         void GenerateInspectionRateByMonthFromProduct();
         void GenerateDefectDensityChangedByMonthFromProduct();
+        void GenerateCommentDensityChangedByMonthFromProduct();
     }
 }

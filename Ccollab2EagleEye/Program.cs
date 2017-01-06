@@ -100,7 +100,8 @@ namespace Ccollab2EagleEye
                     new DefectDensityUploadedByProductCommand(reviews),
                     new CodeDefectDensityChangedCommand(reviews),
                     new InspectionRateByMonthFromProductCommand(reviews),
-                    new DefectDensityChangedByMonthCommand(reviews)
+                    new DefectDensityChangedByMonthCommand(reviews),
+                    new CommentDensityChangedByMonthCommand(reviews)
                 );
 
                 reviewsManager.GenerateReviewCountByMonth();
@@ -112,6 +113,7 @@ namespace Ccollab2EagleEye
                 reviewsManager.GenerateCodeDefectDensityChanged();
                 reviewsManager.GenerateInspectionRateByMonth();
                 reviewsManager.GenerateDefectDensityChangedByMonth();
+                reviewsManager.GenerateCommentDensityChangedByMonth();
             }
 
             // ccollab defects charts related
