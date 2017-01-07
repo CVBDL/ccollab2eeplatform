@@ -162,7 +162,36 @@ namespace EagleEye.Defects
             log.Info("Generating: Defect Severity Count By Product ... Done.");
         }
 
-        public void GenerateDefectCountByInjectionStage(string settingsKey)
+        public void GenerateDefectCountByInjectionStageFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByInjectionStage)
+            {
+                List<DefectRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesDefectsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesDefectsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Defect count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    DefectCountByInjectionStage(datasource, item.ChartId);
+
+                    log.Info("Generating: Defect count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void DefectCountByInjectionStage(List<DefectRecord> datasource, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -174,9 +203,7 @@ namespace EagleEye.Defects
             //     ["integration/test", 16]
             //   ]
             // }
-
-            log.Info("Generating: Defect Count By Injection Stage ...");
-
+            
             Dictionary<string, int> injectionstage2count = new Dictionary<string, int>();
 
             // collect all products
@@ -184,8 +211,8 @@ namespace EagleEye.Defects
             {
                 injectionstage2count.Add(injectionStage.ToLower(), 0);
             }
-            
-            var query = FilteredEmployeesDefectsData
+
+            var query = datasource
                         .GroupBy(record => record.InjectionStage)
                         .Select(group => new { InjectionStage = group.Key.ToLower(), Count = group.Count() });
 
@@ -210,8 +237,6 @@ namespace EagleEye.Defects
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
             Save2EagleEye(settingsKey, json);
-
-            log.Info("Generating: Defect Count By Injection Stage ... Done.");
         }
 
         public void GenerateDefectCountByType(string settingsKey)
