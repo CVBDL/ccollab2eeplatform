@@ -133,7 +133,8 @@ namespace Ccollab2EagleEye
                     new DefectCountByTypeCommand(defects),
                     new DefectsDistributionByTypeCommand(defects),
                     new DefectCountByCreatorCommand(defects),
-                    new DefectSeverityCountByCreatorCommand(defects)
+                    new DefectSeverityCountByCreatorCommand(defects),
+                    new DefectCountOfTypeByCreatorCommand(defects)
                 );
 
                 defectsManager.GenerateDefectCountByProduct();
@@ -143,6 +144,7 @@ namespace Ccollab2EagleEye
                 defectsManager.GenerateDefectsDistributionByType();
                 defectsManager.GenerateDefectCountByCreator();
                 defectsManager.GenerateDefectSeverityCountByCreator();
+                defectsManager.GenerateDefectCountOfTypeByCreator();
             }
             
             // notify task state

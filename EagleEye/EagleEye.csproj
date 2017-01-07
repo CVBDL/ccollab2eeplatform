@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Chart.cs" />
     <Compile Include="Defects\DefectCountByCreatorCommand.cs" />
+    <Compile Include="Defects\DefectCountOfTypeByCreatorCommand.cs" />
     <Compile Include="Defects\Defects.cs" />
     <Compile Include="Defects\DefectsDistributionByTypeCommand.cs" />
     <Compile Include="Defects\DefectSeverityCountByCreatorCommand.cs" />

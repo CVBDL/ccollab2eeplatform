@@ -403,6 +403,93 @@ namespace EagleEye.Defects
             Save2EagleEye(settingsKey, json);
         }
 
+        public void GenerateDefectCountOfTypeByCreatorFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.DefectCountOfTypeByCreator)
+            {
+                List<DefectRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesDefectsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesDefectsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Defect count of type by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    DefectCountOfTypeByCreator(datasource, item);
+
+                    log.Info("Generating: Defect count of type by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void DefectCountOfTypeByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Creator", "algorithm/logic", "build", ..., "testing"],
+            //     ["Patrick Zhong", 3, 1, ..., 0]
+            //   ]
+            // }
+            Dictionary<string, List<int>> creator2typecount = new Dictionary<string, List<int>>();
+
+            // collect all employees of the product
+            foreach (Employee employee in EmployeesReader.GetEmployeesByProduct(chartSettings.ProductName))
+            {
+                creator2typecount.Add(employee.LoginName, new List<int>(new int[EagleEyeSettingsReader.Settings.DefectTypes.Count]));
+            }
+
+            var query = datasource
+                        .GroupBy(record => record.CreatorLogin)
+                        .Select(group => group);
+
+            foreach (var item in query)
+            {
+                if (!creator2typecount.ContainsKey(item.Key)) continue;
+
+                foreach (var defect in item)
+                {
+                    int index = EagleEyeSettingsReader.Settings.DefectTypes.IndexOf(defect.Type.ToLower());
+
+                    if (index >= 0)
+                    {
+                        creator2typecount[item.Key][index] += 1;
+                    }
+                }
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Creator" }.Concat(EagleEyeSettingsReader.Settings.DefectTypes).ToList();
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, List<int>> item in creator2typecount)
+            {
+                List<object> row = new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key) };
+
+                foreach (int count in item.Value)
+                {
+                    row.Add(count);
+                }
+
+                datatable.Add(row);
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(chartSettings.ChartId, json);
+        }
+
         public void GenerateDefectsDistributionByType(string settingsKey)
         {
             // Expected data table format:
