@@ -37,27 +37,22 @@
         {
             _cmdDefectCountByProduct.Execute();
         }
-
         public void GenerateDefectSeverityByProduct()
         {
             _cmdDefectSeverityByProduct.Execute();
         }
-
         public void GenerateDefectCountByInjectionStage()
         {
             _cmdDefectCountByInjectionStage.Execute();
         }
-
         public void GenerateDefectCountByType()
         {
             _cmdDefectCountByType.Execute();
         }
-
         public void GenerateDefectsDistributionByType()
         {
             _cmdDefectsDistributionByType.Execute();
         }
-
         public void GenerateDefectCountByCreator()
         {
             _cmdDefectCountByCreator.Execute();

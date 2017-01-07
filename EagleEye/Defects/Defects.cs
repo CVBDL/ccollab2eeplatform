@@ -490,7 +490,7 @@ namespace EagleEye.Defects
             Save2EagleEye(chartSettings.ChartId, json);
         }
 
-        public void GenerateDefectsDistributionByType(string settingsKey)
+        public void GenerateDefectCountOfTypeByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -500,9 +500,7 @@ namespace EagleEye.Defects
             //     ...
             //   ]
             // }
-            log.Info("Generating: Defects Distribution by Type ...");
-
-            EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
+            log.Info("Generating: Defect count of type by product ...");
 
             Dictionary<string, List<int>> product2typecount = new Dictionary<string, List<int>>();
 
@@ -511,7 +509,7 @@ namespace EagleEye.Defects
             {
                 if (!product2typecount.ContainsKey(employee.ProductName))
                 {
-                    product2typecount.Add(employee.ProductName, new List<int>(new int[settings.DefectTypes.Count]));
+                    product2typecount.Add(employee.ProductName, new List<int>(new int[EagleEyeSettingsReader.Settings.DefectTypes.Count]));
                 }
             }
 
@@ -525,7 +523,7 @@ namespace EagleEye.Defects
 
                 foreach (var defect in item)
                 {
-                    int index = settings.DefectTypes.IndexOf(defect.Type);
+                    int index = EagleEyeSettingsReader.Settings.DefectTypes.IndexOf(defect.Type);
 
                     if (index >= 0)
                     {
@@ -536,7 +534,7 @@ namespace EagleEye.Defects
 
             List<List<object>> datatable = new List<List<object>>();
 
-            List<object> header = new List<object> { "Product" }.Concat(settings.DefectTypes).ToList();
+            List<object> header = new List<object> { "Product" }.Concat(EagleEyeSettingsReader.Settings.DefectTypes).ToList();
             datatable.Add(header);
 
             foreach (KeyValuePair<string, List<int>> item in product2typecount)
@@ -555,7 +553,7 @@ namespace EagleEye.Defects
 
             Save2EagleEye(settingsKey, json);
 
-            log.Info("Generating: Defects Distribution by Type ... Done.");
+            log.Info("Generating: Defect count of type by product ... Done.");
         }
 
         public void GenerateDefectCountByCreatorFromProduct()
