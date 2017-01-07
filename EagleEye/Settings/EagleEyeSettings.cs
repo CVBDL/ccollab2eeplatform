@@ -17,6 +17,7 @@ namespace EagleEye.Settings
         public List<ProductChartSettings> CommentDensityChangedByMonth { get; set; }
         public List<ProductChartSettings> ReviewCountByMonth { get; set; }
         public List<ProductChartSettings> DefectCountByInjectionStage { get; set; }
+        public List<ProductChartSettings> DefectCountByType { get; set; }
     }
 
     public class ChartSettings

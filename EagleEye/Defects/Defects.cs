@@ -239,7 +239,36 @@ namespace EagleEye.Defects
             Save2EagleEye(settingsKey, json);
         }
 
-        public void GenerateDefectCountByType(string settingsKey)
+        public void GenerateDefectCountByTypeFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByType)
+            {
+                List<DefectRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesDefectsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesDefectsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Defect count by type from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    DefectCountByType(datasource, item.ChartId);
+
+                    log.Info("Generating: Defect count by type from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void DefectCountByType(List<DefectRecord> datasource, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -250,9 +279,7 @@ namespace EagleEye.Defects
             //     ...
             //   ]
             // }
-
-            log.Info("Generating: Defect Count By Type ...");
-
+            
             Dictionary<string, int> type2count = new Dictionary<string, int>();
 
             // collect all products
@@ -260,8 +287,8 @@ namespace EagleEye.Defects
             {
                 type2count.Add(type.ToLower(), 0);
             }
-            
-            var query = FilteredEmployeesDefectsData
+
+            var query = datasource
                         .GroupBy(record => record.Type)
                         .Select(group => new { Type = group.Key.ToLower(), Count = group.Count() });
 
@@ -286,8 +313,6 @@ namespace EagleEye.Defects
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
             Save2EagleEye(settingsKey, json);
-
-            log.Info("Generating: Defect Count By Type ... Done.");
         }
 
         public void GenerateDefectsDistributionByType(string settingsKey)

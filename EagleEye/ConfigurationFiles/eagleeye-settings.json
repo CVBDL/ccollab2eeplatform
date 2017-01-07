@@ -99,6 +99,24 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
+  "DefectCountByType": [
+    {
+      "ProductName": "*",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "ViewPoint",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTView",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTSP_FTAE",
+      "ChartId": "5809b2827e9254582e54116d"
+    }
+  ],
   "ReviewCountByCreator": [
     {
       "ProductName": "ViewPoint",
