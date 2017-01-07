@@ -93,7 +93,7 @@ namespace EagleEye.Defects
             log.Info("Generating: Defect Count By Product ... Done.");
         }
 
-        public void GenerateDefectCountBySeverity(string settingsKey)
+        public void GenerateDefectSeverityCountByProduct(string settingsKey)
         {
             // Expected data table format:
             // {
@@ -160,6 +160,94 @@ namespace EagleEye.Defects
             Save2EagleEye(settingsKey, json);
 
             log.Info("Generating: Defect Severity Count By Product ... Done.");
+        }
+
+        public void GenerateDefectSeverityCountByCreatorFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.DefectSeverityCountByCreator)
+            {
+                List<DefectRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesDefectsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesDefectsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    DefectSeverityCountByCreator(datasource, item);
+
+                    log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void DefectSeverityCountByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Creator", "Major", "Minor"],
+            //     ["Patrick", 20, 3],
+            //     ["Lily", 16, 0]
+            //   ]
+            // }
+            Dictionary<string, List<int>> creator2severitycount = new Dictionary<string, List<int>>();
+            
+            // collect all employees of the product
+            foreach (Employee employee in EmployeesReader.GetEmployeesByProduct(chartSettings.ProductName))
+            {
+                creator2severitycount.Add(employee.LoginName, new List<int>(new int[EagleEyeSettingsReader.Settings.DefectSeverityTypes.Count]));
+            }
+
+            var query = datasource
+                        .GroupBy(record => record.CreatorLogin)
+                        .Select(group => group);
+
+            foreach (var item in query)
+            {
+                if (!creator2severitycount.ContainsKey(item.Key)) continue;
+
+                foreach (var defect in item)
+                {
+                    int index = EagleEyeSettingsReader.Settings.DefectSeverityTypes.IndexOf(defect.Severity);
+
+                    if (index >= 0)
+                    {
+                        creator2severitycount[item.Key][index] += 1;
+                    }
+                }
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Creator" }.Concat(EagleEyeSettingsReader.Settings.DefectSeverityTypes).ToList();
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, List<int>> item in creator2severitycount)
+            {
+                List<object> row = new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key) };
+
+                foreach (int count in item.Value)
+                {
+                    row.Add(count);
+                }
+
+                datatable.Add(row);
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(chartSettings.ChartId, json);
         }
 
         public void GenerateDefectCountByInjectionStageFromProduct()

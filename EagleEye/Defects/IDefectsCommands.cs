@@ -3,7 +3,7 @@
     public interface IDefectsCommands
     {
         void GenerateDefectCountByProduct(string settingsKey);
-        void GenerateDefectCountBySeverity(string settingsKey);
+        
         
         void GenerateDefectsDistributionByType(string settingsKey);
 
@@ -15,5 +15,11 @@
 
 
         void GenerateDefectCountByTypeFromProduct();
+
+
+        void GenerateDefectSeverityCountByProduct(string settingsKey);
+
+
+        void GenerateDefectSeverityCountByCreatorFromProduct();
     }
 }
