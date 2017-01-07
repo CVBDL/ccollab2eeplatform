@@ -10,6 +10,7 @@ namespace EagleEye.Settings
         public List<string> DefectSeverityTypes { get; set; }
         public List<string> DefectTypes { get; set; }
         public List<string> Products { get; set; }
+        public List<ProductChartSettings> DefectCountByCreator { get; set; }
         public List<ProductChartSettings> ReviewCountByCreator { get; set; }
         public List<ProductChartSettings> InspectionRateByMonth { get; set; }
         public List<ProductChartSettings> DefectDensityChangedByMonth { get; set; }

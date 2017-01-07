@@ -7,5 +7,8 @@
         void GenerateDefectCountByInjectionStage(string settingsKey);
         void GenerateDefectCountByType(string settingsKey);
         void GenerateDefectsDistributionByType(string settingsKey);
+
+
+        void GenerateDefectCountByCreatorFromProduct();
     }
 }

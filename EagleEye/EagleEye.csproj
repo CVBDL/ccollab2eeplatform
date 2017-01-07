@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chart.cs" />
+    <Compile Include="Defects\DefectCountByCreatorCommand.cs" />
     <Compile Include="Defects\Defects.cs" />
     <Compile Include="Defects\DefectsDistributionByTypeCommand.cs" />
     <Compile Include="Defects\DefectsManager.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Defects\DefectCountByProductCommand.cs" />
     <Compile Include="Defects\DefectCountBySeverityCommand.cs" />
     <Compile Include="Defects\DefectCountByTypeCommand.cs" />
+    <Compile Include="Defects\DefectStatistics.cs" />
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="DensityStatistics.cs" />
     <Compile Include="ICommand.cs" />

@@ -332,6 +332,87 @@ namespace EagleEye.Defects
 
             log.Info("Generating: Defects Distribution by Type ... Done.");
         }
-        
+
+        public void GenerateDefectCountByCreatorFromProduct()
+        {
+            foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByCreator)
+            {
+                List<DefectRecord> datasource = null;
+
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesDefectsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesDefectsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Defect count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    DefectCountByCreator(datasource, item);
+
+                    log.Info("Generating: Defect count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void DefectCountByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        {
+            // Expected data table format:
+            // {
+            //    "datatable": [
+            //     ["Creator", "Count"],
+            //     ["Patrick Zhong", 16],
+            //     ["Merlin Mo", 16]
+            //   ]
+            // }
+
+            Dictionary<string, int> creator2count = new Dictionary<string, int>();
+
+            // collect all employees of the product
+            foreach (Employee employee in EmployeesReader.GetEmployeesByProduct(chartSettings.ProductName))
+            {
+                creator2count.Add(employee.LoginName, 0);
+            }
+
+            var query = datasource
+                        .GroupBy(record => record.CreatorLogin)
+                        .Select(group => group);
+
+            foreach (var item in query)
+            {
+                string creatorLoginName = item.Key;
+
+                if (creator2count.ContainsKey(creatorLoginName))
+                {
+                    List<DefectRecord> records = item.ToList();
+
+                    DefectStatistics stat = new DefectStatistics(records);
+                    int count = stat.Count;
+
+                    creator2count[creatorLoginName] = count;
+                }
+            }
+
+            List<List<object>> datatable = new List<List<object>>();
+
+            List<object> header = new List<object> { "Creator", "Count" };
+            datatable.Add(header);
+
+            foreach (KeyValuePair<string, int> item in creator2count)
+            {
+                datatable.Add(new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key), item.Value });
+            }
+
+            string json = JsonConvert.SerializeObject(new Chart(datatable));
+
+            Save2EagleEye(chartSettings.ChartId, json);
+        }
     }
 }

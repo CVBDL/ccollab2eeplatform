@@ -7,6 +7,7 @@
         ICommand _cmdDefectCountByInjectionStage;
         ICommand _cmdDefectCountByType;
         ICommand _cmdDefectsDistributionByType;
+        ICommand _cmdDefectCountByCreator;
 
         public DefectsManager
         (
@@ -14,7 +15,8 @@
             ICommand cmdDefectSeverityByProduct,
             ICommand cmdDefectCountByInjectionStage,
             ICommand cmdDefectCountByType,
-            ICommand cmdDefectsDistributionByType
+            ICommand cmdDefectsDistributionByType,
+            ICommand cmdDefectCountByCreator
         )
         {
             _cmdDefectCountByProduct = cmdDefectCountByProduct;
@@ -22,6 +24,7 @@
             _cmdDefectCountByInjectionStage = cmdDefectCountByInjectionStage;
             _cmdDefectCountByType = cmdDefectCountByType;
             _cmdDefectsDistributionByType = cmdDefectsDistributionByType;
+            _cmdDefectCountByCreator = cmdDefectCountByCreator;
         }
 
         public void GenerateDefectCountByProduct()
@@ -47,6 +50,11 @@
         public void GenerateDefectsDistributionByType()
         {
             _cmdDefectsDistributionByType.Execute();
+        }
+
+        public void GenerateDefectCountByCreator()
+        {
+            _cmdDefectCountByCreator.Execute();
         }
     }
 }
