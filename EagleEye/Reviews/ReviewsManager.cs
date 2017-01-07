@@ -23,7 +23,7 @@
             ICommand cmdCodeDefectDensityUploaded,
             ICommand cmdCodeDefectDensityChanged,
             ICommand cmdInspectionRateByMonth,
-            ICommand cmdDefectDensityChangedByMonthCommand,
+            ICommand cmdDefectDensityChangedByMonth,
             ICommand cmdCommentDensityChangedByMonth
         )
         {
@@ -35,7 +35,7 @@
             _cmdCodeDefectDensityUploaded = cmdCodeDefectDensityUploaded;
             _cmdCodeDefectDensityChanged = cmdCodeDefectDensityChanged;
             _cmdInspectionRateByMonth = cmdInspectionRateByMonth;
-            _cmdDefectDensityChangedByMonth = cmdDefectDensityChangedByMonthCommand;
+            _cmdDefectDensityChangedByMonth = cmdDefectDensityChangedByMonth;
             _cmdCommentDensityChangedByMonth = cmdCommentDensityChangedByMonth;
         }
 
