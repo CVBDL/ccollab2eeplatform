@@ -183,11 +183,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Review count by creator for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Review count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     ReviewCountByCreator(datasource, item);
 
-                    log.Info("Generating: Review count by creator for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Review count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
@@ -384,11 +384,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Code comment density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Code comment density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     CommentDensityChangedByMonth(datasource, item.ChartId);
 
-                    log.Info("Generating: Code comment density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Code comment density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
@@ -570,11 +570,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Code defect density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Code defect density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     DefectDensityChangedByMonth(datasource, item.ChartId);
 
-                    log.Info("Generating: Code defect density (changed) by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Code defect density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
@@ -654,11 +654,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Inspection rate by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Inspection rate by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     InspectionRateByMonth(datasource, item.ChartId);
 
-                    log.Info("Generating: Inspection rate by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Inspection rate by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
