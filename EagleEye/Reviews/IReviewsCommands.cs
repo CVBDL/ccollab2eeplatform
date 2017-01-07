@@ -2,8 +2,10 @@
 {
     public interface IReviewsCommands
     {
-        void GenerateReviewCountByMonth(string settingsKey);
         void GenerateReviewCountByProduct(string settingsKey);
+        void GenerateReviewCountByMonthFromProduct();
+
+
         void GenerateReviewCountByCreator();
         
 

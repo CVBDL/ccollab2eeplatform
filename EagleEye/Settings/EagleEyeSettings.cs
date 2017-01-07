@@ -14,6 +14,7 @@ namespace EagleEye.Settings
         public List<ProductChartSettings> InspectionRateByMonth { get; set; }
         public List<ProductChartSettings> DefectDensityChangedByMonth { get; set; }
         public List<ProductChartSettings> CommentDensityChangedByMonth { get; set; }
+        public List<ProductChartSettings> ReviewCountByMonth { get; set; }
     }
 
     public class ChartSettings

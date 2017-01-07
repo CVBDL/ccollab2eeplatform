@@ -43,10 +43,37 @@ namespace EagleEye.Reviews
         /// <summary>
         /// Generate review count by month.
         /// </summary>
-        public void GenerateReviewCountByMonth(string settingsKey)
+        public void GenerateReviewCountByMonthFromProduct()
         {
-            log.Info("Generating: Review count by month ...");
+            foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByMonth)
+            {
+                List<ReviewRecord> datasource = null;
 
+                // for all products
+                if (item.ProductName == "*")
+                {
+                    datasource = FilteredEmployeesReviewsData;
+                }
+                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
+                {
+                    datasource = FilteredEmployeesReviewsData
+                                .Where(record => record.CreatorProductName == item.ProductName)
+                                .ToList();
+                }
+
+                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                {
+                    log.Info("Generating: Review count by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+
+                    ReviewCountByMonth(datasource, item.ChartId);
+
+                    log.Info("Generating: Review count by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                }
+            }
+        }
+
+        private void ReviewCountByMonth(List<ReviewRecord> datasource, string settingsKey)
+        {
             // Expected data table format:
             // {
             //    "datatable": [
@@ -55,8 +82,8 @@ namespace EagleEye.Reviews
             //     ["2016-02", 30]
             //   ]
             // }
-            
-            var query = FilteredEmployeesReviewsData
+
+            var query = datasource
                     .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
                     .OrderBy(group => group.Key)
                     .Select(group => new { ReviewCreationYYYYMM = group.Key, Count = group.Count() });
@@ -75,8 +102,6 @@ namespace EagleEye.Reviews
             string json = JsonConvert.SerializeObject(new Chart(datatable));
 
             Save2EagleEye(settingsKey, json);
-
-            log.Info("Generating: Review count by month ... Done.");
         }
 
         /// <summary>
