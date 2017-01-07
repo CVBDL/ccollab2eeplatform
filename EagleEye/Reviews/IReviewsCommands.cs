@@ -6,7 +6,7 @@
         void GenerateReviewCountByMonthFromProduct();
 
 
-        void GenerateReviewCountByCreator();
+        void GenerateReviewCountByCreatorFromProduct();
         
 
         void GenerateCommentDensityChangedByProduct(string settingsKey);

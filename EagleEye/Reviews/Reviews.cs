@@ -163,7 +163,7 @@ namespace EagleEye.Reviews
         ///     2. Review count by creator of FTView.
         ///     3. (All other products)...
         /// </summary>
-        public void GenerateReviewCountByCreator()
+        public void GenerateReviewCountByCreatorFromProduct()
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByCreator)
             {

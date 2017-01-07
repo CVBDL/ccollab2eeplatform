@@ -1,10 +1,10 @@
 ﻿namespace EagleEye.Reviews
 {
-    public class CodeDefectDensityChangedCommand : ICommand
+    public class DefectDensityChangedByProductCommand : ICommand
     {
         private Reviews _reviews;
 
-        public CodeDefectDensityChangedCommand(Reviews reviews)
+        public DefectDensityChangedByProductCommand(Reviews reviews)
         {
             _reviews = reviews;
         }

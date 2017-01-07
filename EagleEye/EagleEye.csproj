@@ -59,10 +59,10 @@
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="DensityStatistics.cs" />
     <Compile Include="ICommand.cs" />
-    <Compile Include="Reviews\CodeCommentDensityChangedCommand.cs" />
+    <Compile Include="Reviews\CommentDensityChangedByProductCommand.cs" />
     <Compile Include="Reviews\CommentDensityChangedByMonthCommand.cs" />
     <Compile Include="Reviews\CommentDensityUploadedByProductCommand.cs" />
-    <Compile Include="Reviews\CodeDefectDensityChangedCommand.cs" />
+    <Compile Include="Reviews\DefectDensityChangedByProductCommand.cs" />
     <Compile Include="Reviews\DefectDensityUploadedByProductCommand.cs" />
     <Compile Include="Reviews\DefectDensityChangedByMonthCommand.cs" />
     <Compile Include="Reviews\InspectionRateByMonthFromProductCommand.cs" />
