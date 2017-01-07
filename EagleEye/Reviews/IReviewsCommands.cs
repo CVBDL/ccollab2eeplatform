@@ -4,13 +4,23 @@
     {
         void GenerateReviewCountByMonth(string settingsKey);
         void GenerateReviewCountByProduct(string settingsKey);
-        void GenerateCommentDensityUploadedByProduct(string settingsKey);
-        void GenerateCommentDensityChangedByProduct(string settingsKey);
-        void GenerateDefectDensityUploadedByProduct(string settingsKey);
-        void GenerateDefectDensityChangedByProduct(string settingsKey);
         void GenerateReviewCountByCreator();
-        void GenerateInspectionRateByMonthFromProduct();
-        void GenerateDefectDensityChangedByMonthFromProduct();
+        
+
+        void GenerateCommentDensityChangedByProduct(string settingsKey);
         void GenerateCommentDensityChangedByMonthFromProduct();
+
+
+        void GenerateCommentDensityUploadedByProduct(string settingsKey);
+
+
+        void GenerateDefectDensityChangedByProduct(string settingsKey);
+        void GenerateDefectDensityChangedByMonthFromProduct();
+
+
+        void GenerateDefectDensityUploadedByProduct(string settingsKey);
+
+
+        void GenerateInspectionRateByMonthFromProduct();
     }
 }

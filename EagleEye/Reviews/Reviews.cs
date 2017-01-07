@@ -45,7 +45,7 @@ namespace EagleEye.Reviews
         /// </summary>
         public void GenerateReviewCountByMonth(string settingsKey)
         {
-            log.Info("Generating: Review Count By Month ...");
+            log.Info("Generating: Review count by month ...");
 
             // Expected data table format:
             // {
@@ -76,7 +76,7 @@ namespace EagleEye.Reviews
 
             Save2EagleEye(settingsKey, json);
 
-            log.Info("Generating: Review Count By Month ... Done.");
+            log.Info("Generating: Review count by month ... Done.");
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace EagleEye.Reviews
             //   ]
             // }
 
-            log.Info("Generating: Review Count By Product ...");
+            log.Info("Generating: Review count by product ...");
             
             Dictionary<string, int> product2count = new Dictionary<string, int>();
             
@@ -128,7 +128,7 @@ namespace EagleEye.Reviews
 
             Save2EagleEye(settingsKey, json);
 
-            log.Info("Generating: Review Count By Product ... Done.");
+            log.Info("Generating: Review count by product ... Done.");
         }
 
         /// <summary>
@@ -158,11 +158,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ...");
+                    log.Info("Generating: Review count by creator for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     ReviewCountByCreator(datasource, item);
 
-                    log.Info("Generating: Review Count By Creator For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Review count by creator for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
@@ -240,7 +240,7 @@ namespace EagleEye.Reviews
             //   ]
             // }
 
-            log.Info("Generating: Code Comment Density (Uploaded) ...");
+            log.Info("Generating: Code comment density (uploaded) by product ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
 
@@ -279,7 +279,7 @@ namespace EagleEye.Reviews
 
             Save2EagleEye(settingsKey, json);
 
-            log.Info("Generating: Code Comment Density (Uploaded) ... Done");
+            log.Info("Generating: Code comment density (uploaded) by product ... Done");
         }
 
         /// <summary>
@@ -629,11 +629,11 @@ namespace EagleEye.Reviews
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
-                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ...");
+                    log.Info("Generating: Inspection rate by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
                     InspectionRateByMonth(datasource, item.ChartId);
 
-                    log.Info("Generating: Inspection Rate By Month For " + (item.ProductName == "*" ? "All Products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Inspection rate by month for " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
