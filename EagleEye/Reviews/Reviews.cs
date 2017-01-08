@@ -40,28 +40,25 @@ namespace EagleEye.Reviews
         {
             return GetRecordsByProduct(GetValidRecords(), productName);
         }
-
-        /// <summary>
-        /// Generate review count by month.
-        /// </summary>
+        
         public void GenerateReviewCountByMonthFromProduct()
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByMonth)
             {
-                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Review count by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    ReviewCountByMonth(datasource, item.ChartId);
+                    ReviewCountByMonth(records, item.ChartId);
 
                     log.Info("Generating: Review count by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
-
-        private void ReviewCountByMonth(List<ReviewRecord> datasource, string settingsKey)
+        
+        private void ReviewCountByMonth(List<ReviewRecord> source, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -71,11 +68,10 @@ namespace EagleEye.Reviews
             //     ["2016-02", 30]
             //   ]
             // }
-
-            var query = datasource
-                    .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
-                    .OrderBy(group => group.Key)
-                    .Select(group => new { ReviewCreationYYYYMM = group.Key, Count = group.Count() });
+            var query = source
+                .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                .OrderBy(group => group.Key)
+                .Select(group => new { ReviewCreationYYYYMM = group.Key, Count = group.Count() });
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -92,10 +88,7 @@ namespace EagleEye.Reviews
 
             Save2EagleEye(settingsKey, json);
         }
-
-        /// <summary>
-        /// Generate review count by product.
-        /// </summary>
+        
         public void GenerateReviewCountByProduct(string settingsKey)
         {
             // Expected data table format:
@@ -106,7 +99,6 @@ namespace EagleEye.Reviews
             //     ["Team2", 16]
             //   ]
             // }
-
             log.Info("Generating: Review count by product ...");
             
             Dictionary<string, int> product2count = new Dictionary<string, int>();
@@ -117,8 +109,8 @@ namespace EagleEye.Reviews
             }
             
             var query = GetValidRecords()
-                    .GroupBy(record => record.CreatorProductName)
-                    .Select(group => new { ProductName = group.Key, ReviewCount = group.Count() });
+                .GroupBy(record => record.CreatorProductName)
+                .Select(group => new { ProductName = group.Key, ReviewCount = group.Count() });
 
             foreach (var item in query)
             {
@@ -144,37 +136,25 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: Review count by product ... Done.");
         }
-
-        /// <summary>
-        /// Generate review count by creator.
-        /// Including several charts:
-        ///     1. Review count by creator of ViewPoint.
-        ///     2. Review count by creator of FTView.
-        ///     3. (All other products)...
-        /// </summary>
+        
         public void GenerateReviewCountByCreatorFromProduct()
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByCreator)
             {
-                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Review count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    ReviewCountByCreator(datasource, item);
+                    ReviewCountByCreator(records, item);
 
                     log.Info("Generating: Review count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
-
-        /// <summary>
-        /// Generate review count by creator for a specific product
-        /// </summary>
-        /// <param name="datasource"></param>
-        /// <param name="settingsKey"></param>
-        private void ReviewCountByCreator(List<ReviewRecord> datasource, ProductChartSettings chartSettings)
+        
+        private void ReviewCountByCreator(List<ReviewRecord> source, ProductChartSettings chartSettings)
         {
             // Expected data table format:
             // {
@@ -184,7 +164,6 @@ namespace EagleEye.Reviews
             //     ["Merlin Mo", 16]
             //   ]
             // }
-
             Dictionary<string, int> creator2count = new Dictionary<string, int>();
 
             // collect all employees of the product
@@ -192,10 +171,10 @@ namespace EagleEye.Reviews
             {
                 creator2count.Add(employee.LoginName, 0);
             }
-
-            var query = datasource
-                        .GroupBy(record => record.CreatorLogin)
-                        .Select(group => group);
+            
+            var query = source
+                .GroupBy(record => record.CreatorLogin)
+                .Select(group => group);
 
             foreach (var item in query)
             {
@@ -228,9 +207,10 @@ namespace EagleEye.Reviews
         }
 
         /// <summary>
-        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Uploaded)
+        /// Formula:
+        ///     CommentDensity(uploaded) = (CommentCount * 1000) / LOC;
         /// </summary>
-        /// <param name="settingsKey"></param>
+        /// <param name="settingsKey">EagleEye chart id.</param>
         public void GenerateCommentDensityUploadedByProduct(string settingsKey)
         {
             // Expected data table format:
@@ -241,7 +221,6 @@ namespace EagleEye.Reviews
             //     ["Team2", 0.034]
             //   ]
             // }
-
             log.Info("Generating: Code comment density (uploaded) by product ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
@@ -252,8 +231,8 @@ namespace EagleEye.Reviews
             }
 
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(record => record);
+                .GroupBy(record => record.CreatorProductName)
+                .Select(record => record);
             
             List<List<object>> datatable = new List<List<object>>();
 
@@ -285,9 +264,10 @@ namespace EagleEye.Reviews
         }
 
         /// <summary>
-        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Comment Density(Changed)
+        /// Formula:
+        ///     CommentDensity(changed) = (CommentCount * 1000) / LOCChanged;
         /// </summary>
-        /// <param name="settingsKey"></param>
+        /// <param name="settingsKey">EagleEye chart id.</param>
         public void GenerateCommentDensityChangedByProduct(string settingsKey)
         {
             // Expected data table format:
@@ -298,7 +278,6 @@ namespace EagleEye.Reviews
             //     ["Team2", 0.034]
             //   ]
             // }
-
             log.Info("Generating: code comment density (changed) by product ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
@@ -309,8 +288,8 @@ namespace EagleEye.Reviews
             }
 
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(record => record);
+                .GroupBy(record => record.CreatorProductName)
+                .Select(record => record);
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -345,20 +324,25 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.CommentDensityChangedByMonth)
             {
-                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Code comment density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    CommentDensityChangedByMonth(datasource, item.ChartId);
+                    CommentDensityChangedByMonth(records, item.ChartId);
 
                     log.Info("Generating: Code comment density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void CommentDensityChangedByMonth(List<ReviewRecord> datasource, string settingsKey)
+        /// <summary>
+        /// Formula:
+        ///     Comment Density (changed) = (CommentCount * 1000) / LOCChanged;
+        /// </summary>
+        /// <param name="settingsKey">EagleEye chart id.</param>
+        private void CommentDensityChangedByMonth(List<ReviewRecord> source, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -368,11 +352,10 @@ namespace EagleEye.Reviews
             //     ["2016-02", 0.03]
             //   ]
             // }
-
-            var query = datasource
-                        .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
-                        .OrderBy(group => group.Key)
-                        .Select(group => group);
+            var query = source
+                .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                .OrderBy(group => group.Key)
+                .Select(group => group);
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -402,9 +385,10 @@ namespace EagleEye.Reviews
         }
 
         /// <summary>
-        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Uploaded)
+        /// Formula:
+        ///     DefectDensity(uploaded) = (DefectCount * 1000) / LOC;
         /// </summary>
-        /// <param name="settingsKey"></param>
+        /// <param name="settingsKey">EagleEye chart id.</param>
         public void GenerateDefectDensityUploadedByProduct(string settingsKey)
         {
             // Expected data table format:
@@ -415,7 +399,6 @@ namespace EagleEye.Reviews
             //     ["Team2", 0.034]
             //   ]
             // }
-
             log.Info("Generating: code defect density (uploaded) by product ...");
 
             Dictionary<string, double> product2density = new Dictionary<string, double>();
@@ -426,8 +409,8 @@ namespace EagleEye.Reviews
             }
 
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(record => record);
+                .GroupBy(record => record.CreatorProductName)
+                .Select(record => record);
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -457,11 +440,12 @@ namespace EagleEye.Reviews
 
             log.Info("Generating: code defect density (uploaded) by product ... Done");
         }
-        
+
         /// <summary>
-        /// All.xlsx -> Summary -> Code Defect Density by Product -> Code Defect Density(Changed)
+        /// Formula:
+        ///     DefectDensity(changed) = (DefectCount * 1000) / LOCChanged;
         /// </summary>
-        /// <param name="settingsKey"></param>
+        /// <param name="settingsKey">EagleEye chart id.</param>
         public void GenerateDefectDensityChangedByProduct(string settingsKey)
         {
             // Expected data table format:
@@ -483,8 +467,8 @@ namespace EagleEye.Reviews
             }
 
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(record => record);
+                .GroupBy(record => record.CreatorProductName)
+                .Select(record => record);
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -519,13 +503,13 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectDensityChangedByMonth)
             {
-                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Code defect density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectDensityChangedByMonth(datasource, item.ChartId);
+                    DefectDensityChangedByMonth(records, item.ChartId);
 
                     log.Info("Generating: Code defect density (changed) by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
@@ -534,11 +518,11 @@ namespace EagleEye.Reviews
 
         /// <summary>
         /// Formula:
-        ///     Density = (TotalDefectCount * 1000) / TotalLOCChanged
+        ///     DefectDensity(changed) = (DefectCount * 1000) / LOCChanged;
         /// </summary>
-        /// <param name="datasource"></param>
-        /// <param name="settingsKey"></param>
-        private void DefectDensityChangedByMonth(List<ReviewRecord> datasource, string settingsKey)
+        /// <param name="source">Review datasource to calculate.</param>
+        /// <param name="settingsKey">EagleEye chart id.</param>
+        private void DefectDensityChangedByMonth(List<ReviewRecord> source, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -549,10 +533,10 @@ namespace EagleEye.Reviews
             //   ]
             // }
             
-            var query = datasource
-                        .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
-                        .OrderBy(group => group.Key)
-                        .Select(group => group);
+            var query = source
+                .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                .OrderBy(group => group.Key)
+                .Select(group => group);
 
             List<List<object>> datatable = new List<List<object>>();
 
@@ -580,24 +564,18 @@ namespace EagleEye.Reviews
 
             Save2EagleEye(settingsKey, json);
         }
-
-        /// <summary>
-        /// Generate Inspection Rate By Month Chart.
-        /// Including several charts:
-        ///     1. Inspection rate by month for all products
-        ///     2. Inspection rate by month for a specific product, like ViewPoint.
-        /// </summary>
+        
         public void GenerateInspectionRateByMonthFromProduct()
         {
             foreach (var item in EagleEyeSettingsReader.Settings.InspectionRateByMonth)
             {
-                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Inspection rate by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    InspectionRateByMonth(datasource, item.ChartId);
+                    InspectionRateByMonth(records, item.ChartId);
 
                     log.Info("Generating: Inspection rate by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
@@ -609,7 +587,7 @@ namespace EagleEye.Reviews
         ///     InspectionRate = (LOCC) / (TotalPersonTime * 1000)
         /// </summary>
         /// <param name="settingsKey"></param>
-        private void InspectionRateByMonth(List<ReviewRecord> datasource, string settingsKey)
+        private void InspectionRateByMonth(List<ReviewRecord> source, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -618,12 +596,11 @@ namespace EagleEye.Reviews
             //     ["2016-01", 0.18],
             //     ["2016-02", 0.6]
             //   ]
-            // }
-            
-            var query = datasource
-                        .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
-                        .OrderBy(group => group.Key)
-                        .Select(group => group);
+            // }            
+            var query = source
+                .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
+                .OrderBy(group => group.Key)
+                .Select(group => group);
             
             List<List<object>> datatable = new List<List<object>>();
 
