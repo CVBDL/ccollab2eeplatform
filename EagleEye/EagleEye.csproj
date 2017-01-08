@@ -57,7 +57,7 @@
     <Compile Include="Defects\DefectsManager.cs" />
     <Compile Include="Defects\DefectCountByInjectionStageCommand.cs" />
     <Compile Include="Defects\DefectCountByProductCommand.cs" />
-    <Compile Include="Defects\DefectSeverityCountByProductCommand.cs" />
+    <Compile Include="Defects\DefectCountOfSeverityByProductCommand.cs" />
     <Compile Include="Defects\DefectCountByTypeCommand.cs" />
     <Compile Include="Defects\DefectStatistics.cs" />
     <Compile Include="Defects\IDefectsCommands.cs" />

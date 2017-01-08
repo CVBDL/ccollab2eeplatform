@@ -93,7 +93,7 @@ namespace EagleEye.Defects
             log.Info("Generating: Defect Count By Product ... Done.");
         }
 
-        public void GenerateDefectSeverityCountByProduct(string settingsKey)
+        public void GenerateDefectCountOfSeverityByProduct(string settingsKey)
         {
             // Expected data table format:
             // {

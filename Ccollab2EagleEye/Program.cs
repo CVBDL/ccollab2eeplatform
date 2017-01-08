@@ -128,7 +128,7 @@ namespace Ccollab2EagleEye
                 DefectsManager defectsManager = new DefectsManager
                 (
                     new DefectCountByProductCommand(defects),
-                    new DefectSeverityCountByProductCommand(defects),
+                    new DefectCountOfSeverityByProductCommand(defects),
                     new DefectCountByInjectionStageCommand(defects),
                     new DefectCountByTypeCommand(defects),
                     new DefectCountOfTypeByProduct(defects),

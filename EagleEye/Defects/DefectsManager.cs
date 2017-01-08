@@ -3,7 +3,7 @@
     public class DefectsManager
     {
         ICommand _cmdDefectCountByProduct;
-        ICommand _cmdDefectSeverityByProduct;
+        ICommand _cmdDefectCountOfSeverityByProduct;
         ICommand _cmdDefectCountByInjectionStage;
         ICommand _cmdDefectCountByType;
         ICommand _cmdDefectsDistributionByType;
@@ -14,7 +14,7 @@
         public DefectsManager
         (
             ICommand cmdDefectCountByProduct,
-            ICommand cmdDefectSeverityByProduct,
+            ICommand DefectCountOfSeverityByProduct,
             ICommand cmdDefectCountByInjectionStage,
             ICommand cmdDefectCountByType,
             ICommand cmdDefectsDistributionByType,
@@ -24,7 +24,7 @@
         )
         {
             _cmdDefectCountByProduct = cmdDefectCountByProduct;
-            _cmdDefectSeverityByProduct = cmdDefectSeverityByProduct;
+            _cmdDefectCountOfSeverityByProduct = DefectCountOfSeverityByProduct;
             _cmdDefectCountByInjectionStage = cmdDefectCountByInjectionStage;
             _cmdDefectCountByType = cmdDefectCountByType;
             _cmdDefectsDistributionByType = cmdDefectsDistributionByType;
@@ -39,7 +39,7 @@
         }
         public void GenerateDefectSeverityByProduct()
         {
-            _cmdDefectSeverityByProduct.Execute();
+            _cmdDefectCountOfSeverityByProduct.Execute();
         }
         public void GenerateDefectCountByInjectionStage()
         {
