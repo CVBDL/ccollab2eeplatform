@@ -133,7 +133,7 @@ namespace Ccollab2EagleEye
                     new DefectCountByTypeCommand(defects),
                     new DefectCountOfTypeByProduct(defects),
                     new DefectCountByCreatorCommand(defects),
-                    new DefectSeverityCountByCreatorCommand(defects),
+                    new DefectCountOfSeverityByCreatorCommand(defects),
                     new DefectCountOfTypeByCreatorCommand(defects)
                 );
 

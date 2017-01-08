@@ -162,7 +162,7 @@ namespace EagleEye.Defects
             log.Info("Generating: Defect Severity Count By Product ... Done.");
         }
 
-        public void GenerateDefectSeverityCountByCreatorFromProduct()
+        public void GenerateDefectCountOfSeverityByCreatorFromProduct()
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectSeverityCountByCreator)
             {
@@ -184,14 +184,14 @@ namespace EagleEye.Defects
                 {
                     log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectSeverityCountByCreator(datasource, item);
+                    DefectCountOfSeverityByCreator(datasource, item);
 
                     log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void DefectSeverityCountByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        private void DefectCountOfSeverityByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
         {
             // Expected data table format:
             // {

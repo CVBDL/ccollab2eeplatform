@@ -8,7 +8,7 @@
         ICommand _cmdDefectCountByType;
         ICommand _cmdDefectsDistributionByType;
         ICommand _cmdDefectCountByCreator;
-        ICommand _cmdDefectSeverityCountByCreator;
+        ICommand _cmdDefectCountOfSeverityByCreator;
         ICommand _cmdDefectCountOfTypeByCreator;
 
         public DefectsManager
@@ -19,7 +19,7 @@
             ICommand cmdDefectCountByType,
             ICommand cmdDefectsDistributionByType,
             ICommand cmdDefectCountByCreator,
-            ICommand cmdDefectSeverityCountByCreator,
+            ICommand cmdDefectCountOfSeverityByCreator,
             ICommand cmdDefectCountOfTypeByCreator
         )
         {
@@ -29,7 +29,7 @@
             _cmdDefectCountByType = cmdDefectCountByType;
             _cmdDefectsDistributionByType = cmdDefectsDistributionByType;
             _cmdDefectCountByCreator = cmdDefectCountByCreator;
-            _cmdDefectSeverityCountByCreator = cmdDefectSeverityCountByCreator;
+            _cmdDefectCountOfSeverityByCreator = cmdDefectCountOfSeverityByCreator;
             _cmdDefectCountOfTypeByCreator = cmdDefectCountOfTypeByCreator;
         }
 
@@ -59,7 +59,7 @@
         }
         public void GenerateDefectSeverityCountByCreator()
         {
-            _cmdDefectSeverityCountByCreator.Execute();
+            _cmdDefectCountOfSeverityByCreator.Execute();
         }
         public void GenerateDefectCountOfTypeByCreator()
         {

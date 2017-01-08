@@ -16,6 +16,6 @@
         
         void GenerateDefectSeverityCountByProduct(string settingsKey);
         
-        void GenerateDefectSeverityCountByCreatorFromProduct();
+        void GenerateDefectCountOfSeverityByCreatorFromProduct();
     }
 }
