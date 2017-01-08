@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace EagleEye.Defects
 {
-    public class Defects : EagleEyeDataGeneratorDecorator, IDefectsCommands
+    public class Defects : EagleEyeDataGeneratorDecorator<DefectRecord>, IDefectsCommands
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Defects));
         
@@ -26,10 +26,7 @@ namespace EagleEye.Defects
         {
             if (validRecords == null)
             {
-                validRecords = GetDefectsRawData()
-                    .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
-                    .Select(record => record)
-                    .ToList();
+                validRecords = GetValidRecords(GetDefectsRawData());
             }
 
             return validRecords;
@@ -42,21 +39,7 @@ namespace EagleEye.Defects
         /// <returns>List of defect records.</returns>
         public List<DefectRecord> GetRecordsByProduct(string productName)
         {
-            List<DefectRecord> records = null;
-
-            // for all products
-            if (productName == "*")
-            {
-                records = GetValidRecords();
-            }
-            else if (EagleEyeSettingsReader.Settings.Products.IndexOf(productName) != -1)
-            {
-                records = GetValidRecords()
-                    .Where(record => record.CreatorProductName == productName)
-                    .ToList();
-            }
-
-            return records;
+            return GetRecordsByProduct(GetValidRecords(), productName);
         }
         
         public void GenerateDefectCountByProduct(string settingsKey)

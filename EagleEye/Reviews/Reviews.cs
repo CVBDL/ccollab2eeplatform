@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace EagleEye.Reviews
 {
-    public class Reviews : EagleEyeDataGeneratorDecorator, IReviewsCommands
+    public class Reviews : EagleEyeDataGeneratorDecorator<ReviewRecord>, IReviewsCommands
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
         
@@ -25,10 +25,7 @@ namespace EagleEye.Reviews
         {
             if (validRecords == null)
             {
-                validRecords = GetReviewsRawData()
-                    .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
-                    .Select(record => record)
-                    .ToList();
+                validRecords = GetValidRecords(GetReviewsRawData());
             }
 
             return validRecords;
@@ -41,21 +38,7 @@ namespace EagleEye.Reviews
         /// <returns>List of review records.</returns>
         public List<ReviewRecord> GetRecordsByProduct(string productName)
         {
-            List<ReviewRecord> records = null;
-
-            // for all products
-            if (productName == "*")
-            {
-                records = GetValidRecords();
-            }
-            else if (EagleEyeSettingsReader.Settings.Products.IndexOf(productName) != -1)
-            {
-                records = GetValidRecords()
-                    .Where(record => record.CreatorProductName == productName)
-                    .ToList();
-            }
-
-            return records;
+            return GetRecordsByProduct(GetValidRecords(), productName);
         }
 
         /// <summary>
