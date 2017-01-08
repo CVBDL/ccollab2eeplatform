@@ -1,43 +1,10 @@
 ﻿{
   "ApiRootEndpoint": "http://localhost:3000/api/v1/",
-  "Charts": {
-    "AllInspectionRateByMonth": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeCommentDensityChanged": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeCommentDensityUploaded": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeDefectDensityChanged": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeDefectDensityUploaded": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectCountByInjectionStage": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectCountByProduct": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectCountBySeverity": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectCountByType": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectsDistributionByType": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "ReviewCountByMonth": {
-      "ChartId": "5809b2827e9254582e54116d"
-    },
-    "ReviewCountByProduct": {
-      "ChartId": "5799641be24561202bc7190d"
-    }
-  },
+  "Products": [
+    "FTView",
+    "FTSP_FTAE",
+    "ViewPoint"
+  ],
   "DefectInjectionStage": [
     "Code/Unit Test",
     "Design",
@@ -62,11 +29,35 @@
     "style",
     "testing"
   ],
-  "Products": [
-    "FTView",
-    "FTSP_FTAE",
-    "ViewPoint"
-  ],
+  "Charts": {
+    "CodeCommentDensityChanged": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "CodeCommentDensityUploaded": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "CodeDefectDensityChanged": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "CodeDefectDensityUploaded": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectCountByInjectionStage": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectCountByProduct": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectCountBySeverity": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "DefectsDistributionByType": {
+      "ChartId": "5799641be24561202bc7190d"
+    },
+    "ReviewCountByProduct": {
+      "ChartId": "5799641be24561202bc7190d"
+    }
+  },
   "DefectCountByCreator": [
     {
       "ProductName": "ViewPoint",

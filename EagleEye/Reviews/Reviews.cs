@@ -3,7 +3,6 @@ using EagleEye.Settings;
 using Employees;
 using log4net;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -39,7 +38,7 @@ namespace EagleEye.Reviews
                 return filteredEmployeesReviewsData;
             }
         }
-        
+
         /// <summary>
         /// Generate review count by month.
         /// </summary>
