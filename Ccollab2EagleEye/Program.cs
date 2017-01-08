@@ -84,9 +84,9 @@ namespace Ccollab2EagleEye
             // ccollab reviews charts related
             Reviews reviews = new Reviews(ccollabDataGenerator);
 
-            if (reviews.FilteredEmployeesReviewsData == null)
+            if (reviews.GetValidRecords() == null || reviews.GetValidRecords().Count == 0)
             {
-                log.Info("No filtered reviews data.");
+                log.Info("No valid review records.");
             }
             else
             {
@@ -119,9 +119,9 @@ namespace Ccollab2EagleEye
             // ccollab defects charts related
             Defects defects = new Defects(ccollabDataGenerator);
 
-            if (defects.FilteredEmployeesDefectsData == null)
+            if (defects.FilteredEmployeesDefectsData == null || defects.FilteredEmployeesDefectsData.Count == 0)
             {
-                log.Info("No filtered defects data.");
+                log.Info("No valid defect records.");
             }
             else
             {

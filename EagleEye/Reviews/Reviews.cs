@@ -14,29 +14,48 @@ namespace EagleEye.Reviews
         
         public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
 
-        /// <summary>
-        /// Holds filtered raw reviews data of local employees.
-        /// </summary>
-        private List<ReviewRecord> filteredEmployeesReviewsData = null;
+        private List<ReviewRecord> validRecords = null;
 
         /// <summary>
-        /// Filter raw reviews data of local employees.
+        /// From the raw review records, only the ones which are created by employees in
+        /// `employees.json` are valid.
         /// </summary>
-        public List<ReviewRecord> FilteredEmployeesReviewsData
+        /// <returns></returns>
+        public List<ReviewRecord> GetValidRecords()
         {
-            get
+            if (validRecords == null)
             {
-                if (filteredEmployeesReviewsData == null)
-                {
-                    var query = GetReviewsRawData()
-                                .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
-                                .Select(record => record);
-                    
-                    filteredEmployeesReviewsData = query.ToList();
-                }
-
-                return filteredEmployeesReviewsData;
+                validRecords = GetReviewsRawData()
+                    .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
+                    .Select(record => record)
+                    .ToList();
             }
+
+            return validRecords;
+        }
+
+        /// <summary>
+        /// Get all review records for one/all product.
+        /// </summary>
+        /// <param name="productName">Product name, like: "ViewPoint".</param>
+        /// <returns>List of review records.</returns>
+        public List<ReviewRecord> GetRecordsByProduct(string productName)
+        {
+            List<ReviewRecord> records = null;
+
+            // for all products
+            if (productName == "*")
+            {
+                records = GetValidRecords();
+            }
+            else if (EagleEyeSettingsReader.Settings.Products.IndexOf(productName) != -1)
+            {
+                records = GetValidRecords()
+                    .Where(record => record.CreatorProductName == productName)
+                    .ToList();
+            }
+
+            return records;
         }
 
         /// <summary>
@@ -46,19 +65,7 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByMonth)
             {
-                List<ReviewRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesReviewsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesReviewsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -126,7 +133,7 @@ namespace EagleEye.Reviews
                 product2count.Add(product, 0);
             }
             
-            var query = FilteredEmployeesReviewsData
+            var query = GetValidRecords()
                     .GroupBy(record => record.CreatorProductName)
                     .Select(group => new { ProductName = group.Key, ReviewCount = group.Count() });
 
@@ -166,19 +173,7 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByCreator)
             {
-                List<ReviewRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesReviewsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesReviewsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -273,7 +268,7 @@ namespace EagleEye.Reviews
                 product2density.Add(product, 0);
             }
 
-            var query = FilteredEmployeesReviewsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(record => record);
             
@@ -330,7 +325,7 @@ namespace EagleEye.Reviews
                 product2density.Add(product, 0);
             }
 
-            var query = FilteredEmployeesReviewsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(record => record);
 
@@ -367,19 +362,7 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.CommentDensityChangedByMonth)
             {
-                List<ReviewRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesReviewsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesReviewsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -459,7 +442,7 @@ namespace EagleEye.Reviews
                 product2density.Add(product, 0);
             }
 
-            var query = FilteredEmployeesReviewsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(record => record);
 
@@ -516,7 +499,7 @@ namespace EagleEye.Reviews
                 product2density.Add(product, 0);
             }
 
-            var query = FilteredEmployeesReviewsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(record => record);
 
@@ -553,19 +536,7 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectDensityChangedByMonth)
             {
-                List<ReviewRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesReviewsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesReviewsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -637,19 +608,7 @@ namespace EagleEye.Reviews
         {
             foreach (var item in EagleEyeSettingsReader.Settings.InspectionRateByMonth)
             {
-                List<ReviewRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesReviewsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesReviewsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<ReviewRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
