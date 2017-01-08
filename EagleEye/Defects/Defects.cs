@@ -51,7 +51,7 @@ namespace EagleEye.Defects
             //   ]
             // }
 
-            log.Info("Generating: Defect Count By Product ...");
+            log.Info("Generating: Defect count by product ...");
             
             Dictionary<string, int> product2count = new Dictionary<string, int>();
 
@@ -90,7 +90,7 @@ namespace EagleEye.Defects
 
             Save2EagleEye(settingsKey, json);
 
-            log.Info("Generating: Defect Count By Product ... Done.");
+            log.Info("Generating: Defect count by product ... Done.");
         }
 
         public void GenerateDefectCountOfSeverityByProduct(string settingsKey)
@@ -104,7 +104,7 @@ namespace EagleEye.Defects
             //   ]
             // }
 
-            log.Info("Generating: Defect Severity Count By Product ...");
+            log.Info("Generating: Defect severity count by product ...");
 
             EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
 
@@ -159,7 +159,7 @@ namespace EagleEye.Defects
 
             Save2EagleEye(settingsKey, json);
 
-            log.Info("Generating: Defect Severity Count By Product ... Done.");
+            log.Info("Generating: Defect severity count by product ... Done.");
         }
 
         public void GenerateDefectCountOfSeverityByCreatorFromProduct()

@@ -3,31 +3,31 @@
     public class DefectsManager
     {
         ICommand _cmdDefectCountByProduct;
-        ICommand _cmdDefectCountOfSeverityByProduct;
         ICommand _cmdDefectCountByInjectionStage;
         ICommand _cmdDefectCountByType;
-        ICommand _cmdDefectsDistributionByType;
         ICommand _cmdDefectCountByCreator;
+        ICommand _cmdDefectCountOfSeverityByProduct;
+        ICommand _cmdDefectCountOfTypeByProduct;
         ICommand _cmdDefectCountOfSeverityByCreator;
         ICommand _cmdDefectCountOfTypeByCreator;
 
         public DefectsManager
         (
             ICommand cmdDefectCountByProduct,
-            ICommand DefectCountOfSeverityByProduct,
             ICommand cmdDefectCountByInjectionStage,
             ICommand cmdDefectCountByType,
-            ICommand cmdDefectsDistributionByType,
             ICommand cmdDefectCountByCreator,
-            ICommand cmdDefectCountOfSeverityByCreator,
-            ICommand cmdDefectCountOfTypeByCreator
+            ICommand cmdDefectCountOfTypeByProduct,
+            ICommand cmdDefectCountOfTypeByCreator,
+            ICommand cmdDefectCountOfSeverityByProduct,
+            ICommand cmdDefectCountOfSeverityByCreator
         )
         {
             _cmdDefectCountByProduct = cmdDefectCountByProduct;
-            _cmdDefectCountOfSeverityByProduct = DefectCountOfSeverityByProduct;
             _cmdDefectCountByInjectionStage = cmdDefectCountByInjectionStage;
             _cmdDefectCountByType = cmdDefectCountByType;
-            _cmdDefectsDistributionByType = cmdDefectsDistributionByType;
+            _cmdDefectCountOfSeverityByProduct = cmdDefectCountOfSeverityByProduct;
+            _cmdDefectCountOfTypeByProduct = cmdDefectCountOfTypeByProduct;
             _cmdDefectCountByCreator = cmdDefectCountByCreator;
             _cmdDefectCountOfSeverityByCreator = cmdDefectCountOfSeverityByCreator;
             _cmdDefectCountOfTypeByCreator = cmdDefectCountOfTypeByCreator;
@@ -49,9 +49,9 @@
         {
             _cmdDefectCountByType.Execute();
         }
-        public void GenerateDefectsDistributionByType()
+        public void GenerateDefectCountOfTypeByProduct()
         {
-            _cmdDefectsDistributionByType.Execute();
+            _cmdDefectCountOfTypeByProduct.Execute();
         }
         public void GenerateDefectCountByCreator()
         {

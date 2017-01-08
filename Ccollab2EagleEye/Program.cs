@@ -128,23 +128,23 @@ namespace Ccollab2EagleEye
                 DefectsManager defectsManager = new DefectsManager
                 (
                     new DefectCountByProductCommand(defects),
-                    new DefectCountOfSeverityByProductCommand(defects),
                     new DefectCountByInjectionStageCommand(defects),
                     new DefectCountByTypeCommand(defects),
-                    new DefectCountOfTypeByProduct(defects),
                     new DefectCountByCreatorCommand(defects),
-                    new DefectCountOfSeverityByCreatorCommand(defects),
-                    new DefectCountOfTypeByCreatorCommand(defects)
+                    new DefectCountOfTypeByProductCommand(defects),
+                    new DefectCountOfTypeByCreatorCommand(defects),
+                    new DefectCountOfSeverityByProductCommand(defects),
+                    new DefectCountOfSeverityByCreatorCommand(defects)
                 );
 
                 defectsManager.GenerateDefectCountByProduct();
-                defectsManager.GenerateDefectSeverityByProduct();
                 defectsManager.GenerateDefectCountByInjectionStage();
                 defectsManager.GenerateDefectCountByType();
-                defectsManager.GenerateDefectsDistributionByType();
                 defectsManager.GenerateDefectCountByCreator();
-                defectsManager.GenerateDefectSeverityCountByCreator();
+                defectsManager.GenerateDefectCountOfTypeByProduct();
                 defectsManager.GenerateDefectCountOfTypeByCreator();
+                defectsManager.GenerateDefectSeverityByProduct();
+                defectsManager.GenerateDefectSeverityCountByCreator();
             }
             
             // notify task state
