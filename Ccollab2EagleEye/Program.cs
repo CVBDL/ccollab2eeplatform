@@ -119,7 +119,7 @@ namespace Ccollab2EagleEye
             // ccollab defects charts related
             Defects defects = new Defects(ccollabDataGenerator);
 
-            if (defects.FilteredEmployeesDefectsData == null || defects.FilteredEmployeesDefectsData.Count == 0)
+            if (defects.GetValidRecords() == null || defects.GetValidRecords().Count == 0)
             {
                 log.Info("No valid defect records.");
             }

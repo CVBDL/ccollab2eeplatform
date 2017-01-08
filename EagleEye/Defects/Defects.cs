@@ -13,33 +13,52 @@ namespace EagleEye.Defects
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Defects));
         
-        /// <summary>
-        /// Holds filtered raw defects data of local employees.
-        /// </summary>
-        private List<DefectRecord> filteredEmployeesDefectsData = null;
-
         public Defects(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
 
+        private List<DefectRecord> validRecords = null;
+
         /// <summary>
-        /// Filter raw defects data of local employees.
+        /// From the raw review records, only the ones which are created by employees in
+        /// `employees.json` are valid.
         /// </summary>
-        public List<DefectRecord> FilteredEmployeesDefectsData
+        /// <returns></returns>
+        public List<DefectRecord> GetValidRecords()
         {
-            get
+            if (validRecords == null)
             {
-                if (filteredEmployeesDefectsData == null)
-                {
-                    var query = GetDefectsRawData()
-                                .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
-                                .Select(record => record);
-
-                    filteredEmployeesDefectsData = query.ToList<DefectRecord>();
-                }
-
-                return filteredEmployeesDefectsData;
+                validRecords = GetDefectsRawData()
+                    .Where(record => EmployeesReader.Employees.Any(employee => employee.LoginName == record.CreatorLogin))
+                    .Select(record => record)
+                    .ToList();
             }
+
+            return validRecords;
         }
 
+        /// <summary>
+        /// Get all defect records for one/all product.
+        /// </summary>
+        /// <param name="productName">Product name, like: "ViewPoint".</param>
+        /// <returns>List of defect records.</returns>
+        public List<DefectRecord> GetRecordsByProduct(string productName)
+        {
+            List<DefectRecord> records = null;
+
+            // for all products
+            if (productName == "*")
+            {
+                records = GetValidRecords();
+            }
+            else if (EagleEyeSettingsReader.Settings.Products.IndexOf(productName) != -1)
+            {
+                records = GetValidRecords()
+                    .Where(record => record.CreatorProductName == productName)
+                    .ToList();
+            }
+
+            return records;
+        }
+        
         public void GenerateDefectCountByProduct(string settingsKey)
         {
             // Expected data table format:
@@ -64,7 +83,7 @@ namespace EagleEye.Defects
                 }
             }
             
-            var query = FilteredEmployeesDefectsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(group => new { ProductName = group.Key, DefectCount = group.Count() });
 
@@ -119,7 +138,7 @@ namespace EagleEye.Defects
                 }
             }
 
-            var query = FilteredEmployeesDefectsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(group => group);
 
@@ -166,20 +185,8 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectSeverityCountByCreator)
             {
-                List<DefectRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesDefectsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesDefectsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
-
+                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
+                
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
@@ -254,19 +261,7 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByInjectionStage)
             {
-                List<DefectRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesDefectsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesDefectsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -331,19 +326,7 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByType)
             {
-                List<DefectRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesDefectsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesDefectsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -407,19 +390,7 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountOfTypeByCreator)
             {
-                List<DefectRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesDefectsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesDefectsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
@@ -513,7 +484,7 @@ namespace EagleEye.Defects
                 }
             }
 
-            var query = FilteredEmployeesDefectsData
+            var query = GetValidRecords()
                         .GroupBy(record => record.CreatorProductName)
                         .Select(group => group);
 
@@ -560,19 +531,7 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByCreator)
             {
-                List<DefectRecord> datasource = null;
-
-                // for all products
-                if (item.ProductName == "*")
-                {
-                    datasource = FilteredEmployeesDefectsData;
-                }
-                else if (EagleEyeSettingsReader.Settings.Products.IndexOf(item.ProductName) != -1)
-                {
-                    datasource = FilteredEmployeesDefectsData
-                                .Where(record => record.CreatorProductName == item.ProductName)
-                                .ToList();
-                }
+                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
 
                 if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
                 {
