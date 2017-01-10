@@ -67,8 +67,8 @@ namespace EagleEye.Defects
             }
             
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(group => new { ProductName = group.Key, DefectCount = group.Count() });
+                .GroupBy(record => record.CreatorProductName)
+                .Select(group => new { ProductName = group.Key, DefectCount = group.Count() });
 
             foreach (var item in query)
             {
@@ -122,8 +122,8 @@ namespace EagleEye.Defects
             }
 
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(group => group);
+                .GroupBy(record => record.CreatorProductName)
+                .Select(group => group);
 
             foreach (var item in query)
             {
@@ -168,20 +168,20 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectSeverityCountByCreator)
             {
-                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<DefectRecord> records = GetRecordsByProduct(item.ProductName);
                 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectCountOfSeverityByCreator(datasource, item);
+                    DefectCountOfSeverityByCreator(records, item);
 
                     log.Info("Generating: Defect severity count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void DefectCountOfSeverityByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        private void DefectCountOfSeverityByCreator(List<DefectRecord> source, ProductChartSettings chartSettings)
         {
             // Expected data table format:
             // {
@@ -199,9 +199,9 @@ namespace EagleEye.Defects
                 creator2severitycount.Add(employee.LoginName, new List<int>(new int[EagleEyeSettingsReader.Settings.DefectSeverityTypes.Count]));
             }
 
-            var query = datasource
-                        .GroupBy(record => record.CreatorLogin)
-                        .Select(group => group);
+            var query = source
+                .GroupBy(record => record.CreatorLogin)
+                .Select(group => group);
 
             foreach (var item in query)
             {
@@ -244,20 +244,20 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByInjectionStage)
             {
-                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<DefectRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Defect count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectCountByInjectionStage(datasource, item.ChartId);
+                    DefectCountByInjectionStage(records, item.ChartId);
 
                     log.Info("Generating: Defect count by injection stage from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void DefectCountByInjectionStage(List<DefectRecord> datasource, string settingsKey)
+        private void DefectCountByInjectionStage(List<DefectRecord> source, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -278,9 +278,9 @@ namespace EagleEye.Defects
                 injectionstage2count.Add(injectionStage.ToLower(), 0);
             }
 
-            var query = datasource
-                        .GroupBy(record => record.InjectionStage)
-                        .Select(group => new { InjectionStage = group.Key.ToLower(), Count = group.Count() });
+            var query = source
+                .GroupBy(record => record.InjectionStage)
+                .Select(group => new { InjectionStage = group.Key.ToLower(), Count = group.Count() });
 
             foreach (var item in query)
             {
@@ -309,20 +309,20 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByType)
             {
-                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<DefectRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Defect count by type from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectCountByType(datasource, item.ChartId);
+                    DefectCountByType(records, item.ChartId);
 
                     log.Info("Generating: Defect count by type from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void DefectCountByType(List<DefectRecord> datasource, string settingsKey)
+        private void DefectCountByType(List<DefectRecord> source, string settingsKey)
         {
             // Expected data table format:
             // {
@@ -342,9 +342,9 @@ namespace EagleEye.Defects
                 type2count.Add(type.ToLower(), 0);
             }
 
-            var query = datasource
-                        .GroupBy(record => record.Type)
-                        .Select(group => new { Type = group.Key.ToLower(), Count = group.Count() });
+            var query = source
+                .GroupBy(record => record.Type)
+                .Select(group => new { Type = group.Key.ToLower(), Count = group.Count() });
 
             foreach (var item in query)
             {
@@ -373,20 +373,20 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountOfTypeByCreator)
             {
-                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<DefectRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Defect count of type by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectCountOfTypeByCreator(datasource, item);
+                    DefectCountOfTypeByCreator(records, item);
 
                     log.Info("Generating: Defect count of type by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void DefectCountOfTypeByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        private void DefectCountOfTypeByCreator(List<DefectRecord> source, ProductChartSettings chartSettings)
         {
             // Expected data table format:
             // {
@@ -403,9 +403,9 @@ namespace EagleEye.Defects
                 creator2typecount.Add(employee.LoginName, new List<int>(new int[EagleEyeSettingsReader.Settings.DefectTypes.Count]));
             }
 
-            var query = datasource
-                        .GroupBy(record => record.CreatorLogin)
-                        .Select(group => group);
+            var query = source
+                .GroupBy(record => record.CreatorLogin)
+                .Select(group => group);
 
             foreach (var item in query)
             {
@@ -468,8 +468,8 @@ namespace EagleEye.Defects
             }
 
             var query = GetValidRecords()
-                        .GroupBy(record => record.CreatorProductName)
-                        .Select(group => group);
+                .GroupBy(record => record.CreatorProductName)
+                .Select(group => group);
 
             foreach (var item in query)
             {
@@ -514,20 +514,20 @@ namespace EagleEye.Defects
         {
             foreach (var item in EagleEyeSettingsReader.Settings.DefectCountByCreator)
             {
-                List<DefectRecord> datasource = GetRecordsByProduct(item.ProductName);
+                List<DefectRecord> records = GetRecordsByProduct(item.ProductName);
 
-                if (datasource != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrEmpty(item.ChartId))
                 {
                     log.Info("Generating: Defect count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
 
-                    DefectCountByCreator(datasource, item);
+                    DefectCountByCreator(records, item);
 
                     log.Info("Generating: Defect count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
                 }
             }
         }
 
-        private void DefectCountByCreator(List<DefectRecord> datasource, ProductChartSettings chartSettings)
+        private void DefectCountByCreator(List<DefectRecord> source, ProductChartSettings chartSettings)
         {
             // Expected data table format:
             // {
@@ -546,9 +546,9 @@ namespace EagleEye.Defects
                 creator2count.Add(employee.LoginName, 0);
             }
 
-            var query = datasource
-                        .GroupBy(record => record.CreatorLogin)
-                        .Select(group => group);
+            var query = source
+                .GroupBy(record => record.CreatorLogin)
+                .Select(group => group);
 
             foreach (var item in query)
             {
