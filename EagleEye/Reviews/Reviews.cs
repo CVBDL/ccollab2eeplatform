@@ -1,4 +1,6 @@
 ﻿using Ccollab;
+using EagleEye.EEPlatformApi;
+using EagleEye.GVizApi;
 using EagleEye.Settings;
 using Employees;
 using log4net;
@@ -43,167 +45,149 @@ namespace EagleEye.Reviews
         
         public void GenerateReviewCountByMonthFromProduct()
         {
-            foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByMonth)
+            foreach (var setting in EagleEyeSettingsReader.Settings.ReviewCountByMonth)
             {
-                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(setting.ProductName);
 
-                if (records != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrWhiteSpace(setting.ChartId))
                 {
-                    log.Info("Generating: Review count by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Review count by month from " + (setting.ProductName == "*" ? "all products" : setting.ProductName) + " ...");
 
-                    ReviewCountByMonth(records, item.ChartId);
+                    DataTable dataTable = ReviewCountByMonth(records);
+                    EagleEyePlatformApi.EditDataTable(setting.ChartId, dataTable);
 
-                    log.Info("Generating: Review count by month from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Review count by month from " + (setting.ProductName == "*" ? "all products" : setting.ProductName) + " ... Done");
                 }
             }
         }
-        
-        private void ReviewCountByMonth(List<ReviewRecord> source, string settingsKey)
+
+        /// <summary>
+        /// Filter by: Review Creation Date.
+        /// 
+        /// Expected data table format:
+        /// {
+        ///   "datatable": [
+        ///     ["Month", "Count"],
+        ///     ["2016-01", 20],
+        ///     ["2016-02", 30]
+        ///   ]
+        /// }
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private DataTable ReviewCountByMonth(List<ReviewRecord> source)
         {
-            // Expected data table format:
-            // {
-            //    "datatable": [
-            //     ["Month", "Count"],
-            //     ["2016-01", 20],
-            //     ["2016-02", 30]
-            //   ]
-            // }
+            DataTable dataTable = new DataTable();
+
+            dataTable.AddColumn(new Column("string", "Month"));
+            dataTable.AddColumn(new Column("number", "Count"));
+
             var query = source
                 .GroupBy(record => record.ReviewCreationYear + "-" + record.ReviewCreationMonth)
                 .OrderBy(group => group.Key)
                 .Select(group => new { ReviewCreationYYYYMM = group.Key, Count = group.Count() });
-
-            List<List<object>> datatable = new List<List<object>>();
-
-            // data table header
-            List<object> header = new List<object> { "Month", "Count" };
-            datatable.Add(header);
-
+            
             foreach (var item in query)
             {
-                datatable.Add(new List<object> { item.ReviewCreationYYYYMM, item.Count });
+                Row row = new Row(item.ReviewCreationYYYYMM, item.Count);
+                dataTable.AddRow(row);
             }
 
-            string json = JsonConvert.SerializeObject(new Chart(datatable));
-
-            Save2EagleEye(settingsKey, json);
+            return dataTable;
         }
-        
-        public void GenerateReviewCountByProduct(string settingsKey)
+
+        /// <summary>
+        /// Expected data table format:
+        /// {
+        ///   "datatable": [
+        ///     ["Product", "Count"],
+        ///     ["Team1", 20],
+        ///     ["Team2", 16]
+        ///   ]
+        /// }
+        /// </summary>
+        public void GenerateReviewCountByProduct()
         {
-            // Expected data table format:
-            // {
-            //    "datatable": [
-            //     ["Product", "Count"],
-            //     ["Team1", 20],
-            //     ["Team2", 16]
-            //   ]
-            // }
             log.Info("Generating: Review count by product ...");
-            
-            Dictionary<string, int> product2count = new Dictionary<string, int>();
-            
-            foreach (var product in EagleEyeSettingsReader.Settings.Products)
-            {
-                product2count.Add(product, 0);
-            }
-            
-            var query = GetValidRecords()
-                .GroupBy(record => record.CreatorProductName)
-                .Select(group => new { ProductName = group.Key, ReviewCount = group.Count() });
+
+            DataTable dataTable = new DataTable();
+
+            dataTable.AddColumn(new Column("string", "Product"));
+            dataTable.AddColumn(new Column("number", "Count"));
+
+            var query = EagleEyeSettingsReader.Settings.Products
+                .GroupJoin(
+                    GetValidRecords(),
+                    product => product,
+                    record => record.CreatorProductName,
+                    (product, matching) => new { ProductName = product, ReviewCount = matching.Count() }
+                );
 
             foreach (var item in query)
             {
-                if (product2count.ContainsKey(item.ProductName))
-                {
-                    product2count[item.ProductName] = item.ReviewCount;
-                }
+                Row row = new Row(item.ProductName, item.ReviewCount);
+                dataTable.AddRow(row);
             }
-
-            List<List<object>> datatable = new List<List<object>>();
-
-            List<object> header = new List<object> { "Product", "Count" };
-            datatable.Add(header);
-
-            foreach (KeyValuePair<string, int> item in product2count)
-            {
-                datatable.Add(new List<object> { item.Key, item.Value });
-            }
-
-            string json = JsonConvert.SerializeObject(new Chart(datatable));
-
-            Save2EagleEye(settingsKey, json);
+            
+            EagleEyePlatformApi.EditDataTable(EagleEyeSettingsReader.Settings.ReviewCountByProduct.ChartId, dataTable);
 
             log.Info("Generating: Review count by product ... Done.");
         }
         
         public void GenerateReviewCountByCreatorFromProduct()
         {
-            foreach (var item in EagleEyeSettingsReader.Settings.ReviewCountByCreator)
+            foreach (var setting in EagleEyeSettingsReader.Settings.ReviewCountByCreator)
             {
-                List<ReviewRecord> records = GetRecordsByProduct(item.ProductName);
+                List<ReviewRecord> records = GetRecordsByProduct(setting.ProductName);
+                List<Employee> creators = EmployeesReader.GetEmployeesByProduct(setting.ProductName);
 
-                if (records != null && !string.IsNullOrEmpty(item.ChartId))
+                if (records != null && !string.IsNullOrWhiteSpace(setting.ChartId))
                 {
-                    log.Info("Generating: Review count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ...");
+                    log.Info("Generating: Review count by creator from " + (setting.ProductName == "*" ? "all products" : setting.ProductName) + " ...");
 
-                    ReviewCountByCreator(records, item);
+                    DataTable dataTable = ReviewCountByCreator(records, creators);
+                    EagleEyePlatformApi.EditDataTable(setting.ChartId, dataTable);
 
-                    log.Info("Generating: Review count by creator from " + (item.ProductName == "*" ? "all products" : item.ProductName) + " ... Done");
+                    log.Info("Generating: Review count by creator from " + (setting.ProductName == "*" ? "all products" : setting.ProductName) + " ... Done");
                 }
             }
         }
-        
-        private void ReviewCountByCreator(List<ReviewRecord> source, ProductChartSettings chartSettings)
-        {
-            // Expected data table format:
-            // {
-            //    "datatable": [
-            //     ["Creator", "Count"],
-            //     ["Patrick Zhong", 16],
-            //     ["Merlin Mo", 16]
-            //   ]
-            // }
-            Dictionary<string, int> creator2count = new Dictionary<string, int>();
 
-            // collect all employees of the product
-            foreach (Employee employee in EmployeesReader.GetEmployeesByProduct(chartSettings.ProductName))
-            {
-                creator2count.Add(employee.LoginName, 0);
-            }
-            
-            var query = source
-                .GroupBy(record => record.CreatorLogin)
-                .Select(group => group);
+        /// <summary>
+        /// Expected data table format:
+        /// {
+        ///   "datatable": [
+        ///     ["Creator", "Count"],
+        ///     ["Patrick Zhong", 9],
+        ///     ["Merlin Mo", 16]
+        ///   ]
+        /// }
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="productName"></param>
+        /// <returns></returns>
+        private DataTable ReviewCountByCreator(List<ReviewRecord> source, List<Employee> creators)
+        {
+            DataTable dataTable = new DataTable();
+
+            dataTable.AddColumn(new Column("string", "Creator"));
+            dataTable.AddColumn(new Column("number", "Count"));
+
+            var query = creators
+                .GroupJoin(
+                    source,
+                    employee => employee.LoginName,
+                    record => record.CreatorLogin,
+                    (employee, matching) => new { Creator = employee.FullName, Count = matching.Count() }
+                );
 
             foreach (var item in query)
             {
-                string creatorLoginName = item.Key;
-
-                if (creator2count.ContainsKey(creatorLoginName))
-                {
-                    List<ReviewRecord> records = item.ToList();
-
-                    ReviewsStatistics stat = new ReviewsStatistics(records);
-                    int count = stat.Count;
-
-                    creator2count[creatorLoginName] = count;
-                }
+                Row row = new Row(item.Creator, item.Count);
+                dataTable.AddRow(row);
             }
 
-            List<List<object>> datatable = new List<List<object>>();
-
-            List<object> header = new List<object> { "Creator", "Count" };
-            datatable.Add(header);
-
-            foreach (KeyValuePair<string, int> item in creator2count)
-            {
-                datatable.Add(new List<object> { EmployeesReader.GetEmployeeFullNameByLoginName(item.Key), item.Value });
-            }
-            
-            string json = JsonConvert.SerializeObject(new Chart(datatable));
-
-            Save2EagleEye(chartSettings.ChartId, json);
+            return dataTable;
         }
 
         /// <summary>

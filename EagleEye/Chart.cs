@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EagleEye.GVizApi;
 
 namespace EagleEye
 {
@@ -21,6 +22,11 @@ namespace EagleEye
         public Chart(List<List<object>> dt = null)
         {
             datatable = dt;
+        }
+
+        public Chart(DataTable dt)
+        {
+            datatable = dt.GetData();
         }
     }
 }

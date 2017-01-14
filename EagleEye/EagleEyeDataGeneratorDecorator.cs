@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using EagleEye.Settings;
 using log4net;
 using System;
+using EagleEye.GVizApi;
+using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Linq;
@@ -23,6 +25,29 @@ namespace EagleEye
 
         protected void Save2EagleEye(string settingsKey, string json)
         {
+            Console.WriteLine(json);
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return;
+            }
+
+            ChartSettings chartSettings = null;
+            if (EagleEyeSettingsReader.Settings != null && EagleEyeSettingsReader.Settings.Charts != null)
+            {
+                EagleEyeSettingsReader.Settings.Charts.TryGetValue(settingsKey, out chartSettings);
+
+                if (chartSettings != null)
+                {
+                    // send request to eagleeye platform
+                    PutDataTableToEagleEye(chartSettings.ChartId, json);
+                }
+            }
+        }
+
+        protected void Save2EagleEye(string settingsKey, DataTable dataTable)
+        {
+            string json = JsonConvert.SerializeObject(new Chart(dataTable));
             Console.WriteLine(json);
 
             if (string.IsNullOrWhiteSpace(json))

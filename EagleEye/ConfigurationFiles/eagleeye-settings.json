@@ -53,10 +53,10 @@
     },
     "DefectsDistributionByType": {
       "ChartId": "5799641be24561202bc7190d"
-    },
-    "ReviewCountByProduct": {
-      "ChartId": "5799641be24561202bc7190d"
     }
+  },
+  "ReviewCountByProduct": {
+    "ChartId": "5799641be24561202bc7190d"
   },
   "DefectCountByCreator": [
     {
