@@ -164,7 +164,7 @@ namespace EagleEye.Reviews
         /// }
         /// </summary>
         /// <param name="source"></param>
-        /// <param name="productName"></param>
+        /// <param name="creators"></param>
         /// <returns></returns>
         private DataTable ReviewCountByCreator(List<ReviewRecord> source, List<Employee> creators)
         {

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EagleEye.GVizApi;
+using log4net;
+using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Text;
-using EagleEye.GVizApi;
-using Newtonsoft.Json;
-using log4net;
 
 namespace EagleEye.EEPlatformApi
 {

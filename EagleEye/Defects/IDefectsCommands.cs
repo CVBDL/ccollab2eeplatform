@@ -2,11 +2,11 @@
 {
     public interface IDefectsCommands
     {
-        void GenerateDefectCountByProduct(string settingsKey);
+        void GenerateDefectCountByProduct();
 
         void GenerateDefectCountByCreatorFromProduct();
 
-        void GenerateDefectCountOfTypeByProduct(string settingsKey);
+        void GenerateDefectCountOfTypeByProduct();
 
         void GenerateDefectCountOfTypeByCreatorFromProduct();
                 
@@ -14,7 +14,7 @@
         
         void GenerateDefectCountByTypeFromProduct();
         
-        void GenerateDefectCountOfSeverityByProduct(string settingsKey);
+        void GenerateDefectCountOfSeverityByProduct();
         
         void GenerateDefectCountOfSeverityByCreatorFromProduct();
     }

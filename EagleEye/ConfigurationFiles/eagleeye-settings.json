@@ -29,36 +29,36 @@
     "style",
     "testing"
   ],
-  "Charts": {
-    "DefectCountByInjectionStage": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectCountByProduct": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectCountBySeverity": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "DefectsDistributionByType": {
-      "ChartId": "5799641be24561202bc7190d"
-    }
+  "CodeCommentDensityChanged": {
+    "ChartId": "5799641be24561202bc7190d"
   },
-
+  "CodeCommentDensityUploaded": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
   "CodeDefectDensityChanged": {
     "ChartId": "5799641be24561202bc7190d"
   },
   "CodeDefectDensityUploaded": {
     "ChartId": "5799641be24561202bc7190d"
   },
-  "CodeCommentDensityChanged": {
-    "ChartId": "5799641be24561202bc7190d"
-  },
-  "ReviewCountByProduct": {
-    "ChartId": "5799641be24561202bc7190d"
-  },
-  "CodeCommentDensityUploaded": {
-    "ChartId": "5799641be24561202bc7190d"
-  },
+  "CommentDensityChangedByMonth": [
+    {
+      "ProductName": "*",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "ViewPoint",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTView",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
+    {
+      "ProductName": "FTSP_FTAE",
+      "ChartId": "5809b2827e9254582e54116d"
+    }
+  ],
   "DefectCountByCreator": [
     {
       "ProductName": "ViewPoint",
@@ -91,6 +91,12 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
+  "DefectCountByProduct": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
+  "DefectCountBySeverity": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
   "DefectCountByType": [
     {
       "ProductName": "*",
@@ -123,7 +129,11 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
-  "DefectSeverityCountByCreator": [
+  "DefectDensityChangedByMonth": [
+    {
+      "ProductName": "*",
+      "ChartId": "5809b2827e9254582e54116d"
+    },
     {
       "ProductName": "ViewPoint",
       "ChartId": "5809b2827e9254582e54116d"
@@ -137,7 +147,10 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
-  "ReviewCountByCreator": [
+  "DefectsDistributionByType": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
+  "DefectSeverityCountByCreator": [
     {
       "ProductName": "ViewPoint",
       "ChartId": "5809b2827e9254582e54116d"
@@ -169,29 +182,7 @@
       "ChartId": "5809b2827e9254582e54116d"
     }
   ],
-  "CommentDensityChangedByMonth": [
-    {
-      "ProductName": "*",
-      "ChartId": "5809b2827e9254582e54116d"
-    },
-    {
-      "ProductName": "ViewPoint",
-      "ChartId": "5809b2827e9254582e54116d"
-    },
-    {
-      "ProductName": "FTView",
-      "ChartId": "5809b2827e9254582e54116d"
-    },
-    {
-      "ProductName": "FTSP_FTAE",
-      "ChartId": "5809b2827e9254582e54116d"
-    }
-  ],
-  "DefectDensityChangedByMonth": [
-    {
-      "ProductName": "*",
-      "ChartId": "5809b2827e9254582e54116d"
-    },
+  "ReviewCountByCreator": [
     {
       "ProductName": "ViewPoint",
       "ChartId": "5809b2827e9254582e54116d"
@@ -222,5 +213,8 @@
       "ProductName": "FTSP_FTAE",
       "ChartId": "5809b2827e9254582e54116d"
     }
-  ]
+  ],
+  "ReviewCountByProduct": {
+    "ChartId": "5799641be24561202bc7190d"
+  }
 }

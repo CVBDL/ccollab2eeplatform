@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using EagleEye.GVizApi;
+﻿using EagleEye.GVizApi;
+using System.Collections.Generic;
 
-namespace EagleEye
+namespace EagleEye.EEPlatformApi
 {
     /// <summary>
     /// JSON payload format used to update chart datatable to EagleEye platform.
@@ -18,12 +18,7 @@ namespace EagleEye
     internal class Chart
     {
         public List<List<object>> datatable { get; set; }
-
-        public Chart(List<List<object>> dt = null)
-        {
-            datatable = dt;
-        }
-
+        
         public Chart(DataTable dt)
         {
             datatable = dt.GetData();

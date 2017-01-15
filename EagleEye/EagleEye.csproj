@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chart.cs" />
+    <Compile Include="EEPlatformApi\Chart.cs" />
     <Compile Include="Defects\DefectCountByCreatorCommand.cs" />
     <Compile Include="Defects\DefectCountOfTypeByCreatorCommand.cs" />
     <Compile Include="Defects\Defects.cs" />

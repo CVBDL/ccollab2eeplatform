@@ -14,6 +14,11 @@ namespace EagleEye.GVizApi
             }
         }
 
+        public void AddCell(object cell)
+        {
+            cells.Add(cell);
+        }
+
         public List<object> Cells
         {
             get
