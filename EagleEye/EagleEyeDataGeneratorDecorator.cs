@@ -11,21 +11,21 @@ namespace EagleEye
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EagleEyeDataGeneratorDecorator<T>));
 
-        private ICcollabDataSource _ccollabDataGenerator;
+        private ICcollabDataSource ccollabDataSource;
 
         public EagleEyeDataGeneratorDecorator(ICcollabDataSource ccollabDataGenerator)
         {
-            _ccollabDataGenerator = ccollabDataGenerator;
+            ccollabDataSource = ccollabDataGenerator;
         }
         
         public List<ReviewRecord> GetReviewsRawData()
         {
-            return _ccollabDataGenerator.GetReviewsRawData();
+            return ccollabDataSource.GetReviewsRawData();
         }
 
         public List<DefectRecord> GetDefectsRawData()
         {
-            return _ccollabDataGenerator.GetDefectsRawData();
+            return ccollabDataSource.GetDefectsRawData();
         }
 
         protected List<T> GetValidRecords(List<T> source)
@@ -38,7 +38,7 @@ namespace EagleEye
 
         protected List<T> GetRecordsByProduct(List<T> source, string productName)
         {
-            List<T> records = null;
+            List<T> records = new List<T>();
 
             // for all products
             if (productName == "*")

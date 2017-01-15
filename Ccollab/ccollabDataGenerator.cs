@@ -14,47 +14,45 @@ namespace Ccollab
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CcollabDataGenerator));
 
-        private static readonly string CCOLLABCMD_FILE_NAME = "ConfigurationFiles/ccollab-cmd.json";
-
-        //private List<string[]> _reviewsRawData = null;
-        private List<ReviewRecord> _reviewsRawData = null;
-        private List<DefectRecord> _defectsRawData = null;
-
-        private bool _hasFetchedCcollabData = false;
+        private static readonly string SETTINGS_FILENAME = "ConfigurationFiles/ccollab-cmd.json";
+        
+        private List<ReviewRecord> reviewsRawData = null;
+        private List<DefectRecord> defectsRawData = null;
+        private bool hasFetchedCcollabData = false;
 
         public List<ReviewRecord> GetReviewsRawData()
         {
-            if (!_hasFetchedCcollabData)
+            if (!hasFetchedCcollabData)
             {
                 FetchCcollabData();
             }
 
-            return _reviewsRawData;
+            return reviewsRawData;
         }
 
         public List<DefectRecord> GetDefectsRawData()
         {
-            if (!_hasFetchedCcollabData)
+            if (!hasFetchedCcollabData)
             {
                 FetchCcollabData();
             }
 
-            return _defectsRawData;
+            return defectsRawData;
         }
         
         /// <summary>
-        /// Read ccollab raw CSV files.
+        /// Read raw CSV files downloaded from code collaborator.
         /// </summary>
-        /// <returns>true for success.</returns>
+        /// <returns></returns>
         private bool FetchCcollabData()
         {
-            _hasFetchedCcollabData = true;
+            hasFetchedCcollabData = true;
 
             List<CcollabCmd> ccollabCmds = ReadCcollabConfigJson();
 
             if (ccollabCmds == null)
             {
-                log.Info("Program exit: No ccollab command to be proceed.");
+                log.Info("No ccollab command to be proceed.");
 
                 return false;
             }
@@ -65,13 +63,13 @@ namespace Ccollab
 
             if (ccRawFiles.TryGetValue("Reviews", out reviewsRawFileName))
             {
-                _reviewsRawData = new List<ReviewRecord>();
+                reviewsRawData = new List<ReviewRecord>();
 
                 foreach (var row in ReadInCsvFile(reviewsRawFileName))
                 {
                     ReviewRecord record = new ReviewRecord(row);
 
-                    _reviewsRawData.Add(record);
+                    reviewsRawData.Add(record);
                 }
             }
             else
@@ -83,13 +81,13 @@ namespace Ccollab
 
             if (ccRawFiles.TryGetValue("Defects", out defectsRawFileName))
             {
-                _defectsRawData = new List<DefectRecord>();
+                defectsRawData = new List<DefectRecord>();
 
                 foreach (var row in ReadInCsvFile(defectsRawFileName))
                 {
                     DefectRecord record = new DefectRecord(row);
 
-                    _defectsRawData.Add(record);
+                    defectsRawData.Add(record);
                 }
             }
             else
@@ -102,7 +100,7 @@ namespace Ccollab
                 //File.Delete(ccRawFile.Value);
             }
 
-            if (_reviewsRawData == null && _defectsRawData == null)
+            if (reviewsRawData == null && defectsRawData == null)
             {
                 return false;
             }
@@ -118,22 +116,20 @@ namespace Ccollab
         {
             string json = string.Empty;
 
-            StreamReader sr = new StreamReader(CCOLLABCMD_FILE_NAME, Encoding.Default);
-
+            StreamReader sr = new StreamReader(SETTINGS_FILENAME, Encoding.Default);
             using (sr)
             {
                 json = sr.ReadToEnd();
             }
 
             List<CcollabCmd> ccollabCmds = null;
-
             try
             {
                 ccollabCmds = JsonConvert.DeserializeObject<List<CcollabCmd>>(json);
             }
             catch (Exception)
             {
-                log.Error(string.Format("Failed to read json file: {0}", CCOLLABCMD_FILE_NAME));
+                log.Error(string.Format("Failed to read json file: {0}", SETTINGS_FILENAME));
             }
 
             return ccollabCmds;

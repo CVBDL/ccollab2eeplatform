@@ -1,6 +1,5 @@
 ﻿using Employees;
 using System;
-using System.Collections.Generic;
 
 namespace Ccollab
 {
@@ -13,10 +12,6 @@ namespace Ccollab
         private string reviewCreationMonth = string.Empty;
         private string reviewCreationDay = string.Empty;
         
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="row">Parsed CSV row, split columns into string array.</param>
         public ReviewRecord(string[] row)
         {
             this.row = row;

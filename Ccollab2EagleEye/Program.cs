@@ -17,31 +17,23 @@ namespace Ccollab2EagleEye
     class Program
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+
         readonly static string logConfigFile = @"logConfig.xml";
 
         static string taskId;
         static bool show_help = false;
         
-        /// <summary>
-        /// Main method
-        /// </summary>
-        /// <param name="args"></param>
         static void Main(string[] args)
         {
             // BasicConfigurator replaced with XmlConfigurator.
             XmlConfigurator.Configure(new System.IO.FileInfo(logConfigFile));
-
-            log.Info("initialize command line parser");
-
-            //TODO: support specific start&End time in the data query, use commandline parameter to receive the start&end time
-            var optSet = new OptionSet() {
-                { "t|task-id=",  "the task Id.",          v => taskId = v },
+            
+            OptionSet optSet = new OptionSet() {
+                { "t|task-id=",  "the task Id.",          v => taskId    = v },
                 { "h|help", "show this message and exit", v => show_help = v != null },
             };
-
-            log.Debug("parse command line with 'Options'");
-
-            //Parse the command line parameters
+            
+            // Parse the command line parameters.
             List<string> extra;
             try
             {
@@ -49,32 +41,26 @@ namespace Ccollab2EagleEye
             }
             catch (OptionException e)
             {
-                log.Debug(string.Format("OptionException: {0}", e.Message));
-
-                Console.Write("Integrated Security Testing: ");
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Try `DfS.SecureTesting.Launcher --help' for more information.");
-
-                log.Info("IntegratedSecurityTesting Exit");
+                log.Error(string.Format("An error occurred when parsing command line parameters: {0}", e.Message));
                 return;
             }
 
-            //Show help or uage
+            // Show help or usage.
             if (show_help)
             {
                 ShowHelp(optSet);
                 return;
             }
 
-            if (EmployeesReader.Employees == null)
+            if (EmployeesReader.Employees == null || EmployeesReader.Employees.Count == 0)
             {
-                log.Info("Error occured when reading employee settings.");
+                log.Error("An error occurred when reading employee settings.");
                 return;
             }
 
-            if (EagleEyeSettingsReader.Settings == null)
+            if (EagleEyeSettingsReader.Settings == null || !EagleEyeSettingsReader.Settings.IsValid())
             {
-                log.Info("Error occured when reading EagleEye settings.");
+                log.Error("An error occurred when reading eagleeye settings.");
                 return;
             }
 
@@ -148,13 +134,13 @@ namespace Ccollab2EagleEye
             }
             
             // notify task state
-            if (string.IsNullOrEmpty(taskId))
+            if (string.IsNullOrWhiteSpace(taskId))
             {
                 log.Error("No task id provided, so unable to notify EagleEye task state.");
             }
             else
             {
-                //NotifyTaskStatus(taskId, true);
+                NotifyTaskStatus(taskId, true);
             }
 
             Console.WriteLine("Press any key to continue...");
@@ -168,28 +154,33 @@ namespace Ccollab2EagleEye
         /// <param name="isSuccess"></param>
         static void NotifyTaskStatus(string taskId, bool isSuccess)
         {
-            log.Info("Sending task notification to server ...");
+            log.Info(string.Format("Sending task state to server: {0} ...", EagleEyeSettingsReader.Settings.ApiRootEndpoint));
 
             HttpClient client = new HttpClient();
             
-            string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
-
             try
             {
-                StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PutAsync(EagleEyeSettingsReader.Settings.ApiRootEndpoint + "tasks/" + taskId, payload).Result;
+                string requestUri = EagleEyeSettingsReader.Settings.ApiRootEndpoint + "tasks/" + taskId;
+
+                string json = isSuccess ? "{\"state\":\"success\"}" : "{\"state\":\"failure\"}";
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = client.PutAsync(requestUri, content).Result;
                 response.EnsureSuccessStatusCode();
 
                 // use for debugging
-                var responseContent = response.Content;
+                HttpContent responseContent = response.Content;
                 string responseBody = responseContent.ReadAsStringAsync().Result;
-                Console.WriteLine(responseBody);
+
+                log.Info(string.Format("Notify task state response: {0}", responseBody));
             }
             catch (HttpRequestException e)
             {
-                log.Info("Error: Notify task with id '" + taskId + "'");
-                Console.WriteLine("Message :{0} ", e.Message);
+                log.Error(string.Format("An error occurred when sending task state notification request."));
+                log.Error(string.Format("Exception: {0}", e.Message));
             }
+
+            log.Info("Sending task state to server ... Done");
         }
 
         /// <summary>

@@ -1,13 +1,11 @@
 ﻿using Ccollab;
+using EagleEye.EEPlatformApi;
+using EagleEye.GVizApi;
 using EagleEye.Settings;
 using Employees;
 using log4net;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using EagleEye.GVizApi;
-using EagleEye.EEPlatformApi;
 
 namespace EagleEye.Defects
 {

@@ -1,8 +1,5 @@
 ﻿namespace Ccollab
 {
-    /// <summary>
-    /// Ref to ccollab-cmd.json
-    /// </summary>
     public class CcollabCmd
     {
         public string Id { get; set; }

@@ -5,7 +5,6 @@ namespace EagleEye.Settings
     public class EagleEyeSettings
     {
         public string ApiRootEndpoint { get; set; }
-        public Dictionary<string, ChartSettings> Charts { get; set; }
         public List<string> DefectInjectionStage { get; set; }
         public List<string> DefectSeverityTypes { get; set; }
         public List<string> DefectTypes { get; set; }
@@ -28,6 +27,22 @@ namespace EagleEye.Settings
         public List<ProductChartSettings> DefectCountByType { get; set; }
         public List<ProductChartSettings> DefectSeverityCountByCreator { get; set; }
         public List<ProductChartSettings> DefectCountOfTypeByCreator { get; set; }
+
+        /// <summary>
+        /// Validate EagleEyeSettings.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            bool result = true;
+
+            if (string.IsNullOrWhiteSpace(ApiRootEndpoint))
+            {
+                result = false;
+            }
+            
+            return result;
+        }
     }
 
     public class ChartSettings

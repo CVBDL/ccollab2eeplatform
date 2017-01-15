@@ -1,5 +1,5 @@
-﻿using System;
-using Employees;
+﻿using Employees;
+using System;
 
 namespace Ccollab
 {
@@ -11,11 +11,7 @@ namespace Ccollab
         private string reviewCreationYear = string.Empty;
         private string reviewCreationMonth = string.Empty;
         private string reviewCreationDay = string.Empty;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="row">Parsed CSV row, split columns into string array.</param>
+        
         public DefectRecord(string[] row)
         {
             this.row = row;

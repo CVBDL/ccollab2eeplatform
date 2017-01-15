@@ -11,13 +11,10 @@ namespace Employees
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EmployeesReader));
 
-        private static readonly string EMPLOYEES_JSON_FILENAME = "ConfigurationFiles/employees.json";
+        private static readonly string SETTINGS_FILENAME = "ConfigurationFiles/employees.json";
 
         private static List<Employee> employees = null;
 
-        /// <summary>
-        /// Get a list of all employees.
-        /// </summary>
         public static List<Employee> Employees
         {
             get
@@ -26,7 +23,7 @@ namespace Employees
                 {
                     string json = string.Empty;
 
-                    StreamReader sr = new StreamReader(EMPLOYEES_JSON_FILENAME, Encoding.UTF8);
+                    StreamReader sr = new StreamReader(SETTINGS_FILENAME, Encoding.UTF8);
                     using (sr)
                     {
                         json = sr.ReadToEnd();
@@ -41,10 +38,10 @@ namespace Employees
                     {
                         employees = JsonConvert.DeserializeObject<List<Employee>>(json);
                     }
-                    catch (Exception exp)
+                    catch (Exception e)
                     {
-                        log.Error(string.Format("Failed to load from json: {0}", exp.Message));
-                        return null;
+                        log.Error(string.Format("An error occurred when deserializing file: {0}", SETTINGS_FILENAME));
+                        log.Error(string.Format("Exception: {0}", e.Message));
                     }
                 }
 
@@ -53,10 +50,10 @@ namespace Employees
         }
 
         /// <summary>
-        /// Get employee's product name.
+        /// Get the product name a employee belongs to.
         /// </summary>
-        /// <param name="loginName">Employee's login name, like "pzhong".</param>
-        /// <returns>Product name like "ViewPoint".</returns>
+        /// <param name="loginName">Code collaborator login name.</param>
+        /// <returns></returns>
         public static string GetEmployeeProductName(string loginName)
         {
             foreach (Employee employee in Employees)
@@ -67,38 +64,36 @@ namespace Employees
                 }
             }
 
-            return "";
+            return string.Empty;
         }
 
         /// <summary>
-        /// Get all employees inside a product team.
+        /// Get all the employees belongs to a product.
         /// </summary>
-        /// <param name="productName">For example: "ViewPoint"</param>
-        /// <returns>Employees list.</returns>
+        /// <param name="productName"></param>
+        /// <returns></returns>
         public static List<Employee> GetEmployeesByProduct(string productName)
         {
-            List<Employee> employeesOfProduct = new List<Employee>();
+            List<Employee> employees = new List<Employee>();
 
             foreach (Employee employee in Employees)
             {
                 if (employee.ProductName == productName)
                 {
-                    employeesOfProduct.Add(employee);
+                    employees.Add(employee);
                 }
             }
 
-            return employeesOfProduct;
+            return employees;
         }
 
         /// <summary>
-        /// Get an employee's full name by his/her login name.
+        /// Get a employee's full name by his/her login name.
         /// </summary>
         /// <param name="loginName"></param>
-        /// <returns>Full name, like "Patrick Zhong".</returns>
+        /// <returns></returns>
         public static string GetEmployeeFullNameByLoginName(string loginName)
         {
-            string fullName = string.Empty;
-
             foreach (Employee employee in Employees)
             {
                 if (employee.LoginName == loginName)
@@ -107,7 +102,7 @@ namespace Employees
                 }
             }
 
-            return fullName;
+            return string.Empty;
         }
     }
 }
