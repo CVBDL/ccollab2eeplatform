@@ -11,7 +11,7 @@
 
         public void Execute()
         {
-            _reviews.GenerateCommentDensityChangedByProduct("CodeCommentDensityChanged");
+            _reviews.GenerateCommentDensityChangedByProduct();
         }
     }
 }

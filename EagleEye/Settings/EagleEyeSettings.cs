@@ -11,6 +11,10 @@ namespace EagleEye.Settings
         public List<string> DefectTypes { get; set; }
         public List<string> Products { get; set; }
         public ChartSettings ReviewCountByProduct { get; set; }
+        public ChartSettings CodeCommentDensityUploaded { get; set; }
+        public ChartSettings CodeCommentDensityChanged { get; set; }
+        public ChartSettings CodeDefectDensityUploaded { get; set; }
+        public ChartSettings CodeDefectDensityChanged { get; set; }
         public List<ProductChartSettings> DefectCountByCreator { get; set; }
         public List<ProductChartSettings> ReviewCountByCreator { get; set; }
         public List<ProductChartSettings> InspectionRateByMonth { get; set; }

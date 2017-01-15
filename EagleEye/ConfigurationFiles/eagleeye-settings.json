@@ -30,18 +30,6 @@
     "testing"
   ],
   "Charts": {
-    "CodeCommentDensityChanged": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeCommentDensityUploaded": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeDefectDensityChanged": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
-    "CodeDefectDensityUploaded": {
-      "ChartId": "5799641be24561202bc7190d"
-    },
     "DefectCountByInjectionStage": {
       "ChartId": "5799641be24561202bc7190d"
     },
@@ -55,7 +43,20 @@
       "ChartId": "5799641be24561202bc7190d"
     }
   },
+
+  "CodeDefectDensityChanged": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
+  "CodeDefectDensityUploaded": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
+  "CodeCommentDensityChanged": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
   "ReviewCountByProduct": {
+    "ChartId": "5799641be24561202bc7190d"
+  },
+  "CodeCommentDensityUploaded": {
     "ChartId": "5799641be24561202bc7190d"
   },
   "DefectCountByCreator": [

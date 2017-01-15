@@ -7,15 +7,15 @@
         
         void GenerateReviewCountByCreatorFromProduct();
 
-        void GenerateCommentDensityChangedByProduct(string settingsKey);
+        void GenerateCommentDensityChangedByProduct();
         void GenerateCommentDensityChangedByMonthFromProduct();
 
-        void GenerateCommentDensityUploadedByProduct(string settingsKey);
+        void GenerateCommentDensityUploadedByProduct();
 
-        void GenerateDefectDensityChangedByProduct(string settingsKey);
+        void GenerateDefectDensityChangedByProduct();
         void GenerateDefectDensityChangedByMonthFromProduct();
 
-        void GenerateDefectDensityUploadedByProduct(string settingsKey);
+        void GenerateDefectDensityUploadedByProduct();
 
         void GenerateInspectionRateByMonthFromProduct();
     }
