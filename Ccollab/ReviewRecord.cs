@@ -1,5 +1,6 @@
 ﻿using Employees;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Ccollab
 {
@@ -205,16 +206,25 @@ namespace Ccollab
         }
 
         /// <summary>
-        /// Review total person time, e.g., "1:01:41".
+        /// Review total person time.
+        /// Available formats:
+        ///     "1:38:32"
+        ///     "1d, 07:55:04"
         /// </summary>
         public double TotalPersonTimeInSecond
         {
             get
             {
+                string time = row[ReviewCsvColumnIndex.TotalPersonTime];
+                string formattedTime = string.Empty;
+                formattedTime = Regex.Replace(time, @"\s", "");
+                formattedTime = formattedTime.Replace("d,", ".");
+
                 double seconds = 0;
                 try
                 {
-                    seconds = TimeSpan.Parse(row[ReviewCsvColumnIndex.TotalPersonTime]).TotalSeconds;
+                    // accept format: [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws]
+                    seconds = TimeSpan.Parse(formattedTime).TotalSeconds;
                 }
                 catch (Exception)
                 {
