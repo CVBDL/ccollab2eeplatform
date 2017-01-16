@@ -179,7 +179,16 @@ namespace Ccollab
 
                 while (!parser.EndOfData)
                 {
-                    string[] fields = parser.ReadFields();
+                    string[] fields;
+                    try
+                    {
+                        fields = parser.ReadFields();
+                    }
+                    catch(MalformedLineException e)
+                    {
+                        log.Error(string.Format("An error occurred when parsing the CSV row. Message: {0}", e.Message));
+                        continue;
+                    }
 
                     rows.Add(fields);
                 }

@@ -5,11 +5,11 @@
     /// </summary>
     public static class DefectCsvColumnIndex
     {
-        public const int ReviewCreationDate = 5;
-        public const int CreatorLogin = 8;
-        public const int CreatorFullName = 9;
-        public const int Severity = 20;
-        public const int Type = 22;
-        public const int InjectionStage = 23;
+        public const int ReviewCreationDate = 2;
+        public const int CreatorLogin = 3;
+        public const int CreatorFullName = 4;
+        public const int Severity = 5;
+        public const int Type = 6;
+        public const int InjectionStage = 7;
     }
 }

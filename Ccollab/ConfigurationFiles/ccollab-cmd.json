@@ -4,15 +4,15 @@
     "CmdName": "ccollab.exe",
     "Args": "admin wget ",
     "ReviewsCreationDateLow": "2016-10-01",
-    "ReviewsCreationDateHigh": "2016-10-02",
-    "RelUrl": "\"/go?clearcaseConfigSpecVis=y&reviewAuthorUserLoginVis=y&phaseVis=y&page=ReportReviewList&referencesVis=y&projectTrackedInVis=y&locVis=y&fileCountVis=y&numParticipantsVis=y&reportTitle=Recently+Completed+Reviews&reviewIdVis=y&clearcaseConfigSpec2Vis=y&locRemovedVis=y&overviewVis=y&locAddedVis=y&workflowNameVis=y&reviewCompletionDateVis=y&averageDurationVis=y&clearcaseConfigSpec1Vis=y&formSubmittedreportConfig=1&reviewPrivateVis=y&projectNumberVis=y&groupTitleVis=y&reviewMeetingDateVis=y&locModifiedVis=y&sort1=col%3D%7C%7C%7Corder%3Dasc&sort0=col%3DreviewId%7C%7C%7Corder%3Ddesc&reviewAuthorUserNameVis=y&reviewCreationDateVis=y&ErrorsAndMessages_fingerPrint=861101&authorDurationVis=y&reviewWallDurationVis=y&numOpenDefectsVis=y&developmentOrderVis=y&reviewPersonDurationVis=y&component=ErrorsAndMessages&comment_latestVis=y&review_idleVis=y&reviewCreatorUserLoginVis=y&reviewDeadlineVis=y&data-format=csv&testCaseIdsVis=y&reviewReviewerUserLoginVis=y&groupDepth=0&commentsVis=y&locChangedVis=y&defectsPerHourVis=y&checklistsVis=y&reviewTitleVis=y&projectNameVis=y&readerVis=y&reviewObserverUserLoginVis=y&reviewModeratorUserNameVis=y&reviewStageVis=y&reviewerDurationVis=y&locDeltaVis=y&defectNumberSVis=y&rsprojectNumberVis=y&numCommentsVis=y&reviewObserverUserNameVis=y&reviewPhaseVis=y&numDefectsVis=y&reviewCreatorUserNameVis=y&reviewModeratorUserLoginVis=y&reviewReviewerUserNameVis=y\""
+    "ReviewsCreationDateHigh": "2017-01-10",
+    "RelUrl": "\"/go?reviewCreatorUserLoginVis=y&numDefectsVis=y&reviewCreatorUserNameVis=y&reviewIdVis=y&reviewPersonDurationVis=y&defectNumberSVis=y&reviewCreationDateVis=y&numCommentsVis=y&locVis=y&locChangedVis=y&data-format=csv&page=ReportReviewList&component=ErrorsAndMessages&formSubmittedreportConfig=1\""
   },
   {
     "Id": "Defects",
     "CmdName": "ccollab.exe",
     "Args": "admin wget ",
     "ReviewsCreationDateLow": "2016-10-01",
-    "ReviewsCreationDateHigh": "2016-10-02",
-    "RelUrl": "\"/go?defectStateVis=y&type_cvb_testcase_classificationVis=y&severityVis=y&defectTextVis=y&defectCreatorUserNameVis=y&page=ReportDefectList&component=ErrorsAndMessages&defectExternalNameVis=y&type_ccollabdefaultVis=y&defectCreatedOnVis=y&reportTitle=All+Defects&data-format=csv&defectFileVersionVis=y&groupDepth=0&injectionStageVis=y&defectChangeAuthorVis=y&defectChangeIdVis=y&defectReviewTitleVis=y&reviewCompletionDateVis=y&defectChangeDateVis=y&defectLocationVis=y&defectScmProviderVis=y&formSubmittedreportConfig=1&defectFileVis=y&defectChangeCommentVis=y&defectCreatorUserLoginVis=y&type_cvbVis=y&defectIdVis=y&reviewGroupVis=y&defectReviewIdVis=y&reviewCreatedVis=y&sort1=col%3D%7C%7C%7Corder%3Dasc&sort0=col%3DdefectId%7C%7C%7Corder%3Ddesc&ErrorsAndMessages_fingerPrint=861101\""
+    "ReviewsCreationDateHigh": "2017-01-10",
+    "RelUrl": "\"/go?type_cvbVis=y&defectIdVis=y&severityVis=y&defectReviewIdVis=y&defectCreatorUserNameVis=y&reviewCreatedVis=y&defectCreatorUserLoginVis=y&injectionStageVis=y&page=ReportDefectList&component=ErrorsAndMessages&data-format=csv&groupDepth=0&formSubmittedreportConfig=1\""
   }
 ]
