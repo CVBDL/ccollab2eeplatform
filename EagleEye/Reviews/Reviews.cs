@@ -4,6 +4,7 @@ using EagleEye.GVizApi;
 using EagleEye.Settings;
 using Employees;
 using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,6 +15,8 @@ namespace EagleEye.Reviews
         private static readonly ILog log = LogManager.GetLogger(typeof(Reviews));
         
         public Reviews(ICcollabDataSource ccollabDataGenerator) : base(ccollabDataGenerator) { }
+
+        private int decimalPlaces = 6;
 
         private List<ReviewRecord> validRecords = null;
 
@@ -228,7 +231,7 @@ namespace EagleEye.Reviews
                 double density = 0;
                 if (totalLOC != 0)
                 {
-                    density = (totalCommentCount * 1000) / totalLOC;
+                    density = Math.Round((double)(totalCommentCount * 1000) / totalLOC, decimalPlaces);
                 }
 
                 Row row = new Row(item.ProductName, density);
@@ -255,7 +258,7 @@ namespace EagleEye.Reviews
         /// </summary>
         public void GenerateCommentDensityChangedByProduct()
         {
-            log.Info("Generating: code comment density (changed) by product ...");
+            log.Info("Generating: Code comment density (changed) by product ...");
 
             DataTable dataTable = new DataTable();
 
@@ -279,7 +282,7 @@ namespace EagleEye.Reviews
                 double density = 0;
                 if (totalLOCChanged != 0)
                 {
-                    density = (totalCommentCount * 1000) / totalLOCChanged;
+                    density = Math.Round((double)(totalCommentCount * 1000) / totalLOCChanged, decimalPlaces);
                 }
                 
                 Row row = new Row(item.ProductName, density);
@@ -288,7 +291,7 @@ namespace EagleEye.Reviews
 
             EagleEyePlatformApi.EditDataTable(EagleEyeSettingsReader.Settings.CodeCommentDensityChanged.ChartId, dataTable);
 
-            log.Info("Generating: code comment density (changed) by product ... Done");
+            log.Info("Generating: Code comment density (changed) by product ... Done");
         }
 
         public void GenerateCommentDensityChangedByMonthFromProduct()
@@ -343,7 +346,7 @@ namespace EagleEye.Reviews
                 double density = 0;
                 if (totalLOCChanged != 0)
                 {
-                    density = (totalCommentCount * 1000) / totalLOCChanged;
+                    density = Math.Round((double)(totalCommentCount * 1000) / totalLOCChanged, decimalPlaces);
                 }
                 
                 Row row = new Row(item.ProductName, density);
@@ -368,7 +371,7 @@ namespace EagleEye.Reviews
         /// </summary>
         public void GenerateDefectDensityUploadedByProduct()
         {
-            log.Info("Generating: code defect density (uploaded) by product ...");
+            log.Info("Generating: Code defect density (uploaded) by product ...");
 
             DataTable dataTable = new DataTable();
 
@@ -392,7 +395,7 @@ namespace EagleEye.Reviews
                 double density = 0;
                 if (totalLOC != 0)
                 {
-                    density = (totalDefectCount * 1000) / totalLOC;
+                    density = Math.Round((double)(totalDefectCount * 1000) / totalLOC, decimalPlaces);
                 }
                                 
                 Row row = new Row(item.ProductName, density);
@@ -401,7 +404,7 @@ namespace EagleEye.Reviews
 
             EagleEyePlatformApi.EditDataTable(EagleEyeSettingsReader.Settings.CodeDefectDensityUploaded.ChartId, dataTable);
 
-            log.Info("Generating: code defect density (uploaded) by product ... Done");
+            log.Info("Generating: Code defect density (uploaded) by product ... Done");
         }
 
         /// <summary>
@@ -419,7 +422,7 @@ namespace EagleEye.Reviews
         /// </summary>
         public void GenerateDefectDensityChangedByProduct()
         {
-            log.Info("Generating: code defect density (changed) by product ...");
+            log.Info("Generating: Code defect density (changed) by product ...");
 
             DataTable dataTable = new DataTable();
 
@@ -443,7 +446,7 @@ namespace EagleEye.Reviews
                 double density = 0;
                 if (totalLOCChanged != 0)
                 {
-                    density = (totalDefectCount * 1000) / totalLOCChanged;
+                    density = Math.Round((double)(totalDefectCount * 1000) / totalLOCChanged, decimalPlaces);
                 }
 
                 Row row = new Row(item.ProductName, density);
@@ -452,7 +455,7 @@ namespace EagleEye.Reviews
 
             EagleEyePlatformApi.EditDataTable(EagleEyeSettingsReader.Settings.CodeDefectDensityChanged.ChartId, dataTable);
 
-            log.Info("Generating: code defect density (changed) by product ... Done");
+            log.Info("Generating: Code defect density (changed) by product ... Done");
         }
 
         public void GenerateDefectDensityChangedByMonthFromProduct()
@@ -508,7 +511,7 @@ namespace EagleEye.Reviews
                 double density = 0;
                 if (totalLOCChanged != 0)
                 {
-                    density = totalDefectCount * 1000 / totalLOCChanged;
+                    density = Math.Round((double)(totalDefectCount * 1000) / totalLOCChanged, decimalPlaces);
                 }
                 
                 Row row = new Row(item.ProductName, density);
@@ -570,7 +573,7 @@ namespace EagleEye.Reviews
                 double inspectionRate = 0;
                 if (totalPersonTimeInHour != 0)
                 {
-                    inspectionRate = stat.TotalLOCChanged / (totalPersonTimeInHour * 1000);
+                    inspectionRate = Math.Round(stat.TotalLOCChanged / (totalPersonTimeInHour * 1000), decimalPlaces);
                 }
                 
                 Row row = new Row(item.ProductName, inspectionRate);
