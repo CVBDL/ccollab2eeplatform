@@ -24,7 +24,7 @@ namespace EagleEye.Reviews
             }
         }
 
-        private int totalCommentCount = -1;
+        private int totalCommentCount = 0;
 
         /// <summary>
         /// Comment count.
@@ -33,7 +33,7 @@ namespace EagleEye.Reviews
         {
             get
             {
-                if (totalCommentCount < 0)
+                if (totalCommentCount == 0)
                 {
                     totalCommentCount = records.Sum(record => record.CommentCount);
                 }
@@ -42,7 +42,7 @@ namespace EagleEye.Reviews
             }
         }
 
-        private int totalDefectCount = -1;
+        private int totalDefectCount = 0;
 
         /// <summary>
         /// Defect count.
@@ -51,7 +51,7 @@ namespace EagleEye.Reviews
         {
             get
             {
-                if (totalDefectCount < 0)
+                if (totalDefectCount == 0)
                 {
                     totalDefectCount = records.Sum(record => record.DefectCount);
                 }
@@ -60,7 +60,7 @@ namespace EagleEye.Reviews
             }
         }
 
-        private int totalLOC = -1;
+        private int totalLOC = 0;
 
         /// <summary>
         /// "LOC" for short.
@@ -69,7 +69,7 @@ namespace EagleEye.Reviews
         {
             get
             {
-                if (totalLOC < 0)
+                if (totalLOC == 0)
                 {
                     totalLOC = records.Sum(record => record.LOC);
                 }
@@ -78,7 +78,7 @@ namespace EagleEye.Reviews
             }
         }
 
-        private int totalLOCChanged = -1;
+        private int totalLOCChanged = 0;
 
         /// <summary>
         /// "LOCC" for short.
@@ -87,7 +87,7 @@ namespace EagleEye.Reviews
         {
             get
             {
-                if (totalLOCChanged < 0)
+                if (totalLOCChanged == 0)
                 {
                     totalLOCChanged = records.Sum(record => record.LOCChanged);
                 }
@@ -96,7 +96,7 @@ namespace EagleEye.Reviews
             }
         }
 
-        private double totalPersonTimeInSecond = -1;
+        private double totalPersonTimeInSecond = 0;
 
         /// <summary>
         /// Total Person-Time
@@ -105,7 +105,7 @@ namespace EagleEye.Reviews
         {
             get
             {
-                if (totalPersonTimeInSecond < 0)
+                if (totalPersonTimeInSecond == 0)
                 {
                     totalPersonTimeInSecond = records.Sum(record => record.TotalPersonTimeInSecond);
                 }
