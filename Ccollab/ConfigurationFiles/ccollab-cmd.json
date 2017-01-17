@@ -4,7 +4,7 @@
     "CmdName": "ccollab.exe",
     "Args": "admin wget ",
     "ReviewsCreationDateLow": "2016-10-01",
-    "ReviewsCreationDateHigh": "2017-01-10",
+    "ReviewsCreationDateHigh": "2017-03-01",
     "RelUrl": "\"/go?reviewCreatorUserLoginVis=y&numDefectsVis=y&reviewCreatorUserNameVis=y&reviewIdVis=y&reviewPersonDurationVis=y&reviewCreationDateVis=y&numCommentsVis=y&locVis=y&locChangedVis=y&data-format=csv&page=ReportReviewList&component=ErrorsAndMessages&formSubmittedreportConfig=1\""
   },
   {
@@ -12,7 +12,7 @@
     "CmdName": "ccollab.exe",
     "Args": "admin wget ",
     "ReviewsCreationDateLow": "2016-10-01",
-    "ReviewsCreationDateHigh": "2017-01-10",
+    "ReviewsCreationDateHigh": "2017-03-01",
     "RelUrl": "\"/go?type_cvbVis=y&defectIdVis=y&severityVis=y&defectReviewIdVis=y&defectCreatorUserNameVis=y&reviewCreatedVis=y&defectCreatorUserLoginVis=y&injectionStageVis=y&page=ReportDefectList&component=ErrorsAndMessages&data-format=csv&groupDepth=0&formSubmittedreportConfig=1\""
   }
 ]

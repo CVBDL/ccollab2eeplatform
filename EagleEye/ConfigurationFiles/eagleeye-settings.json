@@ -6,10 +6,10 @@
     "ViewPoint"
   ],
   "DefectInjectionStage": [
-    "Code/Unit Test",
-    "Design",
+    "Not Evaluated",
     "Requirements",
-    "Integration/Test"
+    "High Level Design",
+    "Detailed Design"
   ],
   "DefectSeverityTypes": [
     "Major",
@@ -24,10 +24,12 @@
     "interface",
     "maintainability",
     "performance",
-    "requirements/design",
     "robustness/error handling",
     "style",
-    "testing"
+    "testing",
+    "initialization",
+    "requirements/design",
+    "synchronization/thread safety"
   ],
   "CodeCommentDensityChanged": {
     "ChartId": "5799641be24561202bc7190d"
