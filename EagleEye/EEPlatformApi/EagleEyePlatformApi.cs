@@ -1,4 +1,5 @@
 ﻿using EagleEye.GVizApi;
+using EagleEye.Settings;
 using log4net;
 using Newtonsoft.Json;
 using System;
@@ -25,19 +26,18 @@ namespace EagleEye.EEPlatformApi
             log.Info("JSON :: " + json);
 
             //EagleEyeSettings settings = EagleEyeSettingsReader.Settings;
-
             //HttpClient httpClient = new HttpClient();
-
+            //StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            //string requestUri = settings.ApiRootEndpoint + "charts/" + chartId + "/datatable";
             //try
             //{
-            //    StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-            //    HttpResponseMessage response = httpClient.PutAsync(settings.ApiRootEndpoint + "charts/" + chartId + "/datatable", payload).Result;
+            //    HttpResponseMessage response = httpClient.PutAsync(requestUri, content).Result;
             //    response.EnsureSuccessStatusCode();
 
             //    // use for debugging
-            //    var responseContent = response.Content;
+            //    HttpContent responseContent = response.Content;
             //    string responseBody = responseContent.ReadAsStringAsync().Result;
-            //    Console.WriteLine(responseBody);
+            //    log.Info(string.Format("HTTP response: {0}", responseBody));
             //}
             //catch (HttpRequestException e)
             //{
