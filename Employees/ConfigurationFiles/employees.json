@@ -5,9 +5,24 @@
     "ProductName": "ViewPoint"
   },
   {
-    "LoginName": "rli",
+    "LoginName": "rli1",
     "FullName": "Rex Li",
-    "ProductName": "FTView"
+    "ProductName": "ViewPoint"
+  },
+  {
+    "LoginName": "zjye",
+    "FullName": "Zeno Jia",
+    "ProductName": "ViewPoint"
+  },
+  {
+    "LoginName": "azhu",
+    "FullName": "Anthony Zhu",
+    "ProductName": "ViewPoint"
+  },
+  {
+    "LoginName": "wsun2",
+    "FullName": "Warren Sun",
+    "ProductName": "ViewPoint"
   },
   {
     "LoginName": "mmo2",
@@ -17,6 +32,11 @@
   {
     "LoginName": "trang",
     "FullName": "Tweety Rang",
+    "ProductName": "ViewPoint"
+  },
+  {
+    "LoginName": "yyyang",
+    "FullName": "Young Yang",
     "ProductName": "FTView"
   }
 ]
