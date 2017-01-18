@@ -2,6 +2,11 @@
 
 namespace EagleEye.GVizApi
 {
+    /// <summary>
+    /// The data object consists of two required top-level properties,
+    /// `cols` and `rows`, and an optional `p` property that is a map of 
+    /// arbitrary values.
+    /// </summary>
     public class DataTable
     {
         private List<Column> cols = new List<Column>();
@@ -52,6 +57,13 @@ namespace EagleEye.GVizApi
             }
 
             return dataTable;
+        }
+
+        public string ToJSON()
+        {
+
+
+            return "";
         }
     }
 }

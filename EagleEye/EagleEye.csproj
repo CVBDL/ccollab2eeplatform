@@ -63,6 +63,7 @@
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="DensityStatistics.cs" />
     <Compile Include="EEPlatformApi\EagleEyePlatformApi.cs" />
+    <Compile Include="GVizApi\Cell.cs" />
     <Compile Include="GVizApi\Column.cs" />
     <Compile Include="GVizApi\DataTable.cs" />
     <Compile Include="GVizApi\Row.cs" />
