@@ -52,20 +52,7 @@ namespace EagleEye.EEPlatformApi
         {
             if (string.IsNullOrWhiteSpace(chartId)) return;
 
-            Chart chart = new Chart(dataTable);
-
-            string json = null;
-            try
-            {
-                json = JsonConvert.SerializeObject(chart);
-            }
-            catch (Exception e)
-            {
-                log.Error("Unable to serialize data table to JSON for chart: " + chartId + ".");
-                log.Error(e.ToString());
-
-                return;
-            }
+            string json = dataTable.ToJSON();
 
             PutDataTableToEagleEye(chartId, json);
         }

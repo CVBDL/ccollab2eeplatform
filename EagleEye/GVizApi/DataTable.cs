@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using log4net;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace EagleEye.GVizApi
 {
@@ -9,9 +12,11 @@ namespace EagleEye.GVizApi
     /// </summary>
     public class DataTable
     {
-        private List<Column> cols = new List<Column>();
-        private List<Row> rows = new List<Row>();
+        private static readonly ILog log = LogManager.GetLogger(typeof(DataTable));
 
+        public List<Column> cols { get; set; } = new List<Column>();
+        public List<Row> rows { get; set; } = new List<Row>();
+        
         /// <summary>
         /// Adds a new column to the data table, and returns the index of the new column.
         /// </summary>
@@ -31,39 +36,19 @@ namespace EagleEye.GVizApi
             return rows.IndexOf(row);
         }
 
-        /// <summary>
-        /// [
-        ///     ["Product", "Count"],
-        ///     ["Team1", 20],
-        ///     ["Team2", 10]
-        /// ]
-        /// </summary>
-        /// <returns></returns>
-        public List<List<object>> GetData()
-        {
-            List<List<object>> dataTable = new List<List<object>>();
-
-            List<object> header = new List<object>();
-            foreach (Column col in cols)
-            {
-                header.Add(col.Label);
-            }
-
-            dataTable.Add(header);
-
-            foreach (Row row in rows)
-            {
-                dataTable.Add(row.Cells);
-            }
-
-            return dataTable;
-        }
-
         public string ToJSON()
         {
+            string json = string.Empty;
+            try
+            {
+                json = JsonConvert.SerializeObject(this);
+            }
+            catch (Exception e)
+            {
+                log.Error(string.Format("Unable to serialize data table to JSON. Message: {0}", e.Message));
+            }
 
-
-            return "";
+            return json;
         }
     }
 }

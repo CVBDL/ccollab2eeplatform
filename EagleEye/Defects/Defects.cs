@@ -114,12 +114,12 @@ namespace EagleEye.Defects
             foreach (var item in query)
             {
                 Row row = new Row();
-                row.AddCell(item.ProductName);
+                row.AddCell(new Cell(item.ProductName));
 
                 foreach (string severity in EagleEyeSettingsReader.Settings.DefectSeverityTypes)
                 {
                     int count = item.Records.Count(record => record.Severity == severity);
-                    row.AddCell(count);
+                    row.AddCell(new Cell(count));
                 }
                 
                 dataTable.AddRow(row);
@@ -184,12 +184,12 @@ namespace EagleEye.Defects
             foreach (var item in query)
             {
                 Row row = new Row();
-                row.AddCell(item.Creator);
+                row.AddCell(new Cell(item.Creator));
 
                 foreach (string severity in EagleEyeSettingsReader.Settings.DefectSeverityTypes)
                 {
                     int count = item.Records.Count(record => record.Severity == severity);
-                    row.AddCell(count);
+                    row.AddCell(new Cell(count));
                 }
 
                 dataTable.AddRow(row);
@@ -362,12 +362,12 @@ namespace EagleEye.Defects
             foreach (var item in query)
             {
                 Row row = new Row();
-                row.AddCell(item.Creator);
+                row.AddCell(new Cell(item.Creator));
 
                 foreach (string type in EagleEyeSettingsReader.Settings.DefectTypes)
                 {
                     int count = item.Records.Count(record => record.Type == type);
-                    row.AddCell(count);
+                    row.AddCell(new Cell(count));
                 }
 
                 dataTable.AddRow(row);
@@ -410,12 +410,12 @@ namespace EagleEye.Defects
             foreach (var item in query)
             {
                 Row row = new Row();
-                row.AddCell(item.ProductName);
+                row.AddCell(new Cell(item.ProductName));
 
                 foreach (string type in EagleEyeSettingsReader.Settings.DefectTypes)
                 {
                     int count = item.Records.Count(record => record.Type == type);
-                    row.AddCell(count);
+                    row.AddCell(new Cell(count));
                 }
 
                 dataTable.AddRow(row);

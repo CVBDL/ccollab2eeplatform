@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace EagleEye.GVizApi
 {
@@ -26,9 +22,9 @@ namespace EagleEye.GVizApi
     /// </summary>
     public class Cell
     {
-        public object v;
-        public string f;
-        public Dictionary<string, object> p;
+        public object v { get; set; }
+        public string f { get; set; }
+        public Dictionary<string, object> p { get; set; }
 
         public Cell(object value = null, string format = null, Dictionary<string, object> props = null)
         {
