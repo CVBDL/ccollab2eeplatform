@@ -1,6 +1,5 @@
 ﻿using Ccollab;
 using Employees;
-using EagleEye;
 using EagleEye.Defects;
 using EagleEye.Reviews;
 using EagleEye.Settings;

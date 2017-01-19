@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace EagleEye.GVizApi
+namespace GVizApi
 {
     /// <summary>
     /// The data object consists of two required top-level properties,

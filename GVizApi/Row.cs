@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EagleEye.GVizApi
+namespace GVizApi
 {
     /// <summary>
     /// Each row object has one required property called c, which is

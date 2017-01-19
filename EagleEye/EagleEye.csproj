@@ -62,10 +62,6 @@
     <Compile Include="Defects\IDefectsCommands.cs" />
     <Compile Include="DensityStatistics.cs" />
     <Compile Include="EEPlatformApi\EagleEyePlatformApi.cs" />
-    <Compile Include="GVizApi\Cell.cs" />
-    <Compile Include="GVizApi\Column.cs" />
-    <Compile Include="GVizApi\DataTable.cs" />
-    <Compile Include="GVizApi\Row.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Reviews\CommentDensityChangedByProductCommand.cs" />
     <Compile Include="Reviews\CommentDensityChangedByMonthCommand.cs" />
@@ -99,6 +95,10 @@
     <ProjectReference Include="..\Employees\Employees.csproj">
       <Project>{78c40237-e681-4fca-a97f-3a857128f1b2}</Project>
       <Name>Employees</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GVizApi\GVizApi.csproj">
+      <Project>{eaea194a-8e70-4432-a145-0c1da44b8251}</Project>
+      <Name>GVizApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

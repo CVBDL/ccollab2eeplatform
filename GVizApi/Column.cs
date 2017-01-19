@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EagleEye.GVizApi
+namespace GVizApi
 {
     /// <summary>
     /// - `type` [Required]

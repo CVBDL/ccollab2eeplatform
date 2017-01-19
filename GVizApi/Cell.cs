@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EagleEye.GVizApi
+namespace GVizApi
 {
     /// <summary>
     /// Each cell in the table is described by an object with the following properties:
