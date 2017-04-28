@@ -1,4 +1,6 @@
-# ccollab2eeplatform
+# ccollab2eeplatform [Deprecated]
+
+[Use the Python version.](https://github.com/CVBDL/ccollab2eeplatform-python)
 
 Extract data from CodeCollaborator to EagleEye-Platform
 
